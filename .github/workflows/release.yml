@@ -1,15 +1,23 @@
 name: release
-# Push a tag such as v0.1.0. Everything is built from that commit and
-# published under this repository: a GitHub Release with every SDK package,
-# the binaries, the WebAssembly modules and the console, and container images
-# in GitHub's registry at ghcr.io/jhmeel/ivar/<name>.
+# Push a tag such as v0.1.0, or run this workflow from the Actions tab with the
+# version. Everything is built from that commit and published under this
+# repository: a GitHub Release with every SDK package, the binaries, the
+# WebAssembly modules and the console, container images in GitHub's registry
+# at ghcr.io/jhmeel/ivar/<name>, and the sdk/go/<version> tag Go needs for a
+# module in a subdirectory.
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release, for example v0.1.0"
+        required: true
 permissions:
   contents: read
 env:
   REGISTRY: ghcr.io/jhmeel/ivar
+  TAG: ${{ inputs.version || github.ref_name }}
 jobs:
   wasm:
     runs-on: ubuntu-24.04
@@ -17,7 +25,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Tag matches the package versions
         run: |
-          v="${GITHUB_REF_NAME#v}"
+          case "$TAG" in v[0-9]*) ;; *) echo "::error::version must look like v0.1.0"; exit 1;; esac
+          v="${TAG#v}"
           grep -q "^version = \"$v\"" Cargo.toml
           grep -q "\"version\": \"$v\"" sdk/node/express/package.json
           grep -q "^version = \"$v\"" sdk/python/pyproject.toml
@@ -55,26 +64,26 @@ jobs:
         with: { dotnet-version: "8.0.x" }
       - name: Node
         run: |
-          v="${GITHUB_REF_NAME#v}"
+          v="${TAG#v}"
           mkdir -p dist
           (cd sdk/node/core-wasm && npm pack --pack-destination ../../../dist)
           cd sdk/node/express
           npm ci && npm run build
           # The released package fetches the core module from the same release.
-          npm pkg set "dependencies.@ivar/core-wasm=https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/ivar-core-wasm-$v.tgz"
+          npm pkg set "dependencies.@ivar/core-wasm=https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/ivar-core-wasm-$v.tgz"
           npm pack --pack-destination ../../../dist
       - name: Python
         run: pip install build && python -m build --outdir dist sdk/python
       - name: Java
         run: |
-          v="${GITHUB_REF_NAME#v}"
+          v="${TAG#v}"
           (cd sdk/java && mvn -B -q package -DskipTests)
           cp sdk/java/target/ivar-java-$v.jar dist/
           cp sdk/java/pom.xml dist/ivar-java-$v.pom
       - name: .NET
         run: dotnet pack sdk/dotnet/Ivar -c Release -o dist
       - name: PHP
-        run: (cd sdk/php && zip -qr ../../dist/ivar-php-${GITHUB_REF_NAME#v}.zip composer.json src wasm)
+        run: (cd sdk/php && zip -qr ../../dist/ivar-php-${TAG#v}.zip composer.json src wasm)
       - uses: actions/upload-artifact@v4
         with: { name: packages, path: dist }
 
@@ -91,7 +100,7 @@ jobs:
         with: { name: wasm }
       - name: Build
         run: |
-          v="${GITHUB_REF_NAME#v}"
+          v="${TAG#v}"
           cargo build --release --locked -p ivar-server -p ivar-linux-agent -p ivar-network-sensor -p ivar-database-sensor \
             -p ivar-log-collector -p ivar-ai-gateway -p ivar-build-runner -p ivar-workstation-sensor
           cargo build --release --locked -p ivar-edge-filter --target wasm32-wasip1
@@ -131,12 +140,12 @@ jobs:
           target: ${{ matrix.target }}
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ matrix.target }}:${{ github.ref_name }}
+            ${{ env.REGISTRY }}/${{ matrix.target }}:${{ env.TAG }}
             ${{ env.REGISTRY }}/${{ matrix.target }}:latest
           labels: |
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
             org.opencontainers.image.licenses=Apache-2.0
-            org.opencontainers.image.version=${{ github.ref_name }}
+            org.opencontainers.image.version=${{ env.TAG }}
           cache-from: type=gha,scope=${{ matrix.target }}
           cache-to: type=gha,mode=max,scope=${{ matrix.target }}
 
@@ -146,13 +155,23 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with: { path: dist, merge-multiple: true }
       - name: Checksums
         run: |
           rm -rf dist/sdk
           cd dist && sha256sum * > SHA256SUMS && cat SHA256SUMS
+      - name: Tags
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rev-parse -q --verify "refs/tags/$TAG" >/dev/null || git tag -a "$TAG" -m "IVAR ${TAG#v}" "$GITHUB_SHA"
+          git rev-parse -q --verify "refs/tags/sdk/go/$TAG" >/dev/null || git tag -a "sdk/go/$TAG" -m "IVAR Go SDK ${TAG#v}" "$GITHUB_SHA"
+          git push origin "refs/tags/$TAG" "refs/tags/sdk/go/$TAG"
       - uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ env.TAG }}
+          name: IVAR ${{ env.TAG }}
           files: dist/*
           generate_release_notes: true
