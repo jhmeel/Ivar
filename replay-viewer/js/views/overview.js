@@ -25,7 +25,7 @@ export function renderOverview(el, ctx) {
   const lastTime = m.rows[m.rows.length - 1]?.f.time;
   el.innerHTML = `
     <div class="kpis">
-      ${kpi('Events observed', t.events, `${m.sensors.filter((s) => s.events).length} sensors · ${t.sources} sources`, 'events?kind=event', 'event')}
+      ${kpi('Events observed', t.events, `${m.sensors.filter((s) => s.events).length} sensors · ${t.sources} source${t.sources === 1 ? "" : "s"}`, 'events?kind=event', 'event')}
       ${kpi('Findings', t.findings, `${m.rules.length} rules fired`, 'events?kind=finding', 'finding')}
       ${kpi('Verdicts', t.verdicts, `${t.enforced} enforcing (${pct(t.enforced, t.verdicts)})`, 'events?kind=verdict', 'record')}
       ${kpi('Blocked or contained', blocked, `contain ${m.decisions.contain ?? 0} · block ${m.decisions.block ?? 0} · refuse ${m.decisions.refuse ?? 0}`, 'events?decision=contain', 'contain')}

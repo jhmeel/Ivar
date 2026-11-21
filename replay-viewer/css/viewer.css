@@ -217,8 +217,11 @@ select { cursor: pointer; }
 .grid-3 { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; }
 .empty { color: var(--muted); padding: 26px 0; text-align: center; }
 
-.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); gap: 12px; }
-.kpi { padding: 12px 14px; border-radius: var(--radius); background: var(--panel); box-shadow: var(--shadow); }
+/* Eight tiles: two even rows of four, then four rows of two, never an orphan. */
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; container-type: inline-size; }
+@media (max-width: 1020px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 420px) { .kpis { grid-template-columns: minmax(0, 1fr); } }
+.kpi { display: flex; flex-direction: column; min-height: 96px; padding: 12px 14px; border-radius: var(--radius); background: var(--panel); box-shadow: var(--shadow); }
 .kpi[data-go] { cursor: pointer; }
 .kpi[data-go]:hover { background: color-mix(in srgb, var(--panel) 92%, var(--ink) 8%); }
 .kpi .k-label { font-size: 11.5px; color: var(--ink-2); display: flex; align-items: center; gap: 6px; font-weight: 500; }
