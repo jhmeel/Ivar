@@ -6,6 +6,10 @@
 # Join each application service to the ivar network and point its SDK or
 # sensor at http://ivar:8080 (events and signed policy). ./ivar holds
 # core.yaml, keyring.json, policy.bundle and keys/ (see README.md here).
+#
+# The operator console is at http://ivar:8080/console/ on that network. Its
+# operator API trusts the X-Ivar-Operator headers your staff SSO proxy sets,
+# so reach it through that proxy rather than publishing port 8080.
 services:
   ivar:
     image: ghcr.io/jhmeel/ivar/core:v0.1.0

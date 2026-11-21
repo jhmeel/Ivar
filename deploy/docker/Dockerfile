@@ -39,6 +39,13 @@ RUN --mount=type=cache,target=/root/go/pkg/mod cd go \
 FROM gcr.io/distroless/cc-debian12:nonroot AS core
 COPY --from=rust /out/bin/ivar-core /out/bin/ivar-replay-library /usr/local/bin/
 COPY replay-library /usr/share/ivar/replay-library
+# The operator console, served at /console/ unless console_dir is set to "".
+COPY replay-viewer/index.html replay-viewer/favicon.svg /usr/share/ivar/console/
+COPY replay-viewer/css /usr/share/ivar/console/css
+COPY replay-viewer/js /usr/share/ivar/console/js
+COPY replay-viewer/pkg /usr/share/ivar/console/pkg
+COPY replay-viewer/vendor /usr/share/ivar/console/vendor
+COPY replay-viewer/samples /usr/share/ivar/console/samples
 # The evidence directory exists in the image and belongs to nonroot, so a
 # fresh volume mounted there is writable without running as root.
 COPY --from=rust --chown=65532:65532 /out/empty /var/lib/ivar

@@ -15,6 +15,9 @@ data:
     redaction_key_hex_file: /etc/ivar/keys/redaction.hex
     public_url: {{ .Values.core.publicUrl }}
     expected_layers: {{ toJson .Values.core.expectedLayers }}
+    {{- if not .Values.core.console.enabled }}
+    console_dir: ""
+    {{- end }}
     {{- with .Values.core.sinks }}
     sinks: {{- toYaml . | nindent 6 }}
     {{- end }}

@@ -30,6 +30,7 @@ pub struct ServerConfig {
     pub expected_layers: Vec<String>,
     /// The operator console (replay-viewer) to serve at /console/, from the
     /// same origin as the API so live mode needs no cross origin access.
+    /// Unset: the console bundled in the image, when present. Empty: off.
     pub console_dir: Option<String>,
 }
 
@@ -56,7 +57,23 @@ impl Default for ServerConfig {
     }
 }
 
+/// Where the release image puts the operator console.
+pub const BUNDLED_CONSOLE: &str = "/usr/share/ivar/console";
+
 impl ServerConfig {
+    /// The console directory to serve, if any.
+    pub fn console(&self) -> Option<String> {
+        self.console_with(|dir| std::path::Path::new(dir).join("index.html").is_file())
+    }
+
+    fn console_with(&self, present: impl Fn(&str) -> bool) -> Option<String> {
+        match self.console_dir.as_deref() {
+            Some("") => None,
+            Some(dir) => Some(dir.to_string()),
+            None => present(BUNDLED_CONSOLE).then(|| BUNDLED_CONSOLE.to_string()),
+        }
+    }
+
     pub fn load(path: &str) -> anyhow::Result<Self> {
         let mut cfg: Self = serde_yaml::from_str(&std::fs::read_to_string(path)?)?;
         cfg.apply_env(|k| std::env::var(k).ok())?;
@@ -67,6 +84,9 @@ impl ServerConfig {
     /// IVAR_SHARD=ordinal takes the shard from the StatefulSet pod name
     /// (ivar-core-2 is shard 2).
     pub fn apply_env(&mut self, env: impl Fn(&str) -> Option<String>) -> anyhow::Result<()> {
+        if let Some(dir) = env("IVAR_CONSOLE_DIR") {
+            self.console_dir = Some(dir);
+        }
         if let Some(n) = env("IVAR_SHARDS") {
             self.shards = n.parse().map_err(|_| anyhow::anyhow!("IVAR_SHARDS must be a number"))?;
         }
@@ -102,6 +122,17 @@ mod tests {
         assert_eq!((c.shard, c.shards), (2, 3));
         let mut bad = ServerConfig::default();
         assert!(bad.apply_env(|k| (k == "IVAR_SHARD").then(|| "4".to_string())).is_err(), "shard outside the range is refused");
+    }
+
+    #[test]
+    fn console_defaults_to_the_bundled_copy() {
+        let mut c = ServerConfig::default();
+        assert_eq!(c.console_with(|_| true).as_deref(), Some(BUNDLED_CONSOLE), "served from the image when present");
+        assert_eq!(c.console_with(|_| false), None, "nothing to serve outside the image");
+        c.console_dir = Some("/srv/console".into());
+        assert_eq!(c.console_with(|_| false).as_deref(), Some("/srv/console"), "an explicit path wins");
+        c.apply_env(|k| (k == "IVAR_CONSOLE_DIR").then(String::new)).unwrap();
+        assert_eq!(c.console_with(|_| true), None, "an empty value turns it off");
     }
 }
 

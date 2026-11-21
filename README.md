@@ -306,7 +306,7 @@ action_key_seed_file: /etc/ivar/keys/action.seed
 redaction_key_hex_file: /etc/ivar/keys/redaction.hex
 public_url: https://ivar.internal
 expected_layers: [edge, app_sdk, host, network, database]
-console_dir: /usr/share/ivar/console      # optional: the operator console at /console/
+# The operator console is served at /console/ by default; console_dir: "" turns it off.
 ```
 
 ```bash
@@ -977,8 +977,26 @@ to sensors that cannot wait for a response.
 
 ## The console
 
-The console (`replay-viewer/`, served by the core at `/console/` when
-`console_dir` is set) shows a verified replay or follows a live core.
+Every `ivar-core` serves the operator console at `/console/`. It follows the
+core live, or verifies and replays an exported bundle.
+
+### Opening it
+
+1. Open `https://<your core>/console/` through your staff SSO proxy.
+2. Choose **Live core** and **Connect**. Decisions appear as they are made,
+   and the evidence hash chain is re-verified on every update.
+3. To look at an exported incident instead, choose **Replay bundle** and load
+   the bundle with its keyring. The console verifies it in the browser before
+   it shows anything.
+
+The console holds no data of its own. What it shows comes from the core's
+operator API, which trusts the `X-Ivar-Operator` and `X-Ivar-Roles` headers
+your SSO proxy sets, so never expose the core directly. For a local core
+without a proxy, type an operator name and roles into the console instead.
+Turn it off with `console_dir: ""` (Helm: `core.console.enabled=false`).
+
+An application using an SDK with no core (`coreUrl` unset) decides on its own
+and has no console; point it at a core to see its decisions.
 
 **[Watch the walkthrough](docs/media/ivar-console-walkthrough.mp4)** (2 min,
 1080p): verification, the overview, playback, the event inspector, session

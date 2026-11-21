@@ -22,6 +22,11 @@ core:
   expectedLayers: [edge, app_sdk, host, network, database]
   resources: { requests: { cpu: 500m, memory: 512Mi }, limits: { memory: 2Gi } }
   sinks: {}
+  # The operator console at <publicUrl>/console/. It holds no data itself:
+  # everything it shows comes from the operator API, which trusts the
+  # X-Ivar-Operator headers your staff SSO proxy sets. Keep the core behind
+  # that proxy.
+  console: { enabled: true }
 
 control:
   replicas: 2

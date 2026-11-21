@@ -5,4 +5,3 @@ deploy/local/.state
 sdk/java/target
 sdk/dotnet/**/bin
 sdk/dotnet/**/obj
-replay-viewer/pkg
