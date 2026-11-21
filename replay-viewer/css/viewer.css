@@ -107,7 +107,7 @@ a:hover { text-decoration: underline; }
 /* Toolbar (window chrome) */
 .topbar { position: sticky; top: 0; z-index: 20; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 10px 16px; min-height: var(--topbar); background: var(--material); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); border-bottom: 0.5px solid var(--line); }
 .brand { display: flex; align-items: center; gap: 10px; padding-right: 6px; }
-.mark { width: 26px; height: 26px; color: var(--accent); }
+.mark { width: 26px; height: 26px; color: var(--ink); }
 .brand-name { font-weight: 700; font-size: 14px; letter-spacing: 0.02em; }
 .brand-sub { color: var(--muted); font-size: 11px; margin-top: -1px; }
 .sources, .segmented { display: inline-flex; padding: 2px; border-radius: 9px; background: var(--fill); }

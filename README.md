@@ -1,4 +1,13 @@
-# IVAR: intent bound defence against agentic intrusion
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/brand/ivar-logo-dark.svg">
+    <img src="docs/brand/ivar-logo.svg" alt="IVAR" width="320">
+  </picture>
+</p>
+
+# IVAR: Intent Verified Adaptive Response
+
+IVAR is intent bound defence against agentic intrusion.
 
 An implementation of the design specification *Intent-Bound Defence Against
 Agentic Intrusion*. The core model is a live graph of trust edges between
