@@ -16,11 +16,20 @@ final class VerdictCache
         $this->file = $file ?: sys_get_temp_dir() . '/ivar-verdicts.json';
     }
 
+    /**
+     * APCu only counts when it is enabled for this SAPI: the extension can be
+     * loaded with apc.enable_cli off, where every store silently fails.
+     */
+    private static function apcu(): bool
+    {
+        return function_exists('apcu_enabled') && apcu_enabled();
+    }
+
     /** @return list<array> */
     public function all(): array
     {
         $now = Ivar::now();
-        $list = function_exists('apcu_fetch') ? (apcu_fetch('ivar_verdicts') ?: []) : (is_file($this->file) ? (json_decode((string) file_get_contents($this->file), true) ?: []) : []);
+        $list = self::apcu() ? (apcu_fetch('ivar_verdicts') ?: []) : (is_file($this->file) ? (json_decode((string) file_get_contents($this->file), true) ?: []) : []);
         return array_values(array_filter($list, fn ($v) => ($v['expires_at'] ?? 0) === 0 || $v['expires_at'] > $now));
     }
 
@@ -31,7 +40,7 @@ final class VerdictCache
             return;
         }
         $merged = array_slice(array_merge($this->all(), $verdicts), -5000);
-        if (function_exists('apcu_store')) {
+        if (self::apcu()) {
             apcu_store('ivar_verdicts', $merged);
             return;
         }
