@@ -44,6 +44,18 @@ With Coraza and the OWASP Core Rule Set ahead of the IVAR filter:
 CORAZA_WASM=/path/to/coraza-proxy-wasm.wasm deploy/local/up.sh && python3 deploy/local/smoke_test.py
 ```
 
+A live test: installs from the release images in front of a real Express
+payments API using the SDK, then runs legitimate traffic and an attack
+campaign (credential spray, account takeover, mass assignment, payout
+without intent, time locked payout, decoys, victim lockout, shared
+networks), forensics (incidents, evidence chain, signed replay re verified
+by a third party) and resilience (control plane down, core down, restart):
+
+```bash
+CORAZA_WASM=/path/to/coraza-proxy-wasm.wasm deploy/live/up.sh && python3 deploy/live/attack.py
+deploy/live/up.sh down
+```
+
 Adding the SDK to an Express app (section 8.2):
 
 ```js
@@ -128,6 +140,8 @@ Verified in this repository's test suites and the local stack:
   Core Rule Set: observe, live signed rollout, enforcement, refusal of a
   forged one key weakening, and enforcement through a control plane outage.
 * The core image running under the Compose file with a real signed bundle.
+* The live test (`deploy/live`): the release images in front of a real
+  Express API, 34 of 34 checks, reproduced on clean installs.
 * The Helm chart rendered with Helm's template engine and checked
   (`deploy/helm/chartcheck`), and the reference Envoy config accepted by
   `envoy --mode validate`.
