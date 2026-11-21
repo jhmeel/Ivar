@@ -12,17 +12,18 @@ export const WIDTH = 1280;
 export const HEIGHT = 720;
 
 const C = {
-  bg: '#0a0d11', panel: '#12171d', panel2: '#171d24', line: '#222a33', lineStrong: '#2f3944',
-  ink: '#e6edf3', ink2: '#b9c4cf', muted: '#7d8a98', accent: '#38bdf8', verified: '#2dd4bf',
-  record: '#6b7785', throttle: '#f59e0b', challenge: '#a78bfa', block: '#fb923c', contain: '#f43f5e', refuse: '#e11d48',
-  gap: '#3a4450', fast: '#38bdf8', slow: '#2dd4bf', band: 'rgba(244,63,94,0.12)',
+  bg: '#0d0d0f', panel: '#1c1c1e', panel2: '#2c2c2e', line: '#38383a', lineStrong: '#48484a',
+  ink: '#f5f5f7', ink2: '#c7c7cc', muted: '#8e8e93', accent: '#0a84ff', verified: '#32d74b',
+  record: '#199e70', throttle: '#c98500', challenge: '#9085e9', block: '#d95926', contain: '#e66767', refuse: '#d55181',
+  event: '#8e8e93', gap: '#48484a', fast: '#3987e5', slow: '#199e70', band: 'rgba(230,103,103,0.13)',
 };
-const SANS = 'Inter, "Segoe UI", Roboto, system-ui, sans-serif';
-const MONO = '"JetBrains Mono", "SF Mono", Menlo, Consolas, monospace';
+const SANS = '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Segoe UI", Roboto, "Helvetica Neue", sans-serif';
+const MONO = 'ui-monospace, "SF Mono", Menlo, Consolas, monospace';
 const LANES = [['event', 'Events'], ['finding', 'Findings'], ['risk', 'Risk'], ['verdict', 'Verdicts'], ['action_request', 'Actions'], ['gap', 'Unobserved']];
 const DECISIONS = ['record', 'throttle', 'challenge', 'block', 'contain', 'refuse'];
 
 function colorFor(frame) {
+  if (frame.kind === 'event') return C.event;
   const o = outcomeOf(frame);
   if (C[o]) return C[o];
   if (frame.kind === 'finding') return C.challenge;

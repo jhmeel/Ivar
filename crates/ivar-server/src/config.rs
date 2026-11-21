@@ -28,6 +28,9 @@ pub struct ServerConfig {
     pub ai_config: Option<String>,
     /// Platform tier layers expected for replays (full, application, visibility).
     pub expected_layers: Vec<String>,
+    /// The operator console (replay-viewer) to serve at /console/, from the
+    /// same origin as the API so live mode needs no cross origin access.
+    pub console_dir: Option<String>,
 }
 
 impl Default for ServerConfig {
@@ -48,6 +51,7 @@ impl Default for ServerConfig {
             responders: vec![],
             ai_config: None,
             expected_layers: vec!["edge".into(), "app_sdk".into(), "host".into(), "network".into(), "database".into()],
+            console_dir: None,
         }
     }
 }

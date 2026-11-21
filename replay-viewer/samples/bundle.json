@@ -7,25 +7,25 @@
   "plugin_versions": {},
   "counterfactual": false,
   "counterfactual_policy": null,
-  "evidence_chain_head": "927ab2f531e94016a1f416985d077ec3c4e29aeb5000ea22061930ebe1694f74",
+  "evidence_chain_head": "90857c3362bfb504bd3919801cdd8f0d5c83161386fecd90e375ef4d6a13e1b6",
   "frames": [
     {
       "index": 0,
-      "time": 1400,
-      "sensor_time": 1280,
+      "time": 1795251600400,
+      "sensor_time": 1795251600280,
       "clock_skew_ms": 120,
       "sensor_id": "app-sdk-1",
       "sensor_seq": 1,
       "kind": "event",
       "evidence_ids": [
-        "evd_NAD5Z4SDA7"
+        "evd_CTT0ETZMT1"
       ],
       "payload": {
         "class_uid": 0,
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 1280,
+        "time": 1795251600280,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
@@ -114,21 +114,21 @@
     },
     {
       "index": 1,
-      "time": 1800,
-      "sensor_time": 1680,
+      "time": 1795251600800,
+      "sensor_time": 1795251600680,
       "clock_skew_ms": 120,
       "sensor_id": "app-sdk-1",
       "sensor_seq": 2,
       "kind": "event",
       "evidence_ids": [
-        "evd_X18FA028D8"
+        "evd_CW05G4HC4J"
       ],
       "payload": {
         "class_uid": 0,
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 1680,
+        "time": 1795251600680,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
@@ -217,21 +217,21 @@
     },
     {
       "index": 2,
-      "time": 2200,
-      "sensor_time": 2080,
+      "time": 1795251601200,
+      "sensor_time": 1795251601080,
       "clock_skew_ms": 120,
       "sensor_id": "app-sdk-1",
       "sensor_seq": 3,
       "kind": "event",
       "evidence_ids": [
-        "evd_8Z13AMWAMC"
+        "evd_2THAJMW1DQ"
       ],
       "payload": {
         "class_uid": 0,
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 2080,
+        "time": 1795251601080,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
@@ -320,21 +320,21 @@
     },
     {
       "index": 3,
-      "time": 2600,
-      "sensor_time": 2480,
+      "time": 1795251601600,
+      "sensor_time": 1795251601480,
       "clock_skew_ms": 120,
       "sensor_id": "app-sdk-1",
       "sensor_seq": 4,
       "kind": "event",
       "evidence_ids": [
-        "evd_HR95P8NR5G"
+        "evd_MSSE8D6YXH"
       ],
       "payload": {
         "class_uid": 0,
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 2480,
+        "time": 1795251601480,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
@@ -423,21 +423,21 @@
     },
     {
       "index": 4,
-      "time": 3000,
-      "sensor_time": 2880,
+      "time": 1795251602000,
+      "sensor_time": 1795251601880,
       "clock_skew_ms": 120,
       "sensor_id": "app-sdk-1",
       "sensor_seq": 5,
       "kind": "event",
       "evidence_ids": [
-        "evd_P7NVFT8F6Z"
+        "evd_J2VKZHPWX8"
       ],
       "payload": {
         "class_uid": 0,
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 2880,
+        "time": 1795251601880,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
@@ -526,21 +526,21 @@
     },
     {
       "index": 5,
-      "time": 3400,
-      "sensor_time": 3280,
+      "time": 1795251602400,
+      "sensor_time": 1795251602280,
       "clock_skew_ms": 120,
       "sensor_id": "app-sdk-1",
       "sensor_seq": 6,
       "kind": "event",
       "evidence_ids": [
-        "evd_ST1TNETMCX"
+        "evd_4G96NRE0WX"
       ],
       "payload": {
         "class_uid": 0,
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 3280,
+        "time": 1795251602280,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
@@ -629,21 +629,21 @@
     },
     {
       "index": 6,
-      "time": 4300,
-      "sensor_time": 4180,
+      "time": 1795251603300,
+      "sensor_time": 1795251603180,
       "clock_skew_ms": 120,
       "sensor_id": "app-sdk-1",
       "sensor_seq": 7,
       "kind": "event",
       "evidence_ids": [
-        "evd_3G6H2ZJPMP"
+        "evd_C73TKF5Y1D"
       ],
       "payload": {
         "class_uid": 0,
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 4180,
+        "time": 1795251603180,
         "severity_id": 1,
         "status_id": 1,
         "status": "Success",
@@ -732,21 +732,21 @@
     },
     {
       "index": 7,
-      "time": 5300,
-      "sensor_time": 5050,
+      "time": 1795251604300,
+      "sensor_time": 1795251604050,
       "clock_skew_ms": 250,
       "sensor_id": "db-1",
       "sensor_seq": 8,
       "kind": "event",
       "evidence_ids": [
-        "evd_C2N08Z9DQ4"
+        "evd_NVHZYZQCPP"
       ],
       "payload": {
         "class_uid": 0,
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 5050,
+        "time": 1795251604050,
         "severity_id": 1,
         "status_id": 1,
         "status": "",
@@ -837,14 +837,14 @@
     },
     {
       "index": 8,
-      "time": 5300,
-      "sensor_time": 5050,
+      "time": 1795251604300,
+      "sensor_time": 1795251604050,
       "clock_skew_ms": 250,
       "sensor_id": "db-1",
       "sensor_seq": 8,
       "kind": "risk",
       "evidence_ids": [
-        "evd_C2N08Z9DQ4"
+        "evd_NVHZYZQCPP"
       ],
       "payload": {
         "entity": {
@@ -856,13 +856,13 @@
         "fast_score": 0.15000000000000002,
         "slow_score": 0.15000000000000002,
         "contributing_findings": [
-          "fnd_0526FB6Y59"
+          "fnd_YJPWW913NQ"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
         "deception_hit": false,
         "critical_positive_security": false,
-        "time": 5300,
+        "time": 1795251604300,
         "target_only": false
       },
       "counterfactual": false,
@@ -871,14 +871,14 @@
     },
     {
       "index": 9,
-      "time": 5300,
-      "sensor_time": 5050,
+      "time": 1795251604300,
+      "sensor_time": 1795251604050,
       "clock_skew_ms": 250,
       "sensor_id": "db-1",
       "sensor_seq": 8,
       "kind": "risk",
       "evidence_ids": [
-        "evd_C2N08Z9DQ4"
+        "evd_NVHZYZQCPP"
       ],
       "payload": {
         "entity": {
@@ -890,13 +890,13 @@
         "fast_score": 0.15000000000000002,
         "slow_score": 0.15000000000000002,
         "contributing_findings": [
-          "fnd_0526FB6Y59"
+          "fnd_YJPWW913NQ"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
         "deception_hit": false,
         "critical_positive_security": false,
-        "time": 5300,
+        "time": 1795251604300,
         "target_only": false
       },
       "counterfactual": false,
@@ -905,18 +905,18 @@
     },
     {
       "index": 10,
-      "time": 5300,
-      "sensor_time": 5300,
+      "time": 1795251604300,
+      "sensor_time": 1795251604300,
       "clock_skew_ms": 0,
       "sensor_id": "db-1",
       "sensor_seq": 8,
       "kind": "finding",
       "evidence_ids": [
-        "evd_T1HTWYR8C1",
-        "evd_C2N08Z9DQ4"
+        "evd_XF2WCJMSXK",
+        "evd_NVHZYZQCPP"
       ],
       "payload": {
-        "finding_id": "fnd_0526FB6Y59",
+        "finding_id": "fnd_YJPWW913NQ",
         "rule": "undeclared_edge",
         "rule_family": "drift.edge",
         "technique": "T1078",
@@ -924,7 +924,7 @@
         "confidence": 0.3,
         "severity": 2,
         "evidence_ids": [
-          "evd_C2N08Z9DQ4"
+          "evd_NVHZYZQCPP"
         ],
         "entities": [
           {
@@ -939,12 +939,12 @@
           }
         ],
         "observation_point": "database",
-        "time": 5300,
+        "time": 1795251604300,
         "critical_positive_security": false,
         "deception_hit": false,
         "attack_stage": "privilege_escalation",
         "explanation": "trust edge edg_K8RE2YPHBZ is used but never declared",
-        "source_event": "evd_C2N08Z9DQ4"
+        "source_event": "evd_NVHZYZQCPP"
       },
       "counterfactual": false,
       "hops_us": {},
@@ -952,19 +952,19 @@
     },
     {
       "index": 11,
-      "time": 5300,
-      "sensor_time": 5300,
+      "time": 1795251604300,
+      "sensor_time": 1795251604300,
       "clock_skew_ms": 0,
       "sensor_id": "db-1",
       "sensor_seq": 8,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_NJQD7KKB9K",
-        "evd_C2N08Z9DQ4",
-        "evd_T1HTWYR8C1"
+        "evd_YJAYR5EHJG",
+        "evd_NVHZYZQCPP",
+        "evd_XF2WCJMSXK"
       ],
       "payload": {
-        "verdict_id": "vrd_T5XJBHPWR1",
+        "verdict_id": "vrd_S8SJGGYSXE",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -982,10 +982,10 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_C2N08Z9DQ4",
-          "evd_T1HTWYR8C1"
+          "evd_NVHZYZQCPP",
+          "evd_XF2WCJMSXK"
         ],
-        "time": 5300,
+        "time": 1795251604300,
         "ladder_level": 0
       },
       "counterfactual": false,
@@ -994,19 +994,19 @@
     },
     {
       "index": 12,
-      "time": 5300,
-      "sensor_time": 5300,
+      "time": 1795251604300,
+      "sensor_time": 1795251604300,
       "clock_skew_ms": 0,
       "sensor_id": "db-1",
       "sensor_seq": 8,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_4P21M5SEGS",
-        "evd_C2N08Z9DQ4",
-        "evd_T1HTWYR8C1"
+        "evd_HH29M13K5G",
+        "evd_NVHZYZQCPP",
+        "evd_XF2WCJMSXK"
       ],
       "payload": {
-        "verdict_id": "vrd_7R3RJ7EYG8",
+        "verdict_id": "vrd_4PKY3JV5HN",
         "decision": "record",
         "entity": {
           "type": "service",
@@ -1024,10 +1024,10 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_C2N08Z9DQ4",
-          "evd_T1HTWYR8C1"
+          "evd_NVHZYZQCPP",
+          "evd_XF2WCJMSXK"
         ],
-        "time": 5300,
+        "time": 1795251604300,
         "ladder_level": 0
       },
       "counterfactual": false,
@@ -1036,21 +1036,21 @@
     },
     {
       "index": 13,
-      "time": 6300,
-      "sensor_time": 6050,
+      "time": 1795251605300,
+      "sensor_time": 1795251605050,
       "clock_skew_ms": 250,
       "sensor_id": "db-1",
       "sensor_seq": 9,
       "kind": "event",
       "evidence_ids": [
-        "evd_FGKEJ8VY6A"
+        "evd_61WRV8MV1V"
       ],
       "payload": {
         "class_uid": 0,
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 6050,
+        "time": 1795251605050,
         "severity_id": 1,
         "status_id": 1,
         "status": "",
@@ -1141,14 +1141,14 @@
     },
     {
       "index": 14,
-      "time": 6300,
-      "sensor_time": 6050,
+      "time": 1795251605300,
+      "sensor_time": 1795251605050,
       "clock_skew_ms": 250,
       "sensor_id": "db-1",
       "sensor_seq": 9,
       "kind": "risk",
       "evidence_ids": [
-        "evd_FGKEJ8VY6A"
+        "evd_61WRV8MV1V"
       ],
       "payload": {
         "entity": {
@@ -1160,13 +1160,13 @@
         "fast_score": 0.14994224885512342,
         "slow_score": 0.14999982808859547,
         "contributing_findings": [
-          "fnd_0526FB6Y59"
+          "fnd_YJPWW913NQ"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
         "deception_hit": false,
         "critical_positive_security": false,
-        "time": 6300,
+        "time": 1795251605300,
         "target_only": false
       },
       "counterfactual": false,
@@ -1175,14 +1175,14 @@
     },
     {
       "index": 15,
-      "time": 6300,
-      "sensor_time": 6050,
+      "time": 1795251605300,
+      "sensor_time": 1795251605050,
       "clock_skew_ms": 250,
       "sensor_id": "db-1",
       "sensor_seq": 9,
       "kind": "risk",
       "evidence_ids": [
-        "evd_FGKEJ8VY6A"
+        "evd_61WRV8MV1V"
       ],
       "payload": {
         "entity": {
@@ -1194,13 +1194,13 @@
         "fast_score": 0.14994224885512342,
         "slow_score": 0.14999982808859547,
         "contributing_findings": [
-          "fnd_0526FB6Y59"
+          "fnd_YJPWW913NQ"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
         "deception_hit": false,
         "critical_positive_security": false,
-        "time": 6300,
+        "time": 1795251605300,
         "target_only": false
       },
       "counterfactual": false,
@@ -1209,18 +1209,18 @@
     },
     {
       "index": 16,
-      "time": 6300,
-      "sensor_time": 6300,
+      "time": 1795251605300,
+      "sensor_time": 1795251605300,
       "clock_skew_ms": 0,
       "sensor_id": "db-1",
       "sensor_seq": 9,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_ARV6C85XAK",
-        "evd_FGKEJ8VY6A"
+        "evd_JFGR8DPXQG",
+        "evd_61WRV8MV1V"
       ],
       "payload": {
-        "verdict_id": "vrd_07854MBXBV",
+        "verdict_id": "vrd_CBQV6001QQ",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -1236,9 +1236,9 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_FGKEJ8VY6A"
+          "evd_61WRV8MV1V"
         ],
-        "time": 6300,
+        "time": 1795251605300,
         "ladder_level": 0
       },
       "counterfactual": false,
@@ -1247,18 +1247,18 @@
     },
     {
       "index": 17,
-      "time": 6300,
-      "sensor_time": 6300,
+      "time": 1795251605300,
+      "sensor_time": 1795251605300,
       "clock_skew_ms": 0,
       "sensor_id": "db-1",
       "sensor_seq": 9,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_QV9EQ3YZS6",
-        "evd_FGKEJ8VY6A"
+        "evd_TKEFSD68XE",
+        "evd_61WRV8MV1V"
       ],
       "payload": {
-        "verdict_id": "vrd_BNVC46ND5K",
+        "verdict_id": "vrd_H41Z6XM7K6",
         "decision": "record",
         "entity": {
           "type": "service",
@@ -1274,9 +1274,9 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_FGKEJ8VY6A"
+          "evd_61WRV8MV1V"
         ],
-        "time": 6300,
+        "time": 1795251605300,
         "ladder_level": 0
       },
       "counterfactual": false,
@@ -1285,21 +1285,21 @@
     },
     {
       "index": 18,
-      "time": 7300,
-      "sensor_time": 7050,
+      "time": 1795251606300,
+      "sensor_time": 1795251606050,
       "clock_skew_ms": 250,
       "sensor_id": "db-1",
       "sensor_seq": 10,
       "kind": "event",
       "evidence_ids": [
-        "evd_AE7JKVGW13"
+        "evd_98DRVXVQK1"
       ],
       "payload": {
         "class_uid": 0,
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 7050,
+        "time": 1795251606050,
         "severity_id": 1,
         "status_id": 1,
         "status": "",
@@ -1390,14 +1390,14 @@
     },
     {
       "index": 19,
-      "time": 7300,
-      "sensor_time": 7050,
+      "time": 1795251606300,
+      "sensor_time": 1795251606050,
       "clock_skew_ms": 250,
       "sensor_id": "db-1",
       "sensor_seq": 10,
       "kind": "risk",
       "evidence_ids": [
-        "evd_AE7JKVGW13"
+        "evd_98DRVXVQK1"
       ],
       "payload": {
         "entity": {
@@ -1409,13 +1409,13 @@
         "fast_score": 0.1498845199448784,
         "slow_score": 0.14999965617738775,
         "contributing_findings": [
-          "fnd_0526FB6Y59"
+          "fnd_YJPWW913NQ"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
         "deception_hit": false,
         "critical_positive_security": false,
-        "time": 7300,
+        "time": 1795251606300,
         "target_only": false
       },
       "counterfactual": false,
@@ -1424,14 +1424,14 @@
     },
     {
       "index": 20,
-      "time": 7300,
-      "sensor_time": 7050,
+      "time": 1795251606300,
+      "sensor_time": 1795251606050,
       "clock_skew_ms": 250,
       "sensor_id": "db-1",
       "sensor_seq": 10,
       "kind": "risk",
       "evidence_ids": [
-        "evd_AE7JKVGW13"
+        "evd_98DRVXVQK1"
       ],
       "payload": {
         "entity": {
@@ -1443,13 +1443,13 @@
         "fast_score": 0.1498845199448784,
         "slow_score": 0.14999965617738775,
         "contributing_findings": [
-          "fnd_0526FB6Y59"
+          "fnd_YJPWW913NQ"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
         "deception_hit": false,
         "critical_positive_security": false,
-        "time": 7300,
+        "time": 1795251606300,
         "target_only": false
       },
       "counterfactual": false,
@@ -1458,18 +1458,18 @@
     },
     {
       "index": 21,
-      "time": 7300,
-      "sensor_time": 7300,
+      "time": 1795251606300,
+      "sensor_time": 1795251606300,
       "clock_skew_ms": 0,
       "sensor_id": "db-1",
       "sensor_seq": 10,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_JEJFA9HNBT",
-        "evd_AE7JKVGW13"
+        "evd_8T2KREN4SZ",
+        "evd_98DRVXVQK1"
       ],
       "payload": {
-        "verdict_id": "vrd_2V7AJR67DF",
+        "verdict_id": "vrd_MQ9R3PEKRQ",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -1485,9 +1485,9 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_AE7JKVGW13"
+          "evd_98DRVXVQK1"
         ],
-        "time": 7300,
+        "time": 1795251606300,
         "ladder_level": 0
       },
       "counterfactual": false,
@@ -1496,18 +1496,18 @@
     },
     {
       "index": 22,
-      "time": 7300,
-      "sensor_time": 7300,
+      "time": 1795251606300,
+      "sensor_time": 1795251606300,
       "clock_skew_ms": 0,
       "sensor_id": "db-1",
       "sensor_seq": 10,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_530CAF95VJ",
-        "evd_AE7JKVGW13"
+        "evd_CP3Y743G36",
+        "evd_98DRVXVQK1"
       ],
       "payload": {
-        "verdict_id": "vrd_HC9S9JN630",
+        "verdict_id": "vrd_XKXS3KDP59",
         "decision": "record",
         "entity": {
           "type": "service",
@@ -1523,9 +1523,9 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_AE7JKVGW13"
+          "evd_98DRVXVQK1"
         ],
-        "time": 7300,
+        "time": 1795251606300,
         "ladder_level": 0
       },
       "counterfactual": false,
@@ -1534,21 +1534,21 @@
     },
     {
       "index": 23,
-      "time": 8300,
-      "sensor_time": 8050,
+      "time": 1795251607300,
+      "sensor_time": 1795251607050,
       "clock_skew_ms": 250,
       "sensor_id": "db-1",
       "sensor_seq": 11,
       "kind": "event",
       "evidence_ids": [
-        "evd_B1B0CMZXAJ"
+        "evd_EWSVSVE0MG"
       ],
       "payload": {
         "class_uid": 0,
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 8050,
+        "time": 1795251607050,
         "severity_id": 1,
         "status_id": 1,
         "status": "",
@@ -1639,14 +1639,14 @@
     },
     {
       "index": 24,
-      "time": 8300,
-      "sensor_time": 8050,
+      "time": 1795251607300,
+      "sensor_time": 1795251607050,
       "clock_skew_ms": 250,
       "sensor_id": "db-1",
       "sensor_seq": 11,
       "kind": "risk",
       "evidence_ids": [
-        "evd_B1B0CMZXAJ"
+        "evd_EWSVSVE0MG"
       ],
       "payload": {
         "entity": {
@@ -1658,13 +1658,13 @@
         "fast_score": 0.14982681326070457,
         "slow_score": 0.14999948426637721,
         "contributing_findings": [
-          "fnd_0526FB6Y59"
+          "fnd_YJPWW913NQ"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
         "deception_hit": false,
         "critical_positive_security": false,
-        "time": 8300,
+        "time": 1795251607300,
         "target_only": false
       },
       "counterfactual": false,
@@ -1673,14 +1673,14 @@
     },
     {
       "index": 25,
-      "time": 8300,
-      "sensor_time": 8050,
+      "time": 1795251607300,
+      "sensor_time": 1795251607050,
       "clock_skew_ms": 250,
       "sensor_id": "db-1",
       "sensor_seq": 11,
       "kind": "risk",
       "evidence_ids": [
-        "evd_B1B0CMZXAJ"
+        "evd_EWSVSVE0MG"
       ],
       "payload": {
         "entity": {
@@ -1692,13 +1692,13 @@
         "fast_score": 0.14982681326070457,
         "slow_score": 0.14999948426637721,
         "contributing_findings": [
-          "fnd_0526FB6Y59"
+          "fnd_YJPWW913NQ"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
         "deception_hit": false,
         "critical_positive_security": false,
-        "time": 8300,
+        "time": 1795251607300,
         "target_only": false
       },
       "counterfactual": false,
@@ -1707,18 +1707,18 @@
     },
     {
       "index": 26,
-      "time": 8300,
-      "sensor_time": 8300,
+      "time": 1795251607300,
+      "sensor_time": 1795251607300,
       "clock_skew_ms": 0,
       "sensor_id": "db-1",
       "sensor_seq": 11,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_GWRZNWE86N",
-        "evd_B1B0CMZXAJ"
+        "evd_73N15C6SVN",
+        "evd_EWSVSVE0MG"
       ],
       "payload": {
-        "verdict_id": "vrd_GJD901C0K0",
+        "verdict_id": "vrd_CT752N078S",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -1734,9 +1734,9 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_B1B0CMZXAJ"
+          "evd_EWSVSVE0MG"
         ],
-        "time": 8300,
+        "time": 1795251607300,
         "ladder_level": 0
       },
       "counterfactual": false,
@@ -1745,18 +1745,18 @@
     },
     {
       "index": 27,
-      "time": 8300,
-      "sensor_time": 8300,
+      "time": 1795251607300,
+      "sensor_time": 1795251607300,
       "clock_skew_ms": 0,
       "sensor_id": "db-1",
       "sensor_seq": 11,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_PSBSEG4AR1",
-        "evd_B1B0CMZXAJ"
+        "evd_ETA3HQV8HQ",
+        "evd_EWSVSVE0MG"
       ],
       "payload": {
-        "verdict_id": "vrd_SDNM6J4FZY",
+        "verdict_id": "vrd_V4V4XSP6GE",
         "decision": "record",
         "entity": {
           "type": "service",
@@ -1772,9 +1772,9 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_B1B0CMZXAJ"
+          "evd_EWSVSVE0MG"
         ],
-        "time": 8300,
+        "time": 1795251607300,
         "ladder_level": 0
       },
       "counterfactual": false,
@@ -1783,21 +1783,21 @@
     },
     {
       "index": 28,
-      "time": 9300,
-      "sensor_time": 9050,
+      "time": 1795251608300,
+      "sensor_time": 1795251608050,
       "clock_skew_ms": 250,
       "sensor_id": "db-1",
       "sensor_seq": 12,
       "kind": "event",
       "evidence_ids": [
-        "evd_SPFXTPNJT9"
+        "evd_1Y6DZZ9E1K"
       ],
       "payload": {
         "class_uid": 0,
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 9050,
+        "time": 1795251608050,
         "severity_id": 1,
         "status_id": 1,
         "status": "",
@@ -1888,14 +1888,14 @@
     },
     {
       "index": 29,
-      "time": 9300,
-      "sensor_time": 9050,
+      "time": 1795251608300,
+      "sensor_time": 1795251608050,
       "clock_skew_ms": 250,
       "sensor_id": "db-1",
       "sensor_seq": 12,
       "kind": "risk",
       "evidence_ids": [
-        "evd_SPFXTPNJT9"
+        "evd_1Y6DZZ9E1K"
       ],
       "payload": {
         "entity": {
@@ -1907,15 +1907,15 @@
         "fast_score": 1.0,
         "slow_score": 1.0,
         "contributing_findings": [
-          "fnd_0526FB6Y59",
-          "fnd_JFHPHHYP25",
-          "fnd_ZKY10XDE3G"
+          "fnd_2CNX2WQ5WK",
+          "fnd_BFR9PW3ANF",
+          "fnd_YJPWW913NQ"
         ],
         "independent_sources": 2,
         "has_high_confidence_source": true,
         "deception_hit": false,
         "critical_positive_security": true,
-        "time": 9300,
+        "time": 1795251608300,
         "target_only": false
       },
       "counterfactual": false,
@@ -1924,14 +1924,14 @@
     },
     {
       "index": 30,
-      "time": 9300,
-      "sensor_time": 9050,
+      "time": 1795251608300,
+      "sensor_time": 1795251608050,
       "clock_skew_ms": 250,
       "sensor_id": "db-1",
       "sensor_seq": 12,
       "kind": "risk",
       "evidence_ids": [
-        "evd_SPFXTPNJT9"
+        "evd_1Y6DZZ9E1K"
       ],
       "payload": {
         "entity": {
@@ -1943,15 +1943,15 @@
         "fast_score": 1.0,
         "slow_score": 1.0,
         "contributing_findings": [
-          "fnd_0526FB6Y59",
-          "fnd_JFHPHHYP25",
-          "fnd_ZKY10XDE3G"
+          "fnd_2CNX2WQ5WK",
+          "fnd_BFR9PW3ANF",
+          "fnd_YJPWW913NQ"
         ],
         "independent_sources": 2,
         "has_high_confidence_source": true,
         "deception_hit": false,
         "critical_positive_security": true,
-        "time": 9300,
+        "time": 1795251608300,
         "target_only": false
       },
       "counterfactual": false,
@@ -1960,18 +1960,18 @@
     },
     {
       "index": 31,
-      "time": 9300,
-      "sensor_time": 9300,
+      "time": 1795251608300,
+      "sensor_time": 1795251608300,
       "clock_skew_ms": 0,
       "sensor_id": "db-1",
       "sensor_seq": 12,
       "kind": "finding",
       "evidence_ids": [
-        "evd_1YG06XH7N1",
-        "evd_SPFXTPNJT9"
+        "evd_SR11KC4KAN",
+        "evd_1Y6DZZ9E1K"
       ],
       "payload": {
-        "finding_id": "fnd_JFHPHHYP25",
+        "finding_id": "fnd_2CNX2WQ5WK",
         "rule": "bulk_read_anomaly",
         "rule_family": "exfil.bulk_read",
         "technique": "T1530",
@@ -1979,7 +1979,7 @@
         "confidence": 0.7,
         "severity": 4,
         "evidence_ids": [
-          "evd_SPFXTPNJT9"
+          "evd_1Y6DZZ9E1K"
         ],
         "entities": [
           {
@@ -1994,12 +1994,12 @@
           }
         ],
         "observation_point": "database",
-        "time": 9300,
+        "time": 1795251608300,
         "critical_positive_security": false,
         "deception_hit": false,
         "attack_stage": "data_theft",
         "explanation": "bulk read far above the usage profile of edg_K8RE2YPHBZ",
-        "source_event": "evd_SPFXTPNJT9"
+        "source_event": "evd_1Y6DZZ9E1K"
       },
       "counterfactual": false,
       "hops_us": {},
@@ -2007,18 +2007,18 @@
     },
     {
       "index": 32,
-      "time": 9300,
-      "sensor_time": 9300,
+      "time": 1795251608300,
+      "sensor_time": 1795251608300,
       "clock_skew_ms": 0,
       "sensor_id": "db-1",
       "sensor_seq": 12,
       "kind": "finding",
       "evidence_ids": [
-        "evd_NZY6GYQ8HD",
-        "evd_SPFXTPNJT9"
+        "evd_WFYWYWYFGC",
+        "evd_1Y6DZZ9E1K"
       ],
       "payload": {
-        "finding_id": "fnd_ZKY10XDE3G",
+        "finding_id": "fnd_BFR9PW3ANF",
         "rule": "invariant_breach",
         "rule_family": "consequence.per_identity_records",
         "technique": "T1657",
@@ -2026,7 +2026,7 @@
         "confidence": 1.0,
         "severity": 5,
         "evidence_ids": [
-          "evd_SPFXTPNJT9"
+          "evd_1Y6DZZ9E1K"
         ],
         "entities": [
           {
@@ -2041,12 +2041,12 @@
           }
         ],
         "observation_point": "database",
-        "time": 9300,
+        "time": 1795251608300,
         "critical_positive_security": true,
         "deception_hit": false,
         "attack_stage": "impact",
         "explanation": "consequence invariant breached (per_identity_records: 60400 of 10000)",
-        "source_event": "evd_SPFXTPNJT9"
+        "source_event": "evd_1Y6DZZ9E1K"
       },
       "counterfactual": false,
       "hops_us": {},
@@ -2054,18 +2054,18 @@
     },
     {
       "index": 33,
-      "time": 9300,
-      "sensor_time": 9300,
+      "time": 1795251608300,
+      "sensor_time": 1795251608300,
       "clock_skew_ms": 0,
       "sensor_id": "db-1",
       "sensor_seq": 12,
       "kind": "action_request",
       "evidence_ids": [
-        "evd_MEVWXBWSNP"
+        "evd_595KYJSS58"
       ],
       "payload": {
         "request": {
-          "action_request_id": "act_W71CQBQ0J4",
+          "action_request_id": "act_E0K5W6AK90",
           "target": {
             "type": "ip",
             "id": "198.51.100.7",
@@ -2073,22 +2073,22 @@
           },
           "action": "ip.ban",
           "ladder_level": 4,
-          "expiry": 3609300,
+          "expiry": 1795255208300,
           "approval": {
             "approved_by": "policy:auto",
             "approvers": [],
-            "approved_at": 9300
+            "approved_at": 1795251608300
           },
           "reversal_method": "ip.unban",
           "evidence_ids": [
-            "evd_SPFXTPNJT9",
-            "evd_1YG06XH7N1",
-            "evd_NZY6GYQ8HD"
+            "evd_1Y6DZZ9E1K",
+            "evd_SR11KC4KAN",
+            "evd_WFYWYWYFGC"
           ],
-          "verdict_id": "vrd_NCG78EY939",
+          "verdict_id": "vrd_83Q5H0MDES",
           "confidence_class": "two_source_high",
           "evidence_captured_first": false,
-          "time": 9300,
+          "time": 1795251608300,
           "responder": "",
           "mode": "enforce"
         },
@@ -2101,20 +2101,20 @@
     },
     {
       "index": 34,
-      "time": 9300,
-      "sensor_time": 9300,
+      "time": 1795251608300,
+      "sensor_time": 1795251608300,
       "clock_skew_ms": 0,
       "sensor_id": "db-1",
       "sensor_seq": 12,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_4ECHNE4XQQ",
-        "evd_SPFXTPNJT9",
-        "evd_1YG06XH7N1",
-        "evd_NZY6GYQ8HD"
+        "evd_2J38FP5VQT",
+        "evd_1Y6DZZ9E1K",
+        "evd_SR11KC4KAN",
+        "evd_WFYWYWYFGC"
       ],
       "payload": {
-        "verdict_id": "vrd_NCG78EY939",
+        "verdict_id": "vrd_83Q5H0MDES",
         "decision": "contain",
         "entity": {
           "type": "ip",
@@ -2131,14 +2131,14 @@
           "database"
         ],
         "policy_version": "default-1",
-        "expires_at": 3609300,
+        "expires_at": 1795255208300,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_SPFXTPNJT9",
-          "evd_1YG06XH7N1",
-          "evd_NZY6GYQ8HD"
+          "evd_1Y6DZZ9E1K",
+          "evd_SR11KC4KAN",
+          "evd_WFYWYWYFGC"
         ],
-        "time": 9300,
+        "time": 1795251608300,
         "ladder_level": 4
       },
       "counterfactual": false,
@@ -2147,18 +2147,18 @@
     },
     {
       "index": 35,
-      "time": 9300,
-      "sensor_time": 9300,
+      "time": 1795251608300,
+      "sensor_time": 1795251608300,
       "clock_skew_ms": 0,
       "sensor_id": "db-1",
       "sensor_seq": 12,
       "kind": "action_request",
       "evidence_ids": [
-        "evd_5AEV0TFTRV"
+        "evd_Y7ZDZW0VT7"
       ],
       "payload": {
         "request": {
-          "action_request_id": "act_Z4WYE5V0RG",
+          "action_request_id": "act_R4FG4H4176",
           "target": {
             "type": "service",
             "id": "kh_9431ec20e893f6f4590d6fc2",
@@ -2166,22 +2166,22 @@
           },
           "action": "trust_edge.narrow",
           "ladder_level": 4,
-          "expiry": 3609300,
+          "expiry": 1795255208300,
           "approval": {
             "approved_by": "policy:auto",
             "approvers": [],
-            "approved_at": 9300
+            "approved_at": 1795251608300
           },
           "reversal_method": "trust_edge.restore",
           "evidence_ids": [
-            "evd_SPFXTPNJT9",
-            "evd_1YG06XH7N1",
-            "evd_NZY6GYQ8HD"
+            "evd_1Y6DZZ9E1K",
+            "evd_SR11KC4KAN",
+            "evd_WFYWYWYFGC"
           ],
-          "verdict_id": "vrd_SQHT1HVZXH",
+          "verdict_id": "vrd_NG587R59X6",
           "confidence_class": "two_source_high",
           "evidence_captured_first": false,
-          "time": 9300,
+          "time": 1795251608300,
           "responder": "",
           "mode": "enforce"
         },
@@ -2194,20 +2194,20 @@
     },
     {
       "index": 36,
-      "time": 9300,
-      "sensor_time": 9300,
+      "time": 1795251608300,
+      "sensor_time": 1795251608300,
       "clock_skew_ms": 0,
       "sensor_id": "db-1",
       "sensor_seq": 12,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_A4YVCH3H12",
-        "evd_SPFXTPNJT9",
-        "evd_1YG06XH7N1",
-        "evd_NZY6GYQ8HD"
+        "evd_Q72BARAW43",
+        "evd_1Y6DZZ9E1K",
+        "evd_SR11KC4KAN",
+        "evd_WFYWYWYFGC"
       ],
       "payload": {
-        "verdict_id": "vrd_SQHT1HVZXH",
+        "verdict_id": "vrd_NG587R59X6",
         "decision": "contain",
         "entity": {
           "type": "service",
@@ -2224,14 +2224,14 @@
           "database"
         ],
         "policy_version": "default-1",
-        "expires_at": 3609300,
+        "expires_at": 1795255208300,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_SPFXTPNJT9",
-          "evd_1YG06XH7N1",
-          "evd_NZY6GYQ8HD"
+          "evd_1Y6DZZ9E1K",
+          "evd_SR11KC4KAN",
+          "evd_WFYWYWYFGC"
         ],
-        "time": 9300,
+        "time": 1795251608300,
         "ladder_level": 4
       },
       "counterfactual": false,
@@ -2254,8 +2254,8 @@
   "evidence": [
     {
       "seq": 1,
-      "evidence_id": "evd_NAD5Z4SDA7",
-      "time": 1400,
+      "evidence_id": "evd_CTT0ETZMT1",
+      "time": 1795251600400,
       "kind": "event",
       "incident_hint": "",
       "payload": {
@@ -2263,7 +2263,7 @@
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 1280,
+        "time": 1795251600280,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
@@ -2341,17 +2341,17 @@
         }
       },
       "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
-      "hash": "ef573faee92deb1706f18ccd7ade87a1b78dce0f25307fd82b2dbbc77ee0f871",
+      "hash": "d5bf628caca6e16485309aacb1b2da3df396150457beeed3e2c874f312b59928",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "T18t0QFcCrAdy8N5nXbxIOfj57SGMmqrJNURn61utEgyTohohzuE0MDsDGShB8WHGL18mCRkBMWXVUiNHVluDw=="
+        "sig": "kr9L9WuqbFZPM0aIy5dnNoXHh3e/ahirEuvWf+SVueCgquh5TFxu30msJmXQIIO0l9Va2inDSOjqvsIYsmtsCQ=="
       }
     },
     {
       "seq": 2,
-      "evidence_id": "evd_X18FA028D8",
-      "time": 1800,
+      "evidence_id": "evd_CW05G4HC4J",
+      "time": 1795251600800,
       "kind": "event",
       "incident_hint": "",
       "payload": {
@@ -2359,7 +2359,7 @@
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 1680,
+        "time": 1795251600680,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
@@ -2436,18 +2436,18 @@
           "egress_destination": ""
         }
       },
-      "prev_hash": "ef573faee92deb1706f18ccd7ade87a1b78dce0f25307fd82b2dbbc77ee0f871",
-      "hash": "a199cb0b4dd2706a302d4b9dda53c6627e7ac14286e64c4d5a66b0c4b757562e",
+      "prev_hash": "d5bf628caca6e16485309aacb1b2da3df396150457beeed3e2c874f312b59928",
+      "hash": "dd18e43bfecf73bacb26d14d911e2a916fc0a8be859e20c51c9ee049e8a5c188",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "aWApRkkEXdyMCQQ1G21UDVHPDpfoES3Zp+pneRZLFDb7zeOjtQQaD8kht2xTryozVy7tnc334H93vqwMQ50wBQ=="
+        "sig": "G/jtlVXwA16IZsNKzicTvggirJgUp2Ulh7X1HqIvD2rMM1TI3xi5u0Donwmgcun8P4r4Ga4vhaJGLcowwKgWDw=="
       }
     },
     {
       "seq": 3,
-      "evidence_id": "evd_8Z13AMWAMC",
-      "time": 2200,
+      "evidence_id": "evd_2THAJMW1DQ",
+      "time": 1795251601200,
       "kind": "event",
       "incident_hint": "",
       "payload": {
@@ -2455,7 +2455,7 @@
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 2080,
+        "time": 1795251601080,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
@@ -2532,18 +2532,18 @@
           "egress_destination": ""
         }
       },
-      "prev_hash": "a199cb0b4dd2706a302d4b9dda53c6627e7ac14286e64c4d5a66b0c4b757562e",
-      "hash": "4947ec462ddd3979ba683d34c08c56eda9a21dbf815367e648f19c314611f3bb",
+      "prev_hash": "dd18e43bfecf73bacb26d14d911e2a916fc0a8be859e20c51c9ee049e8a5c188",
+      "hash": "8dab9cb1f8802dcf3ca3a20d3d0d76965762db75efa0e9fce2c1e8ecea459cba",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "6zMBIYSJF1R8X/e+Eo0uw6sEvDpYOkZ2ZGW77yK5TIMxZZbshlvJkgD47lw1V0VKC+P3rnEtnwIUSnOfSDeIDA=="
+        "sig": "mnZjhJtPjMk/UpJs1SrJlKgeC78w2NRL9dGKB8n5pvXt8oitJlEr7kYT14s7fFn1gtwMmRKl6hV3LCfEPbJpBQ=="
       }
     },
     {
       "seq": 4,
-      "evidence_id": "evd_HR95P8NR5G",
-      "time": 2600,
+      "evidence_id": "evd_MSSE8D6YXH",
+      "time": 1795251601600,
       "kind": "event",
       "incident_hint": "",
       "payload": {
@@ -2551,7 +2551,7 @@
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 2480,
+        "time": 1795251601480,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
@@ -2628,18 +2628,18 @@
           "egress_destination": ""
         }
       },
-      "prev_hash": "4947ec462ddd3979ba683d34c08c56eda9a21dbf815367e648f19c314611f3bb",
-      "hash": "397a6b3f93cd0e6e7c6e4b4c478b16c3284612696b3bee7c464850608d458795",
+      "prev_hash": "8dab9cb1f8802dcf3ca3a20d3d0d76965762db75efa0e9fce2c1e8ecea459cba",
+      "hash": "3cd707b7ef5093dd6aab101d64352081d937c83e17c7aa578ff72e68b2e53857",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "x8JG9obMOdCpvx+IsHh8lzi9iU8OJerfBGhxumb/7rgKj6ddyQdRWO+Hxp0QpNMyCirC75lxsVyIyhWB8GHbAg=="
+        "sig": "1mFGq+r5DcHFvmaEUAKcfdeZ5yZqVq4JT3gpaHl7+mkW69z8RremUn6NBsLnplLwn2aDc5WDGJTPmroWeZVsBg=="
       }
     },
     {
       "seq": 5,
-      "evidence_id": "evd_P7NVFT8F6Z",
-      "time": 3000,
+      "evidence_id": "evd_J2VKZHPWX8",
+      "time": 1795251602000,
       "kind": "event",
       "incident_hint": "",
       "payload": {
@@ -2647,7 +2647,7 @@
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 2880,
+        "time": 1795251601880,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
@@ -2724,18 +2724,18 @@
           "egress_destination": ""
         }
       },
-      "prev_hash": "397a6b3f93cd0e6e7c6e4b4c478b16c3284612696b3bee7c464850608d458795",
-      "hash": "b1b022a70332a350dd34904677333a0713dc3dd5f2b62db5f2346c23090464b2",
+      "prev_hash": "3cd707b7ef5093dd6aab101d64352081d937c83e17c7aa578ff72e68b2e53857",
+      "hash": "fb43141a8ef6bc34dc424309b636a12e0d34e812d9f3f3382cba3754b8c8ddea",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "bbVNYvcqW6xtJP3YBGXSB4UMPIcXV0MNCASf1WXS+JT7foHEdn8poYA01xhaW/DImp/GwNYOn4mhVw7ENdilAQ=="
+        "sig": "Yqwr1BpMFyHlY9IvpN04CEsDbPy/+ywkdCyZ7G11HbvsXGNuD1g2ppNKfkdcgdyNv1Q31YPz2jY2R14BkCIDAg=="
       }
     },
     {
       "seq": 6,
-      "evidence_id": "evd_ST1TNETMCX",
-      "time": 3400,
+      "evidence_id": "evd_4G96NRE0WX",
+      "time": 1795251602400,
       "kind": "event",
       "incident_hint": "",
       "payload": {
@@ -2743,7 +2743,7 @@
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 3280,
+        "time": 1795251602280,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
@@ -2820,18 +2820,18 @@
           "egress_destination": ""
         }
       },
-      "prev_hash": "b1b022a70332a350dd34904677333a0713dc3dd5f2b62db5f2346c23090464b2",
-      "hash": "45df8a53e952fce60d076ae07154acb228d3a3df96eb35a01454cc73a41029eb",
+      "prev_hash": "fb43141a8ef6bc34dc424309b636a12e0d34e812d9f3f3382cba3754b8c8ddea",
+      "hash": "f7de29667b01cbbb4e384c628990e7ac61d2d8724eccfbe524d13038d158b9ce",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "IWnGWiLJLO85/hQ09UlM7xfIjXuA8ZLpqLpyAaXHCFI1ihTgH+f6qepKkSvhzvImfZ/7y02v5iEQ5H1ueu2GDQ=="
+        "sig": "mCO+j/SMPMupFuuu7gl3YK1mSZ10b50zmgJPdp2GOCvZu8OhTwf52m7+Qc83dpMc8N/caud5UTwwNfjmzF+/Cw=="
       }
     },
     {
       "seq": 7,
-      "evidence_id": "evd_3G6H2ZJPMP",
-      "time": 4300,
+      "evidence_id": "evd_C73TKF5Y1D",
+      "time": 1795251603300,
       "kind": "event",
       "incident_hint": "",
       "payload": {
@@ -2839,7 +2839,7 @@
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 4180,
+        "time": 1795251603180,
         "severity_id": 1,
         "status_id": 1,
         "status": "Success",
@@ -2916,18 +2916,18 @@
           "egress_destination": ""
         }
       },
-      "prev_hash": "45df8a53e952fce60d076ae07154acb228d3a3df96eb35a01454cc73a41029eb",
-      "hash": "1706eba70bc720e23e9020166f2a8123d57df6bfd7d885c64a1bf20b381cba27",
+      "prev_hash": "f7de29667b01cbbb4e384c628990e7ac61d2d8724eccfbe524d13038d158b9ce",
+      "hash": "466c23a473b94ba8fa6c09600fbc806d770079768b4c63695022512173223c43",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "WNSKatRpVjHmgoqNXwpVmeYte5H5wwo1k3WkroFcOBev0IE3SILrjeDqRo205iFo16K3pRpjipSJmIj86bphCg=="
+        "sig": "1guPhSIAo864AMrGpoSDUBzaE3TkjccM+V8JDhjFFbPp8zj96TJ9AziXhVsjp00fRPg4K1X5sNFI68Z1d09BDA=="
       }
     },
     {
       "seq": 8,
-      "evidence_id": "evd_C2N08Z9DQ4",
-      "time": 5300,
+      "evidence_id": "evd_NVHZYZQCPP",
+      "time": 1795251604300,
       "kind": "event",
       "incident_hint": "",
       "payload": {
@@ -2935,7 +2935,7 @@
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 5050,
+        "time": 1795251604050,
         "severity_id": 1,
         "status_id": 1,
         "status": "",
@@ -3014,22 +3014,22 @@
           "egress_destination": ""
         }
       },
-      "prev_hash": "1706eba70bc720e23e9020166f2a8123d57df6bfd7d885c64a1bf20b381cba27",
-      "hash": "674594375477d3c68fc602e14306e32fd7461caaad75aed85797545ad089795a",
+      "prev_hash": "466c23a473b94ba8fa6c09600fbc806d770079768b4c63695022512173223c43",
+      "hash": "f31c26c751478e1043be0c0f5b06d70592859d48546a661f020d49e3bb6ac7c3",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "uMzyMv1HULH7s8vsmiCaa4FCOUAbnUMKc7S1y1LfzujEFR/8WxmqHK9WEewt5xpy/XQnAFSVFu7y45bLRubkAQ=="
+        "sig": "KnTGUHpROPD+X3HmGS+AXmixxM0lp8lSmmARMJsjbXiSvOUOzquEph6DTeM5pwrADMGxZdk2+FqZ8UG+MsryDw=="
       }
     },
     {
       "seq": 9,
-      "evidence_id": "evd_T1HTWYR8C1",
-      "time": 5300,
+      "evidence_id": "evd_XF2WCJMSXK",
+      "time": 1795251604300,
       "kind": "finding",
       "incident_hint": "",
       "payload": {
-        "finding_id": "fnd_0526FB6Y59",
+        "finding_id": "fnd_YJPWW913NQ",
         "rule": "undeclared_edge",
         "rule_family": "drift.edge",
         "technique": "T1078",
@@ -3037,7 +3037,7 @@
         "confidence": 0.3,
         "severity": 2,
         "evidence_ids": [
-          "evd_C2N08Z9DQ4"
+          "evd_NVHZYZQCPP"
         ],
         "entities": [
           {
@@ -3052,29 +3052,29 @@
           }
         ],
         "observation_point": "database",
-        "time": 5300,
+        "time": 1795251604300,
         "critical_positive_security": false,
         "deception_hit": false,
         "attack_stage": "privilege_escalation",
         "explanation": "trust edge edg_K8RE2YPHBZ is used but never declared",
-        "source_event": "evd_C2N08Z9DQ4"
+        "source_event": "evd_NVHZYZQCPP"
       },
-      "prev_hash": "674594375477d3c68fc602e14306e32fd7461caaad75aed85797545ad089795a",
-      "hash": "dc059d18ee455c78cba0725f408ce7e8414ab77026a17f3e167821270b694f41",
+      "prev_hash": "f31c26c751478e1043be0c0f5b06d70592859d48546a661f020d49e3bb6ac7c3",
+      "hash": "8b695cc6fa78dcf6b91bc26038e3f0373232b5bae21bfa37508995e6009116ac",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "5odis/ImkX83OUZF4zAP+TcpBst7GNO1Fi3GLll19H/bzOTM1twbSacgp3UwGmceBgoD0K4xRJMAay959is3Bw=="
+        "sig": "m8tP6JGqbS0qYSd5kndLSBaxgyx5MhRWNTad0uLeeqrSeCZ+V/jjRxrJH9Y+8T+BFRZsuhr7AFxaq/srN/wxCQ=="
       }
     },
     {
       "seq": 10,
-      "evidence_id": "evd_NJQD7KKB9K",
-      "time": 5300,
+      "evidence_id": "evd_YJAYR5EHJG",
+      "time": 1795251604300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_T5XJBHPWR1",
+        "verdict_id": "vrd_S8SJGGYSXE",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -3092,28 +3092,28 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_C2N08Z9DQ4",
-          "evd_T1HTWYR8C1"
+          "evd_NVHZYZQCPP",
+          "evd_XF2WCJMSXK"
         ],
-        "time": 5300,
+        "time": 1795251604300,
         "ladder_level": 0
       },
-      "prev_hash": "dc059d18ee455c78cba0725f408ce7e8414ab77026a17f3e167821270b694f41",
-      "hash": "218d30255e833ad26315c80cb45f1b2d63850d03e699032492981d8c21b4bd78",
+      "prev_hash": "8b695cc6fa78dcf6b91bc26038e3f0373232b5bae21bfa37508995e6009116ac",
+      "hash": "0a75b402757cfaf35a3bf0b25a1501d0192e785e5c1f3df52c0b1a220e62b38f",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "6FqXQXnT5sV9UU7T4HlTUXGtLthSP2BPo+jiioEFQ3+iArcKzJru4HXtYY2K30ETY3VwBSuhH2gwPb0tj8+IDQ=="
+        "sig": "xUKyRckP0mL/njRi2ETPOM7mi7+4nzqFczFAsCxuOBStnDjGcxpD/Qf6rMQNXp1/YVUXVnMz62phJDsS2rv/Dg=="
       }
     },
     {
       "seq": 11,
-      "evidence_id": "evd_4P21M5SEGS",
-      "time": 5300,
+      "evidence_id": "evd_HH29M13K5G",
+      "time": 1795251604300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_7R3RJ7EYG8",
+        "verdict_id": "vrd_4PKY3JV5HN",
         "decision": "record",
         "entity": {
           "type": "service",
@@ -3131,24 +3131,24 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_C2N08Z9DQ4",
-          "evd_T1HTWYR8C1"
+          "evd_NVHZYZQCPP",
+          "evd_XF2WCJMSXK"
         ],
-        "time": 5300,
+        "time": 1795251604300,
         "ladder_level": 0
       },
-      "prev_hash": "218d30255e833ad26315c80cb45f1b2d63850d03e699032492981d8c21b4bd78",
-      "hash": "e834d05df1ba847f1ecefa026625c4c0973b8e337aad8aedde03fae3d3ac2bf1",
+      "prev_hash": "0a75b402757cfaf35a3bf0b25a1501d0192e785e5c1f3df52c0b1a220e62b38f",
+      "hash": "0f021e3550cc8fae8df35b6d5ac4f50b7bdd133cf4fa3b89758f35809d9b74e6",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "jO+9QcTv/LhO09E93OBoy6QkMahcJ6h3hFNU9IjDJn77LgmkbEcV4lvidWAUxZL3LSF8weXaIFwtyelKTNEZDg=="
+        "sig": "A0X2AA8JsTMRndzJZICeHpmsf1IOeG8+xtpTBcpK2vSb6/YvuRPWioFz+oT3RnxuzO3hP/E80dvfxsq94bAwAQ=="
       }
     },
     {
       "seq": 12,
-      "evidence_id": "evd_FGKEJ8VY6A",
-      "time": 6300,
+      "evidence_id": "evd_61WRV8MV1V",
+      "time": 1795251605300,
       "kind": "event",
       "incident_hint": "",
       "payload": {
@@ -3156,7 +3156,7 @@
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 6050,
+        "time": 1795251605050,
         "severity_id": 1,
         "status_id": 1,
         "status": "",
@@ -3235,22 +3235,22 @@
           "egress_destination": ""
         }
       },
-      "prev_hash": "e834d05df1ba847f1ecefa026625c4c0973b8e337aad8aedde03fae3d3ac2bf1",
-      "hash": "a2f994c1eb3697343c4670c54d5404f82655d8f6fa81e392bdd76d4bbf754b05",
+      "prev_hash": "0f021e3550cc8fae8df35b6d5ac4f50b7bdd133cf4fa3b89758f35809d9b74e6",
+      "hash": "b5f7448ec4667d9c3599355f478beea14e981c18380f9b07bfe0092c62a4fd69",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "VMBtHOiblI/KJHhJQByO1mswrgoBaw7fN0mxHqeg0FSpqKgzVpBySJ+XVFLuWytYR2KEKAB67jmD75cgf1o3CQ=="
+        "sig": "jTtgI+SLg9+8XRrL4GyAyMdGMMdW0cNBRbUSy2kgA60VY4kXOTn6pyozHRkLdTivsuSG19SH845u4z7TJhJxBA=="
       }
     },
     {
       "seq": 13,
-      "evidence_id": "evd_ARV6C85XAK",
-      "time": 6300,
+      "evidence_id": "evd_JFGR8DPXQG",
+      "time": 1795251605300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_07854MBXBV",
+        "verdict_id": "vrd_CBQV6001QQ",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -3266,27 +3266,27 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_FGKEJ8VY6A"
+          "evd_61WRV8MV1V"
         ],
-        "time": 6300,
+        "time": 1795251605300,
         "ladder_level": 0
       },
-      "prev_hash": "a2f994c1eb3697343c4670c54d5404f82655d8f6fa81e392bdd76d4bbf754b05",
-      "hash": "2dc8633528afcbdd294f0debf8837383bcdcdba577248eed416fa3a158092c6c",
+      "prev_hash": "b5f7448ec4667d9c3599355f478beea14e981c18380f9b07bfe0092c62a4fd69",
+      "hash": "69a683c7ac96327afc85aef85c47b823e13a94563294c96d4c22eef8dca28420",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "S9WytGswjrpXOeU0NpcTmINwYLzhjfwyKPEmA5MHcbr7hm/fzYMIyhxt79VEx/EthlxF1o27+LZH0pac3abjDg=="
+        "sig": "CfEQi4AiESVYNx90JVIdrc9H0kwmey+i5l0j+8YHIP3nfzBZoVIhOBHIXDhKb15zH19QnBQV9KO25II8LyxwAA=="
       }
     },
     {
       "seq": 14,
-      "evidence_id": "evd_QV9EQ3YZS6",
-      "time": 6300,
+      "evidence_id": "evd_TKEFSD68XE",
+      "time": 1795251605300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_BNVC46ND5K",
+        "verdict_id": "vrd_H41Z6XM7K6",
         "decision": "record",
         "entity": {
           "type": "service",
@@ -3302,23 +3302,23 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_FGKEJ8VY6A"
+          "evd_61WRV8MV1V"
         ],
-        "time": 6300,
+        "time": 1795251605300,
         "ladder_level": 0
       },
-      "prev_hash": "2dc8633528afcbdd294f0debf8837383bcdcdba577248eed416fa3a158092c6c",
-      "hash": "dd6beea507ffc0d5ed8cae545f96697dbca926f15a6c1920695a4306972ad3a9",
+      "prev_hash": "69a683c7ac96327afc85aef85c47b823e13a94563294c96d4c22eef8dca28420",
+      "hash": "f88b6f7adfac7294fee972d1e7d93a54aaa0c182f79aa5309af5d95d90ddfa1d",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "I4qDlVwfIvrrMc1rl+hxUaVLT3aGCTeIvjkWzvevpHX6wF3YDzL/tlLw4c7nh1ECV+BZpe1AHtS8kT16ZcoNDQ=="
+        "sig": "XVZjchSKhg04J/LgEqy1rZ4Ms5D3PrY0TcmULmI2MoFoSLdR65E1tGmQHIK3zS01piJV2rn65k0WBz/c2pPzBA=="
       }
     },
     {
       "seq": 15,
-      "evidence_id": "evd_AE7JKVGW13",
-      "time": 7300,
+      "evidence_id": "evd_98DRVXVQK1",
+      "time": 1795251606300,
       "kind": "event",
       "incident_hint": "",
       "payload": {
@@ -3326,7 +3326,7 @@
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 7050,
+        "time": 1795251606050,
         "severity_id": 1,
         "status_id": 1,
         "status": "",
@@ -3405,22 +3405,22 @@
           "egress_destination": ""
         }
       },
-      "prev_hash": "dd6beea507ffc0d5ed8cae545f96697dbca926f15a6c1920695a4306972ad3a9",
-      "hash": "0dca9f4e95557525cf27d77c151f76e7997cb3d58c4715e531e0b1a71d33f7fa",
+      "prev_hash": "f88b6f7adfac7294fee972d1e7d93a54aaa0c182f79aa5309af5d95d90ddfa1d",
+      "hash": "ba2e6f99bfe538f27115f8cd003ac81de3919d2040125d753e66575b35b64e4b",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "fJbcsZHikQQ/9zFLOiRtm/drqrA9NsTWI3iyEJCJUlVHEhiGecbeWplg7h9vLTX7Bpb9evGYy9vani3+ybN7DQ=="
+        "sig": "naJkHH2uT1yu/RPXSIZGRf3R8Ii/voC5Z91zet8m+S9O6WXXvJV08Hb/ZI0bMTXV9nhvzzwktLlAoAO80BNgAg=="
       }
     },
     {
       "seq": 16,
-      "evidence_id": "evd_JEJFA9HNBT",
-      "time": 7300,
+      "evidence_id": "evd_8T2KREN4SZ",
+      "time": 1795251606300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_2V7AJR67DF",
+        "verdict_id": "vrd_MQ9R3PEKRQ",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -3436,27 +3436,27 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_AE7JKVGW13"
+          "evd_98DRVXVQK1"
         ],
-        "time": 7300,
+        "time": 1795251606300,
         "ladder_level": 0
       },
-      "prev_hash": "0dca9f4e95557525cf27d77c151f76e7997cb3d58c4715e531e0b1a71d33f7fa",
-      "hash": "15aa47f63cd20762253f12999b10bca366459871ca10996015e2cfa660db8e72",
+      "prev_hash": "ba2e6f99bfe538f27115f8cd003ac81de3919d2040125d753e66575b35b64e4b",
+      "hash": "a424b830852c93305713d14a7da902a3bc09bc462b0b16377570122bc8ada50f",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "ZMivCSx9GQST770Xm3fV2DkHKBo5UvDrdt3oOCAk5h6I7mQGEFy6KDbi3e/hw5BRZfhGPIOXfhWsrFgLcwYaBA=="
+        "sig": "YCdOmPytWuTsAvVPJfMx+tR/j1JtTpde/rj2IKrqsPcIeJEGTtcgu1G6gmaCwpVgbB9ZXi7fNIpAWFDxB87QAw=="
       }
     },
     {
       "seq": 17,
-      "evidence_id": "evd_530CAF95VJ",
-      "time": 7300,
+      "evidence_id": "evd_CP3Y743G36",
+      "time": 1795251606300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_HC9S9JN630",
+        "verdict_id": "vrd_XKXS3KDP59",
         "decision": "record",
         "entity": {
           "type": "service",
@@ -3472,23 +3472,23 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_AE7JKVGW13"
+          "evd_98DRVXVQK1"
         ],
-        "time": 7300,
+        "time": 1795251606300,
         "ladder_level": 0
       },
-      "prev_hash": "15aa47f63cd20762253f12999b10bca366459871ca10996015e2cfa660db8e72",
-      "hash": "9ac7afdbb7570adf07d8124d6eb0ddfea6dc17b502a548e96786bd0dcd3fed0a",
+      "prev_hash": "a424b830852c93305713d14a7da902a3bc09bc462b0b16377570122bc8ada50f",
+      "hash": "bf3f3962ae95b4f39089381301dbd547f890aa9155d7b7af17f395a13fc251c8",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "MfW6Xll5EJAsJJYOnSOO6vQwFYXvuEZOvPAvTKWKeA6tgBMgG7GMIQjhnjMk8SvQfJPzPc4LJKAWPnqC8+NIBg=="
+        "sig": "+nVT5GYkcsvdMFFGV8Zuq8Wto9HU21V7pAAdjuDmqneGs8rrTAeaRogfixVleIePjt5/oeof610Ndo4S4A2ACQ=="
       }
     },
     {
       "seq": 18,
-      "evidence_id": "evd_B1B0CMZXAJ",
-      "time": 8300,
+      "evidence_id": "evd_EWSVSVE0MG",
+      "time": 1795251607300,
       "kind": "event",
       "incident_hint": "",
       "payload": {
@@ -3496,7 +3496,7 @@
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 8050,
+        "time": 1795251607050,
         "severity_id": 1,
         "status_id": 1,
         "status": "",
@@ -3575,22 +3575,22 @@
           "egress_destination": ""
         }
       },
-      "prev_hash": "9ac7afdbb7570adf07d8124d6eb0ddfea6dc17b502a548e96786bd0dcd3fed0a",
-      "hash": "0120e201736bf493673d60cfffb812ab7e0810d1a7c247ba7fd1fc30b69d979b",
+      "prev_hash": "bf3f3962ae95b4f39089381301dbd547f890aa9155d7b7af17f395a13fc251c8",
+      "hash": "3ac49595ca5c4ad32623a7f8b427b08b9d1dd5a79a5bda4a05b606ce1617553e",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "IELW4PyWBOctz+jldGipk7rIlz66iEF6mMgGCj7c0SNX7Sj7nusgrrg3FdnihBGbG8eAQIsHTWxI4H+1fiKeBw=="
+        "sig": "jUKuuiae+ePu9Gg4zFZc/kqud/+pJNUlixePPuj9f26ylokykUKEECheTJDncO5INGCQhDxyFH3ErWPojY5qAw=="
       }
     },
     {
       "seq": 19,
-      "evidence_id": "evd_GWRZNWE86N",
-      "time": 8300,
+      "evidence_id": "evd_73N15C6SVN",
+      "time": 1795251607300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_GJD901C0K0",
+        "verdict_id": "vrd_CT752N078S",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -3606,27 +3606,27 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_B1B0CMZXAJ"
+          "evd_EWSVSVE0MG"
         ],
-        "time": 8300,
+        "time": 1795251607300,
         "ladder_level": 0
       },
-      "prev_hash": "0120e201736bf493673d60cfffb812ab7e0810d1a7c247ba7fd1fc30b69d979b",
-      "hash": "eafe6fa754cc665bafa21477859b7e0e512fed5dcbd8ab1dd2f4f05babe0c5f0",
+      "prev_hash": "3ac49595ca5c4ad32623a7f8b427b08b9d1dd5a79a5bda4a05b606ce1617553e",
+      "hash": "68f5ba7ced38a3a5183d85ed7a2d5fde5a33abf1260cd3edc76a5b74f7492307",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "M1W1tLxMbXBMuVCEIJ6bj3jhP2AJOQTB7Gcz1C309JkdqRhjc9g2Ss9eo5OwCebpMzlmUw1U63YLb2n9dZX6DA=="
+        "sig": "GUNwVbpQz0nvq5Cx905gR2cRjkqj0PqclKZZgMWpiKCQsdGqLRku+K3u+8y4nE0iskkRPuNyu65fcOJM3K9uBA=="
       }
     },
     {
       "seq": 20,
-      "evidence_id": "evd_PSBSEG4AR1",
-      "time": 8300,
+      "evidence_id": "evd_ETA3HQV8HQ",
+      "time": 1795251607300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_SDNM6J4FZY",
+        "verdict_id": "vrd_V4V4XSP6GE",
         "decision": "record",
         "entity": {
           "type": "service",
@@ -3642,23 +3642,23 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_B1B0CMZXAJ"
+          "evd_EWSVSVE0MG"
         ],
-        "time": 8300,
+        "time": 1795251607300,
         "ladder_level": 0
       },
-      "prev_hash": "eafe6fa754cc665bafa21477859b7e0e512fed5dcbd8ab1dd2f4f05babe0c5f0",
-      "hash": "72d4c209dea3b4196efbe6bc5ebfbf1f3d250c0175e80bf85f7ec836414d32e4",
+      "prev_hash": "68f5ba7ced38a3a5183d85ed7a2d5fde5a33abf1260cd3edc76a5b74f7492307",
+      "hash": "c7e3214b647b5b0a333c64f9229814cb7f2594f2885e4185c99e2f9e0bee2e07",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "QT/cZLkOb8RGlWxoV/8a6PtVCZN/HOU6V6cAjL4C9gP7/OwDuReGZ+N75WUNjym9nGH1mm0PuBDu5iOJqq5zDw=="
+        "sig": "bwtS3Krv0cIVtSrmswHE8suei8RMGF/8fJezSU8Uff3bnqBrtFtCv+vQQtQI3U89NQJXoH275uiwLOwMsutDCQ=="
       }
     },
     {
       "seq": 21,
-      "evidence_id": "evd_SPFXTPNJT9",
-      "time": 9300,
+      "evidence_id": "evd_1Y6DZZ9E1K",
+      "time": 1795251608300,
       "kind": "event",
       "incident_hint": "",
       "payload": {
@@ -3666,7 +3666,7 @@
         "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
-        "time": 9050,
+        "time": 1795251608050,
         "severity_id": 1,
         "status_id": 1,
         "status": "",
@@ -3745,22 +3745,22 @@
           "egress_destination": ""
         }
       },
-      "prev_hash": "72d4c209dea3b4196efbe6bc5ebfbf1f3d250c0175e80bf85f7ec836414d32e4",
-      "hash": "19e921707063fc15cc59d66d097effe93444026cb469690a15f1da9d23404f47",
+      "prev_hash": "c7e3214b647b5b0a333c64f9229814cb7f2594f2885e4185c99e2f9e0bee2e07",
+      "hash": "948c5446dd08e930aa6493f46fdc42fb2180f2af1cf358136d44d13a3d47f08a",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "Zl+NErqmOvQlxByyNVizag2xKfMyyev7X01/emnDmFxM98zFCCCo8Vumwd2hh1Nz9re3PEfcAN4mTHe+avOlBg=="
+        "sig": "QjzVEphqr/gl+LVY28BOfA6dpTu2GXCswBHaJKzVQR2Qwx/unWch8FFiEoUgQYz1sRg0E1F2c39ePDGNTO3ZBg=="
       }
     },
     {
       "seq": 22,
-      "evidence_id": "evd_1YG06XH7N1",
-      "time": 9300,
+      "evidence_id": "evd_SR11KC4KAN",
+      "time": 1795251608300,
       "kind": "finding",
       "incident_hint": "",
       "payload": {
-        "finding_id": "fnd_JFHPHHYP25",
+        "finding_id": "fnd_2CNX2WQ5WK",
         "rule": "bulk_read_anomaly",
         "rule_family": "exfil.bulk_read",
         "technique": "T1530",
@@ -3768,7 +3768,7 @@
         "confidence": 0.7,
         "severity": 4,
         "evidence_ids": [
-          "evd_SPFXTPNJT9"
+          "evd_1Y6DZZ9E1K"
         ],
         "entities": [
           {
@@ -3783,29 +3783,29 @@
           }
         ],
         "observation_point": "database",
-        "time": 9300,
+        "time": 1795251608300,
         "critical_positive_security": false,
         "deception_hit": false,
         "attack_stage": "data_theft",
         "explanation": "bulk read far above the usage profile of edg_K8RE2YPHBZ",
-        "source_event": "evd_SPFXTPNJT9"
+        "source_event": "evd_1Y6DZZ9E1K"
       },
-      "prev_hash": "19e921707063fc15cc59d66d097effe93444026cb469690a15f1da9d23404f47",
-      "hash": "bff979cbb22d6fb3203e1660e302cdbf5ddd238b5393812dc4b0a965c6523b7f",
+      "prev_hash": "948c5446dd08e930aa6493f46fdc42fb2180f2af1cf358136d44d13a3d47f08a",
+      "hash": "bbe909625eb8b9e79fa42e692761d17d52ab58ff2c7a0ec1232bdc337c63cdb4",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "VmnY+nCht22xx/2YHBZo04i0E7aOvfiva5BTMI5CBRUI2o/0lm8bGYCYwI5m3jCMXb3/Pd6RNO30qmNRTb7eBA=="
+        "sig": "BW1KIjgfXfixm2T1r1UW41y2qUehN+Dn2eru+uunAch5wTXIXNSoZS/RozL6AFYdFb5IML6++N3NomoywlqdCw=="
       }
     },
     {
       "seq": 23,
-      "evidence_id": "evd_NZY6GYQ8HD",
-      "time": 9300,
+      "evidence_id": "evd_WFYWYWYFGC",
+      "time": 1795251608300,
       "kind": "finding",
       "incident_hint": "",
       "payload": {
-        "finding_id": "fnd_ZKY10XDE3G",
+        "finding_id": "fnd_BFR9PW3ANF",
         "rule": "invariant_breach",
         "rule_family": "consequence.per_identity_records",
         "technique": "T1657",
@@ -3813,7 +3813,7 @@
         "confidence": 1.0,
         "severity": 5,
         "evidence_ids": [
-          "evd_SPFXTPNJT9"
+          "evd_1Y6DZZ9E1K"
         ],
         "entities": [
           {
@@ -3828,30 +3828,30 @@
           }
         ],
         "observation_point": "database",
-        "time": 9300,
+        "time": 1795251608300,
         "critical_positive_security": true,
         "deception_hit": false,
         "attack_stage": "impact",
         "explanation": "consequence invariant breached (per_identity_records: 60400 of 10000)",
-        "source_event": "evd_SPFXTPNJT9"
+        "source_event": "evd_1Y6DZZ9E1K"
       },
-      "prev_hash": "bff979cbb22d6fb3203e1660e302cdbf5ddd238b5393812dc4b0a965c6523b7f",
-      "hash": "2ddc1fd69765ee99fdf6da2985b031c05b076550da258d7d2fdb7caeadec0c81",
+      "prev_hash": "bbe909625eb8b9e79fa42e692761d17d52ab58ff2c7a0ec1232bdc337c63cdb4",
+      "hash": "65c23ca2be870f67bfcb0682a49744e4fc9c11b1fa2d6a38680932354bc25b16",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "yI0m57fE9GVlKMPVEgTUfHA+BCZWEYmyxxUcFbszmIxPwWisaqxZRKySbFNPYW+mpcZ3hFLVuSwubAcdKZDNBw=="
+        "sig": "msKl3JTcgPtwEKFuynGyU4pAX5EnSSWc2tfQCMTjsp4h1T5iKtmEs4P847pYWZ094NAVebrcbfYN5o0eaSVtCg=="
       }
     },
     {
       "seq": 24,
-      "evidence_id": "evd_MEVWXBWSNP",
-      "time": 9300,
+      "evidence_id": "evd_595KYJSS58",
+      "time": 1795251608300,
       "kind": "action_request",
       "incident_hint": "",
       "payload": {
         "request": {
-          "action_request_id": "act_W71CQBQ0J4",
+          "action_request_id": "act_E0K5W6AK90",
           "target": {
             "type": "ip",
             "id": "198.51.100.7",
@@ -3859,44 +3859,44 @@
           },
           "action": "ip.ban",
           "ladder_level": 4,
-          "expiry": 3609300,
+          "expiry": 1795255208300,
           "approval": {
             "approved_by": "policy:auto",
             "approvers": [],
-            "approved_at": 9300
+            "approved_at": 1795251608300
           },
           "reversal_method": "ip.unban",
           "evidence_ids": [
-            "evd_SPFXTPNJT9",
-            "evd_1YG06XH7N1",
-            "evd_NZY6GYQ8HD"
+            "evd_1Y6DZZ9E1K",
+            "evd_SR11KC4KAN",
+            "evd_WFYWYWYFGC"
           ],
-          "verdict_id": "vrd_NCG78EY939",
+          "verdict_id": "vrd_83Q5H0MDES",
           "confidence_class": "two_source_high",
           "evidence_captured_first": false,
-          "time": 9300,
+          "time": 1795251608300,
           "responder": "",
           "mode": "enforce"
         },
         "review": "Allowed",
         "needs_approval": false
       },
-      "prev_hash": "2ddc1fd69765ee99fdf6da2985b031c05b076550da258d7d2fdb7caeadec0c81",
-      "hash": "f830228828ea64febb92c58e1ae18b95ae174f3365945a1bc31822ef1338e0e2",
+      "prev_hash": "65c23ca2be870f67bfcb0682a49744e4fc9c11b1fa2d6a38680932354bc25b16",
+      "hash": "ee6faf4ced7f474f3af7a619c5edf14a9d0c89aaed7c5b2042b44dca3c8d3b2c",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "aamWZCCfWyrRtHxmrFIezQHjE7Ipdyey42BH9vJWR2Cu+bDq9FeBVoF1g6k8EHQwrwHStaHrLx6yTKl3yodOAQ=="
+        "sig": "/Qlsd2eirUCFJWQBIVB6+jc/wX4jwXvd4xUP1+oLdCE08emgTJPdHgPTYvE0WUnLIf7Lef594rBFuSd5N7gKDA=="
       }
     },
     {
       "seq": 25,
-      "evidence_id": "evd_4ECHNE4XQQ",
-      "time": 9300,
+      "evidence_id": "evd_2J38FP5VQT",
+      "time": 1795251608300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_NCG78EY939",
+        "verdict_id": "vrd_83Q5H0MDES",
         "decision": "contain",
         "entity": {
           "type": "ip",
@@ -3913,33 +3913,33 @@
           "database"
         ],
         "policy_version": "default-1",
-        "expires_at": 3609300,
+        "expires_at": 1795255208300,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_SPFXTPNJT9",
-          "evd_1YG06XH7N1",
-          "evd_NZY6GYQ8HD"
+          "evd_1Y6DZZ9E1K",
+          "evd_SR11KC4KAN",
+          "evd_WFYWYWYFGC"
         ],
-        "time": 9300,
+        "time": 1795251608300,
         "ladder_level": 4
       },
-      "prev_hash": "f830228828ea64febb92c58e1ae18b95ae174f3365945a1bc31822ef1338e0e2",
-      "hash": "7878f98e668fa642f4269cd5dc45ebdcaf70530b3f6d7341e8b10dc0ef98aed7",
+      "prev_hash": "ee6faf4ced7f474f3af7a619c5edf14a9d0c89aaed7c5b2042b44dca3c8d3b2c",
+      "hash": "8bddd70f2b1c27544bd1f8b590dc264900ead5dfea22426ef0ea1d85042724ae",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "wAv3+3e+vj3fGrU51K/eXVa2seIsWh1vxZYBg4wwHUjsKocXYVdl2G+5o4zsNUAIIKK1a4L6CrAuH/eXpR4CAA=="
+        "sig": "e/PHRUZlWyHJ79DS3unDdKOFwB5vV+2f5nF3yF9oP7AkOnYxwM1p56uEs6QAY/aVyazL3ptMxkLKxSZ3lO2xAw=="
       }
     },
     {
       "seq": 26,
-      "evidence_id": "evd_5AEV0TFTRV",
-      "time": 9300,
+      "evidence_id": "evd_Y7ZDZW0VT7",
+      "time": 1795251608300,
       "kind": "action_request",
       "incident_hint": "",
       "payload": {
         "request": {
-          "action_request_id": "act_Z4WYE5V0RG",
+          "action_request_id": "act_R4FG4H4176",
           "target": {
             "type": "service",
             "id": "kh_9431ec20e893f6f4590d6fc2",
@@ -3947,44 +3947,44 @@
           },
           "action": "trust_edge.narrow",
           "ladder_level": 4,
-          "expiry": 3609300,
+          "expiry": 1795255208300,
           "approval": {
             "approved_by": "policy:auto",
             "approvers": [],
-            "approved_at": 9300
+            "approved_at": 1795251608300
           },
           "reversal_method": "trust_edge.restore",
           "evidence_ids": [
-            "evd_SPFXTPNJT9",
-            "evd_1YG06XH7N1",
-            "evd_NZY6GYQ8HD"
+            "evd_1Y6DZZ9E1K",
+            "evd_SR11KC4KAN",
+            "evd_WFYWYWYFGC"
           ],
-          "verdict_id": "vrd_SQHT1HVZXH",
+          "verdict_id": "vrd_NG587R59X6",
           "confidence_class": "two_source_high",
           "evidence_captured_first": false,
-          "time": 9300,
+          "time": 1795251608300,
           "responder": "",
           "mode": "enforce"
         },
         "review": "Allowed",
         "needs_approval": false
       },
-      "prev_hash": "7878f98e668fa642f4269cd5dc45ebdcaf70530b3f6d7341e8b10dc0ef98aed7",
-      "hash": "d580bd63020f841a5247fba4e7ea9a118ce04f0325d28ca44d63dacbbec772c3",
+      "prev_hash": "8bddd70f2b1c27544bd1f8b590dc264900ead5dfea22426ef0ea1d85042724ae",
+      "hash": "0dfa7ea3a1232d33d563289bb6c0bde4db1dfe6cc763adc4c01426e2f7591376",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "kdE+fKh8RD4BZsGWDvVNjH0xtZ/ppY/M2sODQzUScEK6baFBSQf6wC+ZSyMmLOs4ncphfKoSGxkHBCimWd17CA=="
+        "sig": "M8hClxb7QHHMrhIPj9WCiqxTlMuxytfpPGmxunsrjTnQh0B0zE8uSju8TNBusc2BbzDjwHmSkzUGL991mCQcCA=="
       }
     },
     {
       "seq": 27,
-      "evidence_id": "evd_A4YVCH3H12",
-      "time": 9300,
+      "evidence_id": "evd_Q72BARAW43",
+      "time": 1795251608300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_SQHT1HVZXH",
+        "verdict_id": "vrd_NG587R59X6",
         "decision": "contain",
         "entity": {
           "type": "service",
@@ -4001,22 +4001,22 @@
           "database"
         ],
         "policy_version": "default-1",
-        "expires_at": 3609300,
+        "expires_at": 1795255208300,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_SPFXTPNJT9",
-          "evd_1YG06XH7N1",
-          "evd_NZY6GYQ8HD"
+          "evd_1Y6DZZ9E1K",
+          "evd_SR11KC4KAN",
+          "evd_WFYWYWYFGC"
         ],
-        "time": 9300,
+        "time": 1795251608300,
         "ladder_level": 4
       },
-      "prev_hash": "d580bd63020f841a5247fba4e7ea9a118ce04f0325d28ca44d63dacbbec772c3",
-      "hash": "927ab2f531e94016a1f416985d077ec3c4e29aeb5000ea22061930ebe1694f74",
+      "prev_hash": "0dfa7ea3a1232d33d563289bb6c0bde4db1dfe6cc763adc4c01426e2f7591376",
+      "hash": "90857c3362bfb504bd3919801cdd8f0d5c83161386fecd90e375ef4d6a13e1b6",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "PQe5UG+VCIGTGsoi3g7B8AlGnd50c9Ga7nQFI5xRB6QNTnCzFlTTHlMvT0Ak3k6/yrRea7DCub6WQbZbqeNdAw=="
+        "sig": "62Q9CzYxxMk8FzEk9nV0Py1WERMuBKrdCURBZuUHCQ+OO8YQajeE9T58dFpW34/UrzGa6c04mbLjc0NfDHJ6Cg=="
       }
     }
   ],
@@ -4155,6 +4155,6 @@
   "signature": {
     "alg": "ed25519",
     "key_id": "replay-1",
-    "sig": "lz8xl5IhEsWkH9EmA9cVN/j/7Ml7/9eu9N1ROndUDYj4jgzwEebyIzTsvIW4v4vUen2uNSxBaIVMV+i7yHktDg=="
+    "sig": "g3gJz8vyfioTcSW8LainGp+AwUccmoO42MMr8fnlBJD9B1d8Xb/gasgfTyLtuJlEPkPsRwXay2wSLDZ8pxdIDg=="
   }
 }

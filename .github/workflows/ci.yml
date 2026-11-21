@@ -53,6 +53,7 @@ jobs:
         with: { dotnet-version: "8.0.x" }
       - run: cd sdk/node/express && npm ci && npm test
       - run: cd config && npm ci && npm test
+      - run: node --test replay-viewer/test/*.test.mjs
       - run: pip install wasmtime && cd sdk/python && python -m unittest discover -s tests
       - run: cd sdk/go && go test ./...
       - run: cd go && go vet ./... && go test ./...

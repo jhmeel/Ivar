@@ -64,10 +64,12 @@ action_key_seed_file: /etc/ivar/keys/action.seed
 redaction_key_hex_file: /etc/ivar/keys/redaction.hex
 public_url: http://127.0.0.1:8080
 expected_layers: [edge, app_sdk, host, network, database]
+console_dir: /usr/share/ivar/console
 YAML
 chmod -R a+rX "$state"; chown -R 65532:65532 "$state/data"
 
-docker run -d --name ivar-live-core --network host -v "$state:/etc/ivar:ro" -v "$state/data:/var/lib/ivar" \
+# The operator console is served by the core at /console/ (live mode).
+docker run -d --name ivar-live-core --network host -v "$state:/etc/ivar:ro" -v "$state/data:/var/lib/ivar" -v "$root/replay-viewer:/usr/share/ivar/console:ro" \
   -e IVAR_SHARD=0 -e IVAR_SHARDS=1 "ivar/core:$tag" serve --config /etc/ivar/core.yaml >/dev/null
 start_control() {
   docker rm -f ivar-live-control >/dev/null 2>&1 || true
@@ -95,4 +97,4 @@ docker run -d --name ivar-live-envoy --network host -v "$state:/etc/ivar:ro" env
 ready() { for _ in $(seq 1 150); do curl -sf "$1" >/dev/null && return 0; sleep 0.2; done; echo "not ready: $1" >&2; return 1; }
 ready http://127.0.0.1:8080/healthz; ready http://127.0.0.1:8090/healthz; ready http://127.0.0.1:3000/healthz; ready http://127.0.0.1:9901/ready
 kill -0 "$(cat "$state/app.pid")" 2>/dev/null || { echo "the payments API exited; see $state/app.log" >&2; exit 1; }
-echo "live: gateway http://127.0.0.1:10000 -> payments API :3000 | core :8080 | control :8090"
+echo "live: gateway http://127.0.0.1:10000 -> payments API :3000 | core :8080 (console at /console/) | control :8090"

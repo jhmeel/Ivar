@@ -5,6 +5,51 @@ Agentic Intrusion*. The core model is a live graph of trust edges between
 identities, workloads and data; detections, risk and every response act on
 those edges, and irreversible actions only execute with a valid intent chain.
 
+## The live test, replayed
+
+[![Replay of the live test: a payments API under attack behind Envoy, Coraza and IVAR](docs/media/live-test-replay.gif)](docs/media/live-test-replay.mp4)
+
+**[Watch the full replay (MP4, 32 s)](docs/media/live-test-replay.mp4)**
+
+A real Express payments API behind Envoy, Coraza with the OWASP Core Rule Set
+and the IVAR edge filter, attacked live (`deploy/live`). In 23.6 seconds of
+real time: legitimate customers, a signed switch from observe to enforce with
+no restarts, a credential spray (throttled), an account takeover and a
+mass assignment privilege escalation (refused), a payout without an intent
+chain (refused), a time locked payout (held), decoy hits (contained), a
+victim lockout attempt and a shared network neighbour (both protected), then
+control plane and core outages. 34 of 34 checks passed.
+
+The video is not a screen recording: it is the signed ReplayBundle built from
+the run's sealed evidence (`ivar-core replay`), re executed in the same engine
+(135 of 135 verdicts reproduced, 0 unobserved intervals) and rendered frame by
+frame (`scripts/export-replay.cjs`). Any incident exports the same way.
+
+## The console
+
+The console (`replay-viewer/`, served by the core at `/console/` when
+`console_dir` is set) shows a verified replay or follows a live core.
+
+| | |
+|---|---|
+| [![Live overview](docs/media/console-live-overview.png)](docs/media/console-live-overview.png) | [![Session transcript](docs/media/console-live-sessions.png)](docs/media/console-live-sessions.png) |
+| **Overview**: KPIs, activity over time by decision, highest risk entities, rules fired, sensor health, integrity | **Sessions**: what each session sent (→) and received (←), with IVAR findings, verdicts and actions (◆) in line |
+| [![Events and the decision chain](docs/media/console-live-events.png)](docs/media/console-live-events.png) | [![A replay frame](docs/media/live-test-replay-poster.png)](docs/media/live-test-replay.mp4) |
+| **Events**: every frame, searchable and filterable; the inspector shows the request and response with each field checked against the declared schema, the decision chain from event to receipt, the sealed evidence and the raw JSON | **Full screen replay** and **MP4 export**: the same renderer, so what you watch is what the video holds |
+
+* **Live mode** polls the core's sealed evidence and re verifies the whole
+  hash chain on every update; a record that does not link halts the view, an
+  unreachable core is retried.
+* **Replay mode** checks the bundle signature and evidence chain, then re
+  executes every event in the browser before anything renders.
+* Playback moves one cursor through every view; *As of playhead* limits every
+  view to what had happened by then. Links carry filters
+  (`#/events?decision=contain&entity=ip:198.51.100.7`), exports are CSV,
+  JSON and MP4, and keys are `1` to `5` (views), `j`/`k` (frames), space,
+  arrows, `F` (full screen) and `Esc`.
+* Payload values never leave the sensor (section 16): the console shows field
+  names, routes, statuses, keyed hashes and decisions, and says so.
+
 ## Layout
 
 | Path | What it is | Language |
@@ -25,7 +70,7 @@ those edges, and irreversible actions only execute with a valid intent chain.
 | `config/` | `security.config.ts`: the hardening configuration with the section 15 settings and fixes F1 to F9 | TypeScript |
 | `plugins/` | Responder manifests, including the specification's `okta-responder` unchanged | YAML |
 | `replay-library/` | Attack replay library: incidents and attacks on the IVAR itself | YAML |
-| `replay-viewer/` | Browser replay viewer that re executes evidence before rendering | JS and Wasm |
+| `replay-viewer/` | Operator console: verified replays and live mode, events, sessions, entities, graph, full screen replay, MP4, CSV and JSON export | JS and Wasm |
 | `deploy/` | Dockerfile, Helm chart, Compose service, Terraform modules, Envoy config, policy source, operator decisions, local stack | Mixed |
 
 ## Quick start
@@ -36,6 +81,14 @@ cargo test --workspace                # Rust
 deploy/local/up.sh                    # core, control plane, upstream, Envoy with the IVAR filter
 python3 deploy/local/smoke_test.py    # end to end through real Envoy
 deploy/local/up.sh down
+```
+
+Replay any incident from sealed evidence, then export it as a video (the
+bundle is verified before a frame is drawn):
+
+```bash
+ivar-core replay --evidence data/evidence-0.jsonl --policies data/policies-0 --keyring keyring.json --redaction keys/redaction.hex --signer keys/evidence-0.seed --out replay.json
+node scripts/export-replay.cjs replay.json keyring.json keys/redaction.hex replay.mp4
 ```
 
 With Coraza and the OWASP Core Rule Set ahead of the IVAR filter:
@@ -141,7 +194,9 @@ Verified in this repository's test suites and the local stack:
   forged one key weakening, and enforcement through a control plane outage.
 * The core image running under the Compose file with a real signed bundle.
 * The live test (`deploy/live`): the release images in front of a real
-  Express API, 34 of 34 checks, reproduced on clean installs.
+  Express API, 34 of 34 checks, reproduced on clean installs, with the
+  console following it live from the core and the replay video above built
+  from its sealed evidence.
 * The Helm chart rendered with Helm's template engine and checked
   (`deploy/helm/chartcheck`), and the reference Envoy config accepted by
   `envoy --mode validate`.

@@ -30,7 +30,8 @@ fn main() -> anyhow::Result<()> {
     let mut core = DecisionCore::new(live.clone(), CoreOptions { evidence_signer: Some(ek), ..Default::default() })?;
 
     let mut seq = 0u64;
-    let mut t = 1_000i64;
+    // A fixed, realistic wall clock (2026-11-21 09:00:00 UTC) so the sample reads like a real incident.
+    let mut t = 1_795_251_600_000i64;
     let mut emit = |core: &mut DecisionCore, s: EventSpec, step: i64, skew: i64| {
         let mut s = s;
         seq += 1;

@@ -42,6 +42,26 @@ pub fn router(state: Arc<AppState>) -> Router {
         .with_state(state)
 }
 
+/// The API plus the operator console at /console/ when `console_dir` is set.
+/// The console is static and talks only to this origin; a strict content
+/// security policy keeps it that way.
+pub fn router_with_console(state: Arc<AppState>, console_dir: Option<&str>) -> Router {
+    let api = router(state);
+    let Some(dir) = console_dir else { return api };
+    use axum::http::{header, HeaderValue};
+    use tower_http::set_header::SetResponseHeaderLayer;
+    let console = tower_http::services::ServeDir::new(dir).append_index_html_on_directories(true);
+    let csp = HeaderValue::from_static("default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'");
+    api.nest_service(
+        "/console",
+        tower::ServiceBuilder::new()
+            .layer(SetResponseHeaderLayer::overriding(header::CONTENT_SECURITY_POLICY, csp))
+            .layer(SetResponseHeaderLayer::overriding(header::X_CONTENT_TYPE_OPTIONS, HeaderValue::from_static("nosniff")))
+            .layer(SetResponseHeaderLayer::overriding(header::REFERRER_POLICY, HeaderValue::from_static("no-referrer")))
+            .service(console),
+    )
+}
+
 fn err(code: StatusCode, msg: impl ToString) -> Response {
     (code, Json(json!({ "error": msg.to_string() }))).into_response()
 }

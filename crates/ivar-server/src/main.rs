@@ -139,7 +139,7 @@ async fn serve(cfg: ServerConfig) -> anyhow::Result<()> {
         }
     });
 
-    let http = axum::serve(tokio::net::TcpListener::bind(&cfg.http_listen).await?, ivar_server::http::router(state.clone()));
+    let http = axum::serve(tokio::net::TcpListener::bind(&cfg.http_listen).await?, ivar_server::http::router_with_console(state.clone(), cfg.console_dir.as_deref()));
     let grpc = tonic::transport::Server::builder().add_service(IngestServer::new(IngestService { state })).serve(cfg.grpc_listen.parse()?);
     tracing::info!(http = %cfg.http_listen, grpc = %cfg.grpc_listen, "ivar core serving");
     tokio::select! {
