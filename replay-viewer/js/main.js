@@ -9,6 +9,7 @@ import { renderPipeline } from './panes/pipeline.js';
 import { renderTrust } from './panes/trust.js';
 import { renderRisk } from './panes/risk.js';
 import { renderInspector } from './panes/inspector.js';
+import { exportMp4, defaultSpeed } from './video/encode.js';
 
 const $ = (id) => document.getElementById(id);
 const state = { live: null, counterfactual: null, mode: 'live', evidence: new Map(), keyring: '', texts: [] };
@@ -176,3 +177,42 @@ document.addEventListener('keydown', (e) => {
     $('play').click();
   }
 });
+
+// Video export: the verified replay currently shown, at the selected speed
+// (raised for long incidents so the video stays short).
+async function exportCurrent() {
+  const b = current();
+  if (!b) return;
+  const btn = $('export-mp4');
+  const label = $('export-label');
+  btn.disabled = true;
+  try {
+    const speed = Math.max(Number($('speed').value), defaultSpeed(b));
+    const { blob, codec } = await exportMp4(b, { speed, onProgress: (p) => (label.textContent = `Exporting ${Math.round(p * 100)}%`) });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `replay-${b.incident_id}${b.counterfactual ? '-counterfactual' : ''}.mp4`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 10_000);
+    label.textContent = `Exported (${codec})`;
+  } catch (e) {
+    label.textContent = 'Export failed';
+    seal('error', 'Video export failed', esc(e.message ?? String(e)));
+  } finally {
+    btn.disabled = false;
+    setTimeout(() => (label.textContent = 'Export MP4'), 4000);
+  }
+}
+$('export-mp4').addEventListener('click', exportCurrent);
+
+// Used by scripts/export-replay.cjs: verify a bundle exactly as the viewer
+// does, then export it, returning the MP4 as base64.
+window.ivarExportMp4 = async (bundleText, keyringText, redactionKeyHex, options = {}) => {
+  const { bundle, reExecution, engine } = await verifyBundle(bundleText, keyringText, redactionKeyHex);
+  bundle._verified = { ...reExecution, engine };
+  const { blob, codec, seconds, speed } = await exportMp4(bundle, { speed: options.speed ?? defaultSpeed(bundle), fps: options.fps });
+  const bytes = new Uint8Array(await blob.arrayBuffer());
+  let bin = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  return { base64: btoa(bin), codec, seconds, speed, frames: bundle.frames.length, verdicts: reExecution.recorded_verdicts };
+};

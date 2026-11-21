@@ -1,0 +1,8 @@
+# Pinned so every machine and CI build the same artifacts. Rust 1.98 and
+# later link their own _initialize into wasm32-wasip1 cdylibs, which collides
+# with the one proxy-wasm 0.2.5 defines for the edge filter; move this pin
+# forward together with a proxy-wasm release that handles it.
+[toolchain]
+channel = "1.97.0"
+components = ["clippy", "rustfmt"]
+targets = ["wasm32-wasip1", "wasm32-unknown-unknown"]

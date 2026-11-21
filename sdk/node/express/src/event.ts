@@ -30,13 +30,18 @@ function clientIp(req: Request): string {
   return req.ip ?? req.socket.remoteAddress ?? '';
 }
 
-export function buildEvent(req: Request, opts: IvarOptions, ctx: EventContext, now: number): Record<string, unknown> {
+/**
+ * Build the OCSF event for a request. Only events sent to the core consume a
+ * sequence number (`sent`), so a gap in the sequence always means a lost
+ * event, never a local check (section 13.2).
+ */
+export function buildEvent(req: Request, opts: IvarOptions, ctx: EventContext, now: number, sent = true): Record<string, unknown> {
   const key = opts.redactionKey ?? '';
   const id = opts.identity(req) ?? '';
   const session = opts.session?.(req) ?? '';
   const roles = opts.roles?.(req) ?? [];
   const requestId = (req.headers['x-request-id'] as string | undefined) ?? (req as unknown as { ivarRequestId?: string }).ivarRequestId ?? '';
-  seq += 1;
+  if (sent) seq += 1;
   return {
     class_uid: ctx.classUid,
     category_uid: Math.floor(ctx.classUid / 1000),

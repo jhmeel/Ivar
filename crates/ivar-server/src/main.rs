@@ -1,6 +1,7 @@
 //! ivar-core: the IVAR core service.
 //!
 //! Usage: ivar-core serve --config /etc/ivar/core.yaml
+//!        ivar-core replay --evidence <file> --policies <dir> --keyring <file> --redaction <file> --signer <seed> --out <file>
 //!        ivar-core health [host:port]
 //!        ivar-core keygen <path>   (writes a 32 byte hex seed)
 //!        ivar-core keyring <out.json> <seed file>=<role>[+<role>] ...
@@ -33,6 +34,29 @@ async fn main() -> anyhow::Result<()> {
             // For container healthchecks in images that carry no shell or curl.
             let addr = args.get(2).cloned().unwrap_or_else(|| "127.0.0.1:8080".into());
             std::process::exit(if healthy(&addr) { 0 } else { 1 });
+        }
+        Some("replay") => {
+            // ivar-core replay --evidence <evidence.jsonl> --policies <dir> --keyring <keyring.json>
+            //   --redaction <redaction.hex> --signer <seed> [--signer-id evidence-0]
+            //   [--entities ip:a,user:b] [--incident <id>] --out <bundle.json>
+            let flag = |name: &str| args.iter().position(|a| a == name).and_then(|i| args.get(i + 1)).cloned();
+            let need = |name: &str| flag(name).ok_or_else(|| anyhow::anyhow!("replay needs {name}"));
+            let keyring: Keyring = serde_json::from_str(&std::fs::read_to_string(need("--keyring")?)?)?;
+            let signer = KeyPair::ed25519_from_seed(&flag("--signer-id").unwrap_or_else(|| "evidence-0".into()), read_seed(&need("--signer")?)?);
+            let bundle = ivar_server::offline::build(&ivar_server::offline::OfflineReplay {
+                evidence: Path::new(&need("--evidence")?),
+                policies: Path::new(&need("--policies")?),
+                keyring: &keyring,
+                redaction_key: hex::decode(std::fs::read_to_string(need("--redaction")?)?.trim())?,
+                signer: &signer,
+                entities: flag("--entities").map(|e| e.split(',').filter(|s| !s.is_empty()).map(String::from).collect()).unwrap_or_default(),
+                incident_id: flag("--incident").unwrap_or_else(|| "full_window".into()),
+                expected_layers: ["edge", "app_sdk", "host", "network", "database"].iter().map(|s| s.to_string()).collect(),
+            })?;
+            let out = need("--out")?;
+            std::fs::write(&out, serde_json::to_string(&bundle)?)?;
+            println!("{out}: {} frames, {} of {} verdicts reproduced, signed by {}", bundle.frames.len(), bundle.re_execution.replayed_verdicts, bundle.re_execution.recorded_verdicts, signer.key_id);
+            Ok(())
         }
         Some("keyring") => {
             // ivar-core keyring <out.json> <seed file>=<role>[+<role>] ...

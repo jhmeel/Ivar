@@ -157,7 +157,7 @@ export function ivar(opts: IvarOptions): IvarMiddleware {
     };
     let local;
     try {
-      local = engine.decide(buildEvent(req, opts, { activity: 'http.request', classUid: OCSF_HTTP_ACTIVITY }, Date.now()), Date.now());
+      local = engine.decide(buildEvent(req, opts, { activity: 'http.request', classUid: OCSF_HTTP_ACTIVITY }, Date.now(), false), Date.now());
     } catch (e) {
       if (admin) {
         res.status(503).json({ error: 'security check unavailable' });

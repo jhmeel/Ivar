@@ -65,6 +65,10 @@
       <label><input type="radio" name="mode" value="live" checked><span>Live</span></label>
       <label><input type="radio" name="mode" value="counterfactual"><span>Counterfactual</span></label>
     </div>
+    <button id="export-mp4" type="button" class="btn btn-ghost" title="Export this verified replay as an MP4 video">
+      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5h10v10H3zM13 9l4-2.5v7L13 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      <span id="export-label">Export MP4</span>
+    </button>
     <div class="clock">
       <div><span class="clock-label">Frame</span><span id="clock-frame"></span></div>
       <div><span class="clock-label">Real elapsed</span><span id="clock-elapsed"></span></div>

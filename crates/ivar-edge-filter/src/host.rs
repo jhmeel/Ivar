@@ -91,12 +91,19 @@ impl RootContext for Root {
         };
         self.set_tick_period(Duration::from_millis(cfg.tick_ms.max(100)));
         let now = now_ms(self);
+        // Each gateway worker runs its own filter instance with its own
+        // sequence, so each reports as its own sensor: one shared id would
+        // interleave the sequences and show false gaps in every replay.
+        let mut cfg = cfg;
+        let nanos = self.get_current_time().duration_since(UNIX_EPOCH).map(|d| d.as_nanos()).unwrap_or(0);
+        cfg.sensor_id = format!("{}-w{:06x}", cfg.sensor_id, (nanos ^ (nanos >> 24)) as u32 & 0xff_ffff);
         self.logic = Some(Rc::new(RefCell::new(EdgeLogic::new(cfg, now))));
         true
     }
 
     fn on_tick(&mut self) {
         let Some(logic) = self.logic.clone() else { return };
+        logic.borrow_mut().heartbeat(now_ms(self));
         if self.core_call.is_none() {
             let (cluster, authority, batch) = {
                 let mut l = logic.borrow_mut();

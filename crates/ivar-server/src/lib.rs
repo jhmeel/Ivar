@@ -10,6 +10,7 @@ pub mod config;
 pub mod feed;
 pub mod grpc;
 pub mod http;
+pub mod offline;
 pub mod responders;
 pub mod sinks;
 pub mod state;

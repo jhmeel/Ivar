@@ -29,6 +29,8 @@ pub struct RequestView {
     pub engine_alerts: Vec<String>,
 }
 
+const HEARTBEAT_MS: i64 = 20_000;
+
 pub struct EdgeLogic {
     pub cfg: EdgeConfig,
     sensor: Option<SensorPolicy>,
@@ -40,6 +42,7 @@ pub struct EdgeLogic {
     unacked: Vec<SecurityEvent>,
     /// Position in the core's verdict feed (see ivar-server feed).
     verdict_cursor: u64,
+    last_heartbeat: i64,
     redactor: Redactor,
     seq: u64,
 }
@@ -73,6 +76,7 @@ impl EdgeLogic {
             outbox: EventBuffer::new(cfg.max_outbox),
             unacked: Vec::new(),
             verdict_cursor: 0,
+            last_heartbeat: i64::MIN / 2,
             sensor: None,
             policy_version: 0,
             policy_label: String::new(),
@@ -133,8 +137,13 @@ impl EdgeLogic {
         self.cfg.admin_prefixes.iter().any(|p| path.starts_with(p.as_str()))
     }
 
-    fn event(&mut self, r: &RequestView, body_keys: &[&str], status: u32, now: i64) -> SecurityEvent {
-        self.seq += 1;
+    /// Build an event for this request. Only events sent to the core consume
+    /// a sequence number (`sent`), so a gap in the sequence always means an
+    /// event was lost, never a local check (section 13.2).
+    fn event(&mut self, r: &RequestView, body_keys: &[&str], status: u32, now: i64, sent: bool) -> SecurityEvent {
+        if sent {
+            self.seq += 1;
+        }
         let mut b = EventBuilder::new(ocsf_class::HTTP_ACTIVITY, v::HTTP_REQUEST, now, &self.cfg.sensor_id, "edge", self.seq)
             .src_ip(&r.client_ip)
             .http(&r.method, &r.path, body_keys, status)
@@ -192,7 +201,7 @@ impl EdgeLogic {
     pub fn on_request_headers(&mut self, r: &RequestView, now: i64) -> EdgeAction {
         let admin = self.admin(&r.path);
         self.budget.inspected(&r.path);
-        let ev = self.event(r, &[], 0, now);
+        let ev = self.event(r, &[], 0, now, false);
         self.decide(&ev, now, admin, &r.path, &r.request_id)
     }
 
@@ -206,7 +215,7 @@ impl EdgeLogic {
             .and_then(|v| v.as_object().map(|o| o.keys().take(64).cloned().collect()))
             .unwrap_or_default();
         let refs: Vec<&str> = keys.iter().map(String::as_str).collect();
-        let ev = self.event(r, &refs, 0, now);
+        let ev = self.event(r, &refs, 0, now, false);
         let admin = self.admin(&r.path);
         (self.decide(&ev, now, admin, &r.path, &r.request_id), keys)
     }
@@ -214,7 +223,7 @@ impl EdgeLogic {
     /// After the response: queue the event for the core.
     pub fn on_log(&mut self, r: &RequestView, body_keys: &[String], status: u32, now: i64) {
         let refs: Vec<&str> = body_keys.iter().map(String::as_str).collect();
-        let ev = self.event(r, &refs, status, now);
+        let ev = self.event(r, &refs, status, now, true);
         self.outbox.push(ev);
     }
 
@@ -228,6 +237,18 @@ impl EdgeLogic {
         let body = serde_json::to_vec(&serde_json::json!({ "sensor_id": self.cfg.sensor_id, "dropped": dropped, "events": events, "verdict_cursor": self.verdict_cursor })).ok();
         self.unacked = events;
         body
+    }
+
+    /// Queue a heartbeat every 20 seconds, so a gateway worker with no
+    /// traffic is not mistaken for a silenced one (tamper monitoring). A
+    /// heartbeat carries the current sequence and does not consume one.
+    pub fn heartbeat(&mut self, now: i64) {
+        if now - self.last_heartbeat < HEARTBEAT_MS {
+            return;
+        }
+        self.last_heartbeat = now;
+        let ev = EventBuilder::new(ocsf_class::HTTP_ACTIVITY, v::SENSOR_HEARTBEAT, now, &self.cfg.sensor_id, "edge", self.seq).observation_point("edge").build();
+        self.outbox.push(ev);
     }
 
     /// The last batch was not acknowledged (the core is down or answered an
@@ -388,6 +409,21 @@ mod tests {
         let mut r = req("/hello");
         r.client_ip = "198.51.100.9".into();
         assert!(matches!(l.on_request_headers(&r, 5), EdgeAction::Respond { status: 403, .. }), "a containment learned from the feed is enforced");
+    }
+
+    #[test]
+    fn only_sent_events_consume_sequence_numbers() {
+        let mut l = logic("enforce");
+        l.on_request_headers(&req("/hello"), 1);
+        l.on_log(&req("/hello"), &[], 200, 2);
+        l.on_request_headers(&req("/hello"), 3);
+        l.on_log(&req("/hello"), &[], 200, 4);
+        l.heartbeat(5);
+        let batch: serde_json::Value = serde_json::from_slice(&l.drain_outbox().unwrap()).unwrap();
+        let seqs: Vec<u64> = batch["events"].as_array().unwrap().iter().map(|e| e["ivar"]["sensor_seq"].as_u64().unwrap()).collect();
+        assert_eq!(seqs, vec![1, 2, 2], "two requests, then a heartbeat at the current sequence");
+        l.heartbeat(6);
+        assert!(l.drain_outbox().is_none(), "one heartbeat per period");
     }
 }
 
