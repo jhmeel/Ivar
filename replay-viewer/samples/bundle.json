@@ -7,7 +7,7 @@
   "plugin_versions": {},
   "counterfactual": false,
   "counterfactual_policy": null,
-  "evidence_chain_head": "90857c3362bfb504bd3919801cdd8f0d5c83161386fecd90e375ef4d6a13e1b6",
+  "evidence_chain_head": "d6fd0424638155aff1e87e4524c58cc8a3f5ea533710d15ce1d1baadbe63d67d",
   "frames": [
     {
       "index": 0,
@@ -18,7 +18,7 @@
       "sensor_seq": 1,
       "kind": "event",
       "evidence_ids": [
-        "evd_CTT0ETZMT1"
+        "evd_VBX9B7ZG9C"
       ],
       "payload": {
         "class_uid": 0,
@@ -50,7 +50,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_5640912cef154d9f305573aa",
+            "uid": "kh_2bbca21a3a0a12e4cc0dd79e",
             "name": "",
             "type": "user",
             "org_uid": ""
@@ -121,7 +121,7 @@
       "sensor_seq": 2,
       "kind": "event",
       "evidence_ids": [
-        "evd_CW05G4HC4J"
+        "evd_NS63DVGH5C"
       ],
       "payload": {
         "class_uid": 0,
@@ -153,7 +153,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_f4855d2aece40ad80b4cb1d9",
+            "uid": "kh_ce8146cc02eb11855c60c89f",
             "name": "",
             "type": "user",
             "org_uid": ""
@@ -224,7 +224,7 @@
       "sensor_seq": 3,
       "kind": "event",
       "evidence_ids": [
-        "evd_2THAJMW1DQ"
+        "evd_5KGW77BDP2"
       ],
       "payload": {
         "class_uid": 0,
@@ -256,7 +256,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_16a8f2c67b976d9c6bf89267",
+            "uid": "kh_5eaccbd9ab7829f910fba757",
             "name": "",
             "type": "user",
             "org_uid": ""
@@ -327,7 +327,7 @@
       "sensor_seq": 4,
       "kind": "event",
       "evidence_ids": [
-        "evd_MSSE8D6YXH"
+        "evd_SZ8R1KH2R0"
       ],
       "payload": {
         "class_uid": 0,
@@ -359,7 +359,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_516d6ccda80a79c79a5bc15f",
+            "uid": "kh_6cd27282397e5a3c333e5aa8",
             "name": "",
             "type": "user",
             "org_uid": ""
@@ -430,7 +430,7 @@
       "sensor_seq": 5,
       "kind": "event",
       "evidence_ids": [
-        "evd_J2VKZHPWX8"
+        "evd_50EYVZP5QS"
       ],
       "payload": {
         "class_uid": 0,
@@ -462,7 +462,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_47fd552199f362860a975955",
+            "uid": "kh_26eeb06423b1b4bfe3fe5c99",
             "name": "",
             "type": "user",
             "org_uid": ""
@@ -533,7 +533,7 @@
       "sensor_seq": 6,
       "kind": "event",
       "evidence_ids": [
-        "evd_4G96NRE0WX"
+        "evd_R45ZZ5Q65K"
       ],
       "payload": {
         "class_uid": 0,
@@ -565,7 +565,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_4bccf89fd73fbdbbb855b45a",
+            "uid": "kh_f8053adca5bd8cd980740cb6",
             "name": "",
             "type": "user",
             "org_uid": ""
@@ -636,7 +636,7 @@
       "sensor_seq": 7,
       "kind": "event",
       "evidence_ids": [
-        "evd_C73TKF5Y1D"
+        "evd_0K65AJY0EM"
       ],
       "payload": {
         "class_uid": 0,
@@ -668,7 +668,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_4bccf89fd73fbdbbb855b45a",
+            "uid": "kh_f8053adca5bd8cd980740cb6",
             "name": "",
             "type": "user",
             "org_uid": ""
@@ -739,7 +739,7 @@
       "sensor_seq": 8,
       "kind": "event",
       "evidence_ids": [
-        "evd_NVHZYZQCPP"
+        "evd_EPMXRYMRQD"
       ],
       "payload": {
         "class_uid": 0,
@@ -771,7 +771,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_9431ec20e893f6f4590d6fc2",
+            "uid": "kh_c167259a675300c6662ea2f4",
             "name": "",
             "type": "service",
             "org_uid": ""
@@ -844,7 +844,7 @@
       "sensor_seq": 8,
       "kind": "risk",
       "evidence_ids": [
-        "evd_NVHZYZQCPP"
+        "evd_EPMXRYMRQD"
       ],
       "payload": {
         "entity": {
@@ -856,7 +856,7 @@
         "fast_score": 0.15000000000000002,
         "slow_score": 0.15000000000000002,
         "contributing_findings": [
-          "fnd_YJPWW913NQ"
+          "fnd_91KC7ZS3RK"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
@@ -878,19 +878,19 @@
       "sensor_seq": 8,
       "kind": "risk",
       "evidence_ids": [
-        "evd_NVHZYZQCPP"
+        "evd_EPMXRYMRQD"
       ],
       "payload": {
         "entity": {
           "type": "service",
-          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "id": "kh_c167259a675300c6662ea2f4",
           "role": 0
         },
         "score": 0.15000000000000002,
         "fast_score": 0.15000000000000002,
         "slow_score": 0.15000000000000002,
         "contributing_findings": [
-          "fnd_YJPWW913NQ"
+          "fnd_91KC7ZS3RK"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
@@ -912,11 +912,11 @@
       "sensor_seq": 8,
       "kind": "finding",
       "evidence_ids": [
-        "evd_XF2WCJMSXK",
-        "evd_NVHZYZQCPP"
+        "evd_2S0NK4JKTM",
+        "evd_EPMXRYMRQD"
       ],
       "payload": {
-        "finding_id": "fnd_YJPWW913NQ",
+        "finding_id": "fnd_91KC7ZS3RK",
         "rule": "undeclared_edge",
         "rule_family": "drift.edge",
         "technique": "T1078",
@@ -924,7 +924,7 @@
         "confidence": 0.3,
         "severity": 2,
         "evidence_ids": [
-          "evd_NVHZYZQCPP"
+          "evd_EPMXRYMRQD"
         ],
         "entities": [
           {
@@ -934,7 +934,7 @@
           },
           {
             "type": "service",
-            "id": "kh_9431ec20e893f6f4590d6fc2",
+            "id": "kh_c167259a675300c6662ea2f4",
             "role": 1
           }
         ],
@@ -943,8 +943,8 @@
         "critical_positive_security": false,
         "deception_hit": false,
         "attack_stage": "privilege_escalation",
-        "explanation": "trust edge edg_K8RE2YPHBZ is used but never declared",
-        "source_event": "evd_NVHZYZQCPP"
+        "explanation": "trust edge edg_556ZH62X9E is used but never declared",
+        "source_event": "evd_EPMXRYMRQD"
       },
       "counterfactual": false,
       "hops_us": {},
@@ -959,12 +959,12 @@
       "sensor_seq": 8,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_YJAYR5EHJG",
-        "evd_NVHZYZQCPP",
-        "evd_XF2WCJMSXK"
+        "evd_TT8H16J0A3",
+        "evd_EPMXRYMRQD",
+        "evd_2S0NK4JKTM"
       ],
       "payload": {
-        "verdict_id": "vrd_S8SJGGYSXE",
+        "verdict_id": "vrd_BNRMDYFH60",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -982,8 +982,8 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_NVHZYZQCPP",
-          "evd_XF2WCJMSXK"
+          "evd_EPMXRYMRQD",
+          "evd_2S0NK4JKTM"
         ],
         "time": 1795251604300,
         "ladder_level": 0
@@ -1001,16 +1001,16 @@
       "sensor_seq": 8,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_HH29M13K5G",
-        "evd_NVHZYZQCPP",
-        "evd_XF2WCJMSXK"
+        "evd_BDCGDD220H",
+        "evd_EPMXRYMRQD",
+        "evd_2S0NK4JKTM"
       ],
       "payload": {
-        "verdict_id": "vrd_4PKY3JV5HN",
+        "verdict_id": "vrd_M7QDPP8ZWC",
         "decision": "record",
         "entity": {
           "type": "service",
-          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "id": "kh_c167259a675300c6662ea2f4",
           "role": 0
         },
         "risk": 0.15,
@@ -1024,8 +1024,8 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_NVHZYZQCPP",
-          "evd_XF2WCJMSXK"
+          "evd_EPMXRYMRQD",
+          "evd_2S0NK4JKTM"
         ],
         "time": 1795251604300,
         "ladder_level": 0
@@ -1043,7 +1043,7 @@
       "sensor_seq": 9,
       "kind": "event",
       "evidence_ids": [
-        "evd_61WRV8MV1V"
+        "evd_FAJ2J79THQ"
       ],
       "payload": {
         "class_uid": 0,
@@ -1075,7 +1075,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_9431ec20e893f6f4590d6fc2",
+            "uid": "kh_c167259a675300c6662ea2f4",
             "name": "",
             "type": "service",
             "org_uid": ""
@@ -1148,7 +1148,7 @@
       "sensor_seq": 9,
       "kind": "risk",
       "evidence_ids": [
-        "evd_61WRV8MV1V"
+        "evd_FAJ2J79THQ"
       ],
       "payload": {
         "entity": {
@@ -1160,7 +1160,7 @@
         "fast_score": 0.14994224885512342,
         "slow_score": 0.14999982808859547,
         "contributing_findings": [
-          "fnd_YJPWW913NQ"
+          "fnd_91KC7ZS3RK"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
@@ -1182,19 +1182,19 @@
       "sensor_seq": 9,
       "kind": "risk",
       "evidence_ids": [
-        "evd_61WRV8MV1V"
+        "evd_FAJ2J79THQ"
       ],
       "payload": {
         "entity": {
           "type": "service",
-          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "id": "kh_c167259a675300c6662ea2f4",
           "role": 0
         },
         "score": 0.14999982808859547,
         "fast_score": 0.14994224885512342,
         "slow_score": 0.14999982808859547,
         "contributing_findings": [
-          "fnd_YJPWW913NQ"
+          "fnd_91KC7ZS3RK"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
@@ -1216,11 +1216,11 @@
       "sensor_seq": 9,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_JFGR8DPXQG",
-        "evd_61WRV8MV1V"
+        "evd_4P21GBPNSD",
+        "evd_FAJ2J79THQ"
       ],
       "payload": {
-        "verdict_id": "vrd_CBQV6001QQ",
+        "verdict_id": "vrd_7A2WHZ0FJS",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -1236,7 +1236,7 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_61WRV8MV1V"
+          "evd_FAJ2J79THQ"
         ],
         "time": 1795251605300,
         "ladder_level": 0
@@ -1254,15 +1254,15 @@
       "sensor_seq": 9,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_TKEFSD68XE",
-        "evd_61WRV8MV1V"
+        "evd_JRNSAH5AYQ",
+        "evd_FAJ2J79THQ"
       ],
       "payload": {
-        "verdict_id": "vrd_H41Z6XM7K6",
+        "verdict_id": "vrd_E3E3J96E44",
         "decision": "record",
         "entity": {
           "type": "service",
-          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "id": "kh_c167259a675300c6662ea2f4",
           "role": 0
         },
         "risk": 0.15,
@@ -1274,7 +1274,7 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_61WRV8MV1V"
+          "evd_FAJ2J79THQ"
         ],
         "time": 1795251605300,
         "ladder_level": 0
@@ -1292,7 +1292,7 @@
       "sensor_seq": 10,
       "kind": "event",
       "evidence_ids": [
-        "evd_98DRVXVQK1"
+        "evd_VW7HEPA7PM"
       ],
       "payload": {
         "class_uid": 0,
@@ -1324,7 +1324,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_9431ec20e893f6f4590d6fc2",
+            "uid": "kh_c167259a675300c6662ea2f4",
             "name": "",
             "type": "service",
             "org_uid": ""
@@ -1397,7 +1397,7 @@
       "sensor_seq": 10,
       "kind": "risk",
       "evidence_ids": [
-        "evd_98DRVXVQK1"
+        "evd_VW7HEPA7PM"
       ],
       "payload": {
         "entity": {
@@ -1409,7 +1409,7 @@
         "fast_score": 0.1498845199448784,
         "slow_score": 0.14999965617738775,
         "contributing_findings": [
-          "fnd_YJPWW913NQ"
+          "fnd_91KC7ZS3RK"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
@@ -1431,19 +1431,19 @@
       "sensor_seq": 10,
       "kind": "risk",
       "evidence_ids": [
-        "evd_98DRVXVQK1"
+        "evd_VW7HEPA7PM"
       ],
       "payload": {
         "entity": {
           "type": "service",
-          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "id": "kh_c167259a675300c6662ea2f4",
           "role": 0
         },
         "score": 0.14999965617738775,
         "fast_score": 0.1498845199448784,
         "slow_score": 0.14999965617738775,
         "contributing_findings": [
-          "fnd_YJPWW913NQ"
+          "fnd_91KC7ZS3RK"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
@@ -1465,11 +1465,11 @@
       "sensor_seq": 10,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_8T2KREN4SZ",
-        "evd_98DRVXVQK1"
+        "evd_MC2XXE2WBN",
+        "evd_VW7HEPA7PM"
       ],
       "payload": {
-        "verdict_id": "vrd_MQ9R3PEKRQ",
+        "verdict_id": "vrd_0M5ZD7550M",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -1485,7 +1485,7 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_98DRVXVQK1"
+          "evd_VW7HEPA7PM"
         ],
         "time": 1795251606300,
         "ladder_level": 0
@@ -1503,15 +1503,15 @@
       "sensor_seq": 10,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_CP3Y743G36",
-        "evd_98DRVXVQK1"
+        "evd_TJMHVPQ1DG",
+        "evd_VW7HEPA7PM"
       ],
       "payload": {
-        "verdict_id": "vrd_XKXS3KDP59",
+        "verdict_id": "vrd_WQ8CMAGZ68",
         "decision": "record",
         "entity": {
           "type": "service",
-          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "id": "kh_c167259a675300c6662ea2f4",
           "role": 0
         },
         "risk": 0.15,
@@ -1523,7 +1523,7 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_98DRVXVQK1"
+          "evd_VW7HEPA7PM"
         ],
         "time": 1795251606300,
         "ladder_level": 0
@@ -1541,7 +1541,7 @@
       "sensor_seq": 11,
       "kind": "event",
       "evidence_ids": [
-        "evd_EWSVSVE0MG"
+        "evd_9ZPGZ48E0V"
       ],
       "payload": {
         "class_uid": 0,
@@ -1573,7 +1573,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_9431ec20e893f6f4590d6fc2",
+            "uid": "kh_c167259a675300c6662ea2f4",
             "name": "",
             "type": "service",
             "org_uid": ""
@@ -1646,7 +1646,7 @@
       "sensor_seq": 11,
       "kind": "risk",
       "evidence_ids": [
-        "evd_EWSVSVE0MG"
+        "evd_9ZPGZ48E0V"
       ],
       "payload": {
         "entity": {
@@ -1658,7 +1658,7 @@
         "fast_score": 0.14982681326070457,
         "slow_score": 0.14999948426637721,
         "contributing_findings": [
-          "fnd_YJPWW913NQ"
+          "fnd_91KC7ZS3RK"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
@@ -1680,19 +1680,19 @@
       "sensor_seq": 11,
       "kind": "risk",
       "evidence_ids": [
-        "evd_EWSVSVE0MG"
+        "evd_9ZPGZ48E0V"
       ],
       "payload": {
         "entity": {
           "type": "service",
-          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "id": "kh_c167259a675300c6662ea2f4",
           "role": 0
         },
         "score": 0.14999948426637721,
         "fast_score": 0.14982681326070457,
         "slow_score": 0.14999948426637721,
         "contributing_findings": [
-          "fnd_YJPWW913NQ"
+          "fnd_91KC7ZS3RK"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
@@ -1714,11 +1714,11 @@
       "sensor_seq": 11,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_73N15C6SVN",
-        "evd_EWSVSVE0MG"
+        "evd_CCFFAV3AGE",
+        "evd_9ZPGZ48E0V"
       ],
       "payload": {
-        "verdict_id": "vrd_CT752N078S",
+        "verdict_id": "vrd_2FT9NMM221",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -1734,7 +1734,7 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_EWSVSVE0MG"
+          "evd_9ZPGZ48E0V"
         ],
         "time": 1795251607300,
         "ladder_level": 0
@@ -1752,15 +1752,15 @@
       "sensor_seq": 11,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_ETA3HQV8HQ",
-        "evd_EWSVSVE0MG"
+        "evd_57Z3NEX21F",
+        "evd_9ZPGZ48E0V"
       ],
       "payload": {
-        "verdict_id": "vrd_V4V4XSP6GE",
+        "verdict_id": "vrd_FYANG5ES0S",
         "decision": "record",
         "entity": {
           "type": "service",
-          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "id": "kh_c167259a675300c6662ea2f4",
           "role": 0
         },
         "risk": 0.15,
@@ -1772,7 +1772,7 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_EWSVSVE0MG"
+          "evd_9ZPGZ48E0V"
         ],
         "time": 1795251607300,
         "ladder_level": 0
@@ -1790,7 +1790,7 @@
       "sensor_seq": 12,
       "kind": "event",
       "evidence_ids": [
-        "evd_1Y6DZZ9E1K"
+        "evd_61D7ZFFBWN"
       ],
       "payload": {
         "class_uid": 0,
@@ -1822,7 +1822,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_9431ec20e893f6f4590d6fc2",
+            "uid": "kh_c167259a675300c6662ea2f4",
             "name": "",
             "type": "service",
             "org_uid": ""
@@ -1895,7 +1895,7 @@
       "sensor_seq": 12,
       "kind": "risk",
       "evidence_ids": [
-        "evd_1Y6DZZ9E1K"
+        "evd_61D7ZFFBWN"
       ],
       "payload": {
         "entity": {
@@ -1907,9 +1907,9 @@
         "fast_score": 1.0,
         "slow_score": 1.0,
         "contributing_findings": [
-          "fnd_2CNX2WQ5WK",
-          "fnd_BFR9PW3ANF",
-          "fnd_YJPWW913NQ"
+          "fnd_1XKJ8MRXGM",
+          "fnd_91KC7ZS3RK",
+          "fnd_HTBFCFRRS9"
         ],
         "independent_sources": 2,
         "has_high_confidence_source": true,
@@ -1931,21 +1931,21 @@
       "sensor_seq": 12,
       "kind": "risk",
       "evidence_ids": [
-        "evd_1Y6DZZ9E1K"
+        "evd_61D7ZFFBWN"
       ],
       "payload": {
         "entity": {
           "type": "service",
-          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "id": "kh_c167259a675300c6662ea2f4",
           "role": 0
         },
         "score": 1.0,
         "fast_score": 1.0,
         "slow_score": 1.0,
         "contributing_findings": [
-          "fnd_2CNX2WQ5WK",
-          "fnd_BFR9PW3ANF",
-          "fnd_YJPWW913NQ"
+          "fnd_1XKJ8MRXGM",
+          "fnd_91KC7ZS3RK",
+          "fnd_HTBFCFRRS9"
         ],
         "independent_sources": 2,
         "has_high_confidence_source": true,
@@ -1967,11 +1967,11 @@
       "sensor_seq": 12,
       "kind": "finding",
       "evidence_ids": [
-        "evd_SR11KC4KAN",
-        "evd_1Y6DZZ9E1K"
+        "evd_3S9BNRJ4MF",
+        "evd_61D7ZFFBWN"
       ],
       "payload": {
-        "finding_id": "fnd_2CNX2WQ5WK",
+        "finding_id": "fnd_HTBFCFRRS9",
         "rule": "bulk_read_anomaly",
         "rule_family": "exfil.bulk_read",
         "technique": "T1530",
@@ -1979,7 +1979,7 @@
         "confidence": 0.7,
         "severity": 4,
         "evidence_ids": [
-          "evd_1Y6DZZ9E1K"
+          "evd_61D7ZFFBWN"
         ],
         "entities": [
           {
@@ -1989,7 +1989,7 @@
           },
           {
             "type": "service",
-            "id": "kh_9431ec20e893f6f4590d6fc2",
+            "id": "kh_c167259a675300c6662ea2f4",
             "role": 1
           }
         ],
@@ -1998,8 +1998,8 @@
         "critical_positive_security": false,
         "deception_hit": false,
         "attack_stage": "data_theft",
-        "explanation": "bulk read far above the usage profile of edg_K8RE2YPHBZ",
-        "source_event": "evd_1Y6DZZ9E1K"
+        "explanation": "bulk read far above the usage profile of edg_556ZH62X9E",
+        "source_event": "evd_61D7ZFFBWN"
       },
       "counterfactual": false,
       "hops_us": {},
@@ -2014,11 +2014,11 @@
       "sensor_seq": 12,
       "kind": "finding",
       "evidence_ids": [
-        "evd_WFYWYWYFGC",
-        "evd_1Y6DZZ9E1K"
+        "evd_78R6EKC17W",
+        "evd_61D7ZFFBWN"
       ],
       "payload": {
-        "finding_id": "fnd_BFR9PW3ANF",
+        "finding_id": "fnd_1XKJ8MRXGM",
         "rule": "invariant_breach",
         "rule_family": "consequence.per_identity_records",
         "technique": "T1657",
@@ -2026,7 +2026,7 @@
         "confidence": 1.0,
         "severity": 5,
         "evidence_ids": [
-          "evd_1Y6DZZ9E1K"
+          "evd_61D7ZFFBWN"
         ],
         "entities": [
           {
@@ -2036,7 +2036,7 @@
           },
           {
             "type": "service",
-            "id": "kh_9431ec20e893f6f4590d6fc2",
+            "id": "kh_c167259a675300c6662ea2f4",
             "role": 1
           }
         ],
@@ -2046,7 +2046,7 @@
         "deception_hit": false,
         "attack_stage": "impact",
         "explanation": "consequence invariant breached (per_identity_records: 60400 of 10000)",
-        "source_event": "evd_1Y6DZZ9E1K"
+        "source_event": "evd_61D7ZFFBWN"
       },
       "counterfactual": false,
       "hops_us": {},
@@ -2061,11 +2061,11 @@
       "sensor_seq": 12,
       "kind": "action_request",
       "evidence_ids": [
-        "evd_595KYJSS58"
+        "evd_KB55XGH8GA"
       ],
       "payload": {
         "request": {
-          "action_request_id": "act_E0K5W6AK90",
+          "action_request_id": "act_C0N5YZ53CV",
           "target": {
             "type": "ip",
             "id": "198.51.100.7",
@@ -2081,11 +2081,11 @@
           },
           "reversal_method": "ip.unban",
           "evidence_ids": [
-            "evd_1Y6DZZ9E1K",
-            "evd_SR11KC4KAN",
-            "evd_WFYWYWYFGC"
+            "evd_61D7ZFFBWN",
+            "evd_3S9BNRJ4MF",
+            "evd_78R6EKC17W"
           ],
-          "verdict_id": "vrd_83Q5H0MDES",
+          "verdict_id": "vrd_PEEKBHTBXP",
           "confidence_class": "two_source_high",
           "evidence_captured_first": false,
           "time": 1795251608300,
@@ -2108,13 +2108,13 @@
       "sensor_seq": 12,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_2J38FP5VQT",
-        "evd_1Y6DZZ9E1K",
-        "evd_SR11KC4KAN",
-        "evd_WFYWYWYFGC"
+        "evd_JVSD1W1AZF",
+        "evd_61D7ZFFBWN",
+        "evd_3S9BNRJ4MF",
+        "evd_78R6EKC17W"
       ],
       "payload": {
-        "verdict_id": "vrd_83Q5H0MDES",
+        "verdict_id": "vrd_PEEKBHTBXP",
         "decision": "contain",
         "entity": {
           "type": "ip",
@@ -2134,9 +2134,9 @@
         "expires_at": 1795255208300,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_1Y6DZZ9E1K",
-          "evd_SR11KC4KAN",
-          "evd_WFYWYWYFGC"
+          "evd_61D7ZFFBWN",
+          "evd_3S9BNRJ4MF",
+          "evd_78R6EKC17W"
         ],
         "time": 1795251608300,
         "ladder_level": 4
@@ -2154,14 +2154,14 @@
       "sensor_seq": 12,
       "kind": "action_request",
       "evidence_ids": [
-        "evd_Y7ZDZW0VT7"
+        "evd_7CTW3N2D73"
       ],
       "payload": {
         "request": {
-          "action_request_id": "act_R4FG4H4176",
+          "action_request_id": "act_33JA8XY0EW",
           "target": {
             "type": "service",
-            "id": "kh_9431ec20e893f6f4590d6fc2",
+            "id": "kh_c167259a675300c6662ea2f4",
             "role": 1
           },
           "action": "trust_edge.narrow",
@@ -2174,11 +2174,11 @@
           },
           "reversal_method": "trust_edge.restore",
           "evidence_ids": [
-            "evd_1Y6DZZ9E1K",
-            "evd_SR11KC4KAN",
-            "evd_WFYWYWYFGC"
+            "evd_61D7ZFFBWN",
+            "evd_3S9BNRJ4MF",
+            "evd_78R6EKC17W"
           ],
-          "verdict_id": "vrd_NG587R59X6",
+          "verdict_id": "vrd_0VEFRE31VT",
           "confidence_class": "two_source_high",
           "evidence_captured_first": false,
           "time": 1795251608300,
@@ -2201,17 +2201,17 @@
       "sensor_seq": 12,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_Q72BARAW43",
-        "evd_1Y6DZZ9E1K",
-        "evd_SR11KC4KAN",
-        "evd_WFYWYWYFGC"
+        "evd_N2WA7T7VQQ",
+        "evd_61D7ZFFBWN",
+        "evd_3S9BNRJ4MF",
+        "evd_78R6EKC17W"
       ],
       "payload": {
-        "verdict_id": "vrd_NG587R59X6",
+        "verdict_id": "vrd_0VEFRE31VT",
         "decision": "contain",
         "entity": {
           "type": "service",
-          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "id": "kh_c167259a675300c6662ea2f4",
           "role": 0
         },
         "risk": 1.0,
@@ -2227,9 +2227,9 @@
         "expires_at": 1795255208300,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_1Y6DZZ9E1K",
-          "evd_SR11KC4KAN",
-          "evd_WFYWYWYFGC"
+          "evd_61D7ZFFBWN",
+          "evd_3S9BNRJ4MF",
+          "evd_78R6EKC17W"
         ],
         "time": 1795251608300,
         "ladder_level": 4
@@ -2254,7 +2254,7 @@
   "evidence": [
     {
       "seq": 1,
-      "evidence_id": "evd_CTT0ETZMT1",
+      "evidence_id": "evd_VBX9B7ZG9C",
       "time": 1795251600400,
       "kind": "event",
       "incident_hint": "",
@@ -2288,7 +2288,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_5640912cef154d9f305573aa",
+            "uid": "kh_2bbca21a3a0a12e4cc0dd79e",
             "name": "",
             "type": "user",
             "org_uid": ""
@@ -2341,16 +2341,16 @@
         }
       },
       "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
-      "hash": "d5bf628caca6e16485309aacb1b2da3df396150457beeed3e2c874f312b59928",
+      "hash": "439390c8dd51d176fe34d224654ab8c6ea9b863a42656fbeda28611f6e6cbde6",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "kr9L9WuqbFZPM0aIy5dnNoXHh3e/ahirEuvWf+SVueCgquh5TFxu30msJmXQIIO0l9Va2inDSOjqvsIYsmtsCQ=="
+        "sig": "YXcJ5qgijYQAEUwkvjTrt8FTm1IP4rYPQi/8airukE8gF/xwC6PfMZ3d21XqjsYiGzDOlpWHH48d/KQxw5JPCw=="
       }
     },
     {
       "seq": 2,
-      "evidence_id": "evd_CW05G4HC4J",
+      "evidence_id": "evd_NS63DVGH5C",
       "time": 1795251600800,
       "kind": "event",
       "incident_hint": "",
@@ -2384,7 +2384,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_f4855d2aece40ad80b4cb1d9",
+            "uid": "kh_ce8146cc02eb11855c60c89f",
             "name": "",
             "type": "user",
             "org_uid": ""
@@ -2436,17 +2436,17 @@
           "egress_destination": ""
         }
       },
-      "prev_hash": "d5bf628caca6e16485309aacb1b2da3df396150457beeed3e2c874f312b59928",
-      "hash": "dd18e43bfecf73bacb26d14d911e2a916fc0a8be859e20c51c9ee049e8a5c188",
+      "prev_hash": "439390c8dd51d176fe34d224654ab8c6ea9b863a42656fbeda28611f6e6cbde6",
+      "hash": "0280f981ccb9aa95dad057a970571150467ab856e35d0045bb27bebbfbf68b6c",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "G/jtlVXwA16IZsNKzicTvggirJgUp2Ulh7X1HqIvD2rMM1TI3xi5u0Donwmgcun8P4r4Ga4vhaJGLcowwKgWDw=="
+        "sig": "tXBS2V1A6o+jUgOFOQoAK0ZeBkI6X5oYbIHKRkw+VAmf2iDTuAEYWC33wzefsRZ0G6NMbtH1V+IVj2dKRfeMCQ=="
       }
     },
     {
       "seq": 3,
-      "evidence_id": "evd_2THAJMW1DQ",
+      "evidence_id": "evd_5KGW77BDP2",
       "time": 1795251601200,
       "kind": "event",
       "incident_hint": "",
@@ -2480,7 +2480,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_16a8f2c67b976d9c6bf89267",
+            "uid": "kh_5eaccbd9ab7829f910fba757",
             "name": "",
             "type": "user",
             "org_uid": ""
@@ -2532,17 +2532,17 @@
           "egress_destination": ""
         }
       },
-      "prev_hash": "dd18e43bfecf73bacb26d14d911e2a916fc0a8be859e20c51c9ee049e8a5c188",
-      "hash": "8dab9cb1f8802dcf3ca3a20d3d0d76965762db75efa0e9fce2c1e8ecea459cba",
+      "prev_hash": "0280f981ccb9aa95dad057a970571150467ab856e35d0045bb27bebbfbf68b6c",
+      "hash": "f67b1f10541c69f8f2ecd4907c8f37260c598e7286b8193b9d4c1e740080b36d",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "mnZjhJtPjMk/UpJs1SrJlKgeC78w2NRL9dGKB8n5pvXt8oitJlEr7kYT14s7fFn1gtwMmRKl6hV3LCfEPbJpBQ=="
+        "sig": "+4wyrUAhwNxLYO1KEDg1DoqVQeFui/CsTzyUh4pG7OMS3znJWqCDu5DY/ouKsVxVtPhng+sESjI7t9fljyFBAA=="
       }
     },
     {
       "seq": 4,
-      "evidence_id": "evd_MSSE8D6YXH",
+      "evidence_id": "evd_SZ8R1KH2R0",
       "time": 1795251601600,
       "kind": "event",
       "incident_hint": "",
@@ -2576,7 +2576,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_516d6ccda80a79c79a5bc15f",
+            "uid": "kh_6cd27282397e5a3c333e5aa8",
             "name": "",
             "type": "user",
             "org_uid": ""
@@ -2628,17 +2628,17 @@
           "egress_destination": ""
         }
       },
-      "prev_hash": "8dab9cb1f8802dcf3ca3a20d3d0d76965762db75efa0e9fce2c1e8ecea459cba",
-      "hash": "3cd707b7ef5093dd6aab101d64352081d937c83e17c7aa578ff72e68b2e53857",
+      "prev_hash": "f67b1f10541c69f8f2ecd4907c8f37260c598e7286b8193b9d4c1e740080b36d",
+      "hash": "823e256b59c1742c8a6b37549e35a6c295478d8a2d858db5221f3a6b23e804b1",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "1mFGq+r5DcHFvmaEUAKcfdeZ5yZqVq4JT3gpaHl7+mkW69z8RremUn6NBsLnplLwn2aDc5WDGJTPmroWeZVsBg=="
+        "sig": "FT1mqazG4hQ6I84uQm5eV5hG09pgniFF/WjC26kE2rnZi0KfTEiyJe4inJr2qfSCQGjO4Lfajt0AAaeyB5OnDw=="
       }
     },
     {
       "seq": 5,
-      "evidence_id": "evd_J2VKZHPWX8",
+      "evidence_id": "evd_50EYVZP5QS",
       "time": 1795251602000,
       "kind": "event",
       "incident_hint": "",
@@ -2672,7 +2672,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_47fd552199f362860a975955",
+            "uid": "kh_26eeb06423b1b4bfe3fe5c99",
             "name": "",
             "type": "user",
             "org_uid": ""
@@ -2724,17 +2724,17 @@
           "egress_destination": ""
         }
       },
-      "prev_hash": "3cd707b7ef5093dd6aab101d64352081d937c83e17c7aa578ff72e68b2e53857",
-      "hash": "fb43141a8ef6bc34dc424309b636a12e0d34e812d9f3f3382cba3754b8c8ddea",
+      "prev_hash": "823e256b59c1742c8a6b37549e35a6c295478d8a2d858db5221f3a6b23e804b1",
+      "hash": "7131f8c3e63c5646381a32ef29b4942775523bde56b220003786d773fe89bcaa",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "Yqwr1BpMFyHlY9IvpN04CEsDbPy/+ywkdCyZ7G11HbvsXGNuD1g2ppNKfkdcgdyNv1Q31YPz2jY2R14BkCIDAg=="
+        "sig": "5i82aIYyuZ9HaV3JMYIU/HSB1JPDt1CatXLF8Xvcv5mPDtzZrtGRJl+8PiLFZfUxqZOeCTXSn6ef7igK/A+BDw=="
       }
     },
     {
       "seq": 6,
-      "evidence_id": "evd_4G96NRE0WX",
+      "evidence_id": "evd_R45ZZ5Q65K",
       "time": 1795251602400,
       "kind": "event",
       "incident_hint": "",
@@ -2768,7 +2768,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_4bccf89fd73fbdbbb855b45a",
+            "uid": "kh_f8053adca5bd8cd980740cb6",
             "name": "",
             "type": "user",
             "org_uid": ""
@@ -2820,17 +2820,17 @@
           "egress_destination": ""
         }
       },
-      "prev_hash": "fb43141a8ef6bc34dc424309b636a12e0d34e812d9f3f3382cba3754b8c8ddea",
-      "hash": "f7de29667b01cbbb4e384c628990e7ac61d2d8724eccfbe524d13038d158b9ce",
+      "prev_hash": "7131f8c3e63c5646381a32ef29b4942775523bde56b220003786d773fe89bcaa",
+      "hash": "b7b01507873204f7eb3d3d6b0ce1ce12805ca992be5e123fcfc0bf9ab252ef21",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "mCO+j/SMPMupFuuu7gl3YK1mSZ10b50zmgJPdp2GOCvZu8OhTwf52m7+Qc83dpMc8N/caud5UTwwNfjmzF+/Cw=="
+        "sig": "cnZOLKgfHagjMdRkPQ1W61YsjuRt4Q/givhypDFEi+NFl3WcnWyOCPvyW4f3I6uPMNLHDG3H6SM4JljMS7slDQ=="
       }
     },
     {
       "seq": 7,
-      "evidence_id": "evd_C73TKF5Y1D",
+      "evidence_id": "evd_0K65AJY0EM",
       "time": 1795251603300,
       "kind": "event",
       "incident_hint": "",
@@ -2864,7 +2864,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_4bccf89fd73fbdbbb855b45a",
+            "uid": "kh_f8053adca5bd8cd980740cb6",
             "name": "",
             "type": "user",
             "org_uid": ""
@@ -2916,17 +2916,17 @@
           "egress_destination": ""
         }
       },
-      "prev_hash": "f7de29667b01cbbb4e384c628990e7ac61d2d8724eccfbe524d13038d158b9ce",
-      "hash": "466c23a473b94ba8fa6c09600fbc806d770079768b4c63695022512173223c43",
+      "prev_hash": "b7b01507873204f7eb3d3d6b0ce1ce12805ca992be5e123fcfc0bf9ab252ef21",
+      "hash": "cee4343c142d448fb0fe949798723b641348c625ad4af8114c716eb96ef9c91b",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "1guPhSIAo864AMrGpoSDUBzaE3TkjccM+V8JDhjFFbPp8zj96TJ9AziXhVsjp00fRPg4K1X5sNFI68Z1d09BDA=="
+        "sig": "iLkrZoP6W36ynimu/qQfX2uW9XwXZqEl5rUfAYJgDIX2Uw4X7OkJAnJbaPuNyhIRStEyGaLbyCLS7G91ZOjLBQ=="
       }
     },
     {
       "seq": 8,
-      "evidence_id": "evd_NVHZYZQCPP",
+      "evidence_id": "evd_EPMXRYMRQD",
       "time": 1795251604300,
       "kind": "event",
       "incident_hint": "",
@@ -2960,7 +2960,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_9431ec20e893f6f4590d6fc2",
+            "uid": "kh_c167259a675300c6662ea2f4",
             "name": "",
             "type": "service",
             "org_uid": ""
@@ -3014,22 +3014,22 @@
           "egress_destination": ""
         }
       },
-      "prev_hash": "466c23a473b94ba8fa6c09600fbc806d770079768b4c63695022512173223c43",
-      "hash": "f31c26c751478e1043be0c0f5b06d70592859d48546a661f020d49e3bb6ac7c3",
+      "prev_hash": "cee4343c142d448fb0fe949798723b641348c625ad4af8114c716eb96ef9c91b",
+      "hash": "018b2a4a261dd81b76b0536575d516027c40c1525c0c67e112a4487222793667",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "KnTGUHpROPD+X3HmGS+AXmixxM0lp8lSmmARMJsjbXiSvOUOzquEph6DTeM5pwrADMGxZdk2+FqZ8UG+MsryDw=="
+        "sig": "oMwtN8Bet07drGlB6N41u1S8I6AtnmN9kY15Wi0EYeW5GRyD2wTuPDKEIx1IXQ0qrGQr8K1XcrJMQFpSKemXCQ=="
       }
     },
     {
       "seq": 9,
-      "evidence_id": "evd_XF2WCJMSXK",
+      "evidence_id": "evd_2S0NK4JKTM",
       "time": 1795251604300,
       "kind": "finding",
       "incident_hint": "",
       "payload": {
-        "finding_id": "fnd_YJPWW913NQ",
+        "finding_id": "fnd_91KC7ZS3RK",
         "rule": "undeclared_edge",
         "rule_family": "drift.edge",
         "technique": "T1078",
@@ -3037,7 +3037,7 @@
         "confidence": 0.3,
         "severity": 2,
         "evidence_ids": [
-          "evd_NVHZYZQCPP"
+          "evd_EPMXRYMRQD"
         ],
         "entities": [
           {
@@ -3047,7 +3047,7 @@
           },
           {
             "type": "service",
-            "id": "kh_9431ec20e893f6f4590d6fc2",
+            "id": "kh_c167259a675300c6662ea2f4",
             "role": 1
           }
         ],
@@ -3056,25 +3056,25 @@
         "critical_positive_security": false,
         "deception_hit": false,
         "attack_stage": "privilege_escalation",
-        "explanation": "trust edge edg_K8RE2YPHBZ is used but never declared",
-        "source_event": "evd_NVHZYZQCPP"
+        "explanation": "trust edge edg_556ZH62X9E is used but never declared",
+        "source_event": "evd_EPMXRYMRQD"
       },
-      "prev_hash": "f31c26c751478e1043be0c0f5b06d70592859d48546a661f020d49e3bb6ac7c3",
-      "hash": "8b695cc6fa78dcf6b91bc26038e3f0373232b5bae21bfa37508995e6009116ac",
+      "prev_hash": "018b2a4a261dd81b76b0536575d516027c40c1525c0c67e112a4487222793667",
+      "hash": "e4e9de2188b12d51b0617ef81fd4e01e9450468932ef10ee330c1e4b2c7b6f68",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "m8tP6JGqbS0qYSd5kndLSBaxgyx5MhRWNTad0uLeeqrSeCZ+V/jjRxrJH9Y+8T+BFRZsuhr7AFxaq/srN/wxCQ=="
+        "sig": "VuBM71oc2a6+cKwACWMqq4+vW8EMyorrDNkbCdM9WHPKABZmHjefoOy0N007fhwXr2w3raQVxTcYrs4AgBvZBg=="
       }
     },
     {
       "seq": 10,
-      "evidence_id": "evd_YJAYR5EHJG",
+      "evidence_id": "evd_TT8H16J0A3",
       "time": 1795251604300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_S8SJGGYSXE",
+        "verdict_id": "vrd_BNRMDYFH60",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -3092,32 +3092,32 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_NVHZYZQCPP",
-          "evd_XF2WCJMSXK"
+          "evd_EPMXRYMRQD",
+          "evd_2S0NK4JKTM"
         ],
         "time": 1795251604300,
         "ladder_level": 0
       },
-      "prev_hash": "8b695cc6fa78dcf6b91bc26038e3f0373232b5bae21bfa37508995e6009116ac",
-      "hash": "0a75b402757cfaf35a3bf0b25a1501d0192e785e5c1f3df52c0b1a220e62b38f",
+      "prev_hash": "e4e9de2188b12d51b0617ef81fd4e01e9450468932ef10ee330c1e4b2c7b6f68",
+      "hash": "88b906123c45795e1823631766f4a13b840dc95ae26ee0ed3157714a40a41346",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "xUKyRckP0mL/njRi2ETPOM7mi7+4nzqFczFAsCxuOBStnDjGcxpD/Qf6rMQNXp1/YVUXVnMz62phJDsS2rv/Dg=="
+        "sig": "tJ6Qucl+rlrj05q/zXtX1fMFm2CrkloU2NvwJSXxbFV2Mh0zHlb6W+zGp9//1bRJ4zPyu6tR2ONyC9jVjeoBDw=="
       }
     },
     {
       "seq": 11,
-      "evidence_id": "evd_HH29M13K5G",
+      "evidence_id": "evd_BDCGDD220H",
       "time": 1795251604300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_4PKY3JV5HN",
+        "verdict_id": "vrd_M7QDPP8ZWC",
         "decision": "record",
         "entity": {
           "type": "service",
-          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "id": "kh_c167259a675300c6662ea2f4",
           "role": 0
         },
         "risk": 0.15,
@@ -3131,23 +3131,23 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_NVHZYZQCPP",
-          "evd_XF2WCJMSXK"
+          "evd_EPMXRYMRQD",
+          "evd_2S0NK4JKTM"
         ],
         "time": 1795251604300,
         "ladder_level": 0
       },
-      "prev_hash": "0a75b402757cfaf35a3bf0b25a1501d0192e785e5c1f3df52c0b1a220e62b38f",
-      "hash": "0f021e3550cc8fae8df35b6d5ac4f50b7bdd133cf4fa3b89758f35809d9b74e6",
+      "prev_hash": "88b906123c45795e1823631766f4a13b840dc95ae26ee0ed3157714a40a41346",
+      "hash": "e1ad83440b22c150d9da2090aaad908d49ae72a1f5ec404be78b227fed4f113a",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "A0X2AA8JsTMRndzJZICeHpmsf1IOeG8+xtpTBcpK2vSb6/YvuRPWioFz+oT3RnxuzO3hP/E80dvfxsq94bAwAQ=="
+        "sig": "oFKk2TxA5TgPc2q+yg0sSpstKNlngjSwq0t8wThGqPUcRX2CXwDLiL1zRRi7XEetzuZglZ/droX8oQvw3Fo0Dg=="
       }
     },
     {
       "seq": 12,
-      "evidence_id": "evd_61WRV8MV1V",
+      "evidence_id": "evd_FAJ2J79THQ",
       "time": 1795251605300,
       "kind": "event",
       "incident_hint": "",
@@ -3181,7 +3181,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_9431ec20e893f6f4590d6fc2",
+            "uid": "kh_c167259a675300c6662ea2f4",
             "name": "",
             "type": "service",
             "org_uid": ""
@@ -3235,22 +3235,22 @@
           "egress_destination": ""
         }
       },
-      "prev_hash": "0f021e3550cc8fae8df35b6d5ac4f50b7bdd133cf4fa3b89758f35809d9b74e6",
-      "hash": "b5f7448ec4667d9c3599355f478beea14e981c18380f9b07bfe0092c62a4fd69",
+      "prev_hash": "e1ad83440b22c150d9da2090aaad908d49ae72a1f5ec404be78b227fed4f113a",
+      "hash": "352fa836887b49ed882e12e86d069f88d92a148c6d82668b26c257420e93f6c2",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "jTtgI+SLg9+8XRrL4GyAyMdGMMdW0cNBRbUSy2kgA60VY4kXOTn6pyozHRkLdTivsuSG19SH845u4z7TJhJxBA=="
+        "sig": "zIQl/DI6X0s4PnQF7GJrxxQSTsHxz1oKfJ09fUw/cGyqE08m+F8m474HF1Api46qqiHodrOTqdINbLsN9cGqBQ=="
       }
     },
     {
       "seq": 13,
-      "evidence_id": "evd_JFGR8DPXQG",
+      "evidence_id": "evd_4P21GBPNSD",
       "time": 1795251605300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_CBQV6001QQ",
+        "verdict_id": "vrd_7A2WHZ0FJS",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -3266,31 +3266,31 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_61WRV8MV1V"
+          "evd_FAJ2J79THQ"
         ],
         "time": 1795251605300,
         "ladder_level": 0
       },
-      "prev_hash": "b5f7448ec4667d9c3599355f478beea14e981c18380f9b07bfe0092c62a4fd69",
-      "hash": "69a683c7ac96327afc85aef85c47b823e13a94563294c96d4c22eef8dca28420",
+      "prev_hash": "352fa836887b49ed882e12e86d069f88d92a148c6d82668b26c257420e93f6c2",
+      "hash": "738471eecaa4388bb5ea0d94d9ec30e17ee98649ad145d427f81c1f32c9f5a80",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "CfEQi4AiESVYNx90JVIdrc9H0kwmey+i5l0j+8YHIP3nfzBZoVIhOBHIXDhKb15zH19QnBQV9KO25II8LyxwAA=="
+        "sig": "u+UEELVYowLxXXo4gb4wqyJSdfG4JJOchiRxwxc4zpiaH3E8l7mVfEPn8oaJl9R0XfCZGt8dDxngmfNvPCzYBA=="
       }
     },
     {
       "seq": 14,
-      "evidence_id": "evd_TKEFSD68XE",
+      "evidence_id": "evd_JRNSAH5AYQ",
       "time": 1795251605300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_H41Z6XM7K6",
+        "verdict_id": "vrd_E3E3J96E44",
         "decision": "record",
         "entity": {
           "type": "service",
-          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "id": "kh_c167259a675300c6662ea2f4",
           "role": 0
         },
         "risk": 0.15,
@@ -3302,22 +3302,22 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_61WRV8MV1V"
+          "evd_FAJ2J79THQ"
         ],
         "time": 1795251605300,
         "ladder_level": 0
       },
-      "prev_hash": "69a683c7ac96327afc85aef85c47b823e13a94563294c96d4c22eef8dca28420",
-      "hash": "f88b6f7adfac7294fee972d1e7d93a54aaa0c182f79aa5309af5d95d90ddfa1d",
+      "prev_hash": "738471eecaa4388bb5ea0d94d9ec30e17ee98649ad145d427f81c1f32c9f5a80",
+      "hash": "764dfd874234b32f93e21ebe995540a3579601ef735d8648cff431dc3df33cb6",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "XVZjchSKhg04J/LgEqy1rZ4Ms5D3PrY0TcmULmI2MoFoSLdR65E1tGmQHIK3zS01piJV2rn65k0WBz/c2pPzBA=="
+        "sig": "OcgnUR9fomftRto7LZu5tcuCpGgzTJMoOspmGfOmw2AW37Hgcq1a2/PBdFzn900fhKjyTNUAER+v7PstXzOuCA=="
       }
     },
     {
       "seq": 15,
-      "evidence_id": "evd_98DRVXVQK1",
+      "evidence_id": "evd_VW7HEPA7PM",
       "time": 1795251606300,
       "kind": "event",
       "incident_hint": "",
@@ -3351,7 +3351,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_9431ec20e893f6f4590d6fc2",
+            "uid": "kh_c167259a675300c6662ea2f4",
             "name": "",
             "type": "service",
             "org_uid": ""
@@ -3405,22 +3405,22 @@
           "egress_destination": ""
         }
       },
-      "prev_hash": "f88b6f7adfac7294fee972d1e7d93a54aaa0c182f79aa5309af5d95d90ddfa1d",
-      "hash": "ba2e6f99bfe538f27115f8cd003ac81de3919d2040125d753e66575b35b64e4b",
+      "prev_hash": "764dfd874234b32f93e21ebe995540a3579601ef735d8648cff431dc3df33cb6",
+      "hash": "1ceaf53b960aee5d2438a9d03491d0fc2d412fbf7884435b215afee6a213fc04",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "naJkHH2uT1yu/RPXSIZGRf3R8Ii/voC5Z91zet8m+S9O6WXXvJV08Hb/ZI0bMTXV9nhvzzwktLlAoAO80BNgAg=="
+        "sig": "6gyvA90CBPIsjUk31e/9E/KVH2LmKRZVGP6HYu9MvehE1L2vERt/e5wLyUWcX0AQLosKNIGqw4/6vHkx2cQZDg=="
       }
     },
     {
       "seq": 16,
-      "evidence_id": "evd_8T2KREN4SZ",
+      "evidence_id": "evd_MC2XXE2WBN",
       "time": 1795251606300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_MQ9R3PEKRQ",
+        "verdict_id": "vrd_0M5ZD7550M",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -3436,31 +3436,31 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_98DRVXVQK1"
+          "evd_VW7HEPA7PM"
         ],
         "time": 1795251606300,
         "ladder_level": 0
       },
-      "prev_hash": "ba2e6f99bfe538f27115f8cd003ac81de3919d2040125d753e66575b35b64e4b",
-      "hash": "a424b830852c93305713d14a7da902a3bc09bc462b0b16377570122bc8ada50f",
+      "prev_hash": "1ceaf53b960aee5d2438a9d03491d0fc2d412fbf7884435b215afee6a213fc04",
+      "hash": "2b37d9fdd09e2a3f5d587b880a779fd9068befddec8738a1f29a38feb4cddb7c",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "YCdOmPytWuTsAvVPJfMx+tR/j1JtTpde/rj2IKrqsPcIeJEGTtcgu1G6gmaCwpVgbB9ZXi7fNIpAWFDxB87QAw=="
+        "sig": "dQpHNF5gsW7m+2nbOVs9pu6NFGBaowwbncbH6f4Kdnh5N4aSzIXGGAIJrjFMD0Ne9Pq7qvvgXXIOzl04hZhOCw=="
       }
     },
     {
       "seq": 17,
-      "evidence_id": "evd_CP3Y743G36",
+      "evidence_id": "evd_TJMHVPQ1DG",
       "time": 1795251606300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_XKXS3KDP59",
+        "verdict_id": "vrd_WQ8CMAGZ68",
         "decision": "record",
         "entity": {
           "type": "service",
-          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "id": "kh_c167259a675300c6662ea2f4",
           "role": 0
         },
         "risk": 0.15,
@@ -3472,22 +3472,22 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_98DRVXVQK1"
+          "evd_VW7HEPA7PM"
         ],
         "time": 1795251606300,
         "ladder_level": 0
       },
-      "prev_hash": "a424b830852c93305713d14a7da902a3bc09bc462b0b16377570122bc8ada50f",
-      "hash": "bf3f3962ae95b4f39089381301dbd547f890aa9155d7b7af17f395a13fc251c8",
+      "prev_hash": "2b37d9fdd09e2a3f5d587b880a779fd9068befddec8738a1f29a38feb4cddb7c",
+      "hash": "26e18e7a1a57c6f63b800ddbe14979ee02b4e5a3e4fb34cd69925268af7b1aa7",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "+nVT5GYkcsvdMFFGV8Zuq8Wto9HU21V7pAAdjuDmqneGs8rrTAeaRogfixVleIePjt5/oeof610Ndo4S4A2ACQ=="
+        "sig": "/JoWhQDJDQXMlZmMD9ZKVZXBNS6OYBQcAGY7ph6s1M/vAr2rlo/D0hLEUk+oKjCXLS2sTa0uPAV0LDguBtmBCw=="
       }
     },
     {
       "seq": 18,
-      "evidence_id": "evd_EWSVSVE0MG",
+      "evidence_id": "evd_9ZPGZ48E0V",
       "time": 1795251607300,
       "kind": "event",
       "incident_hint": "",
@@ -3521,7 +3521,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_9431ec20e893f6f4590d6fc2",
+            "uid": "kh_c167259a675300c6662ea2f4",
             "name": "",
             "type": "service",
             "org_uid": ""
@@ -3575,22 +3575,22 @@
           "egress_destination": ""
         }
       },
-      "prev_hash": "bf3f3962ae95b4f39089381301dbd547f890aa9155d7b7af17f395a13fc251c8",
-      "hash": "3ac49595ca5c4ad32623a7f8b427b08b9d1dd5a79a5bda4a05b606ce1617553e",
+      "prev_hash": "26e18e7a1a57c6f63b800ddbe14979ee02b4e5a3e4fb34cd69925268af7b1aa7",
+      "hash": "af975354ba73c8679046d02194701113c911f78ef1dc30cc4c2228c972837601",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "jUKuuiae+ePu9Gg4zFZc/kqud/+pJNUlixePPuj9f26ylokykUKEECheTJDncO5INGCQhDxyFH3ErWPojY5qAw=="
+        "sig": "VsPQBXv2P8I4jcmhoaa2KyhlyYemrOaOvLMynZ/fKz36WQJX/gxFp+KiVRppBFU6Y7bJgWl2JEU40tNQ0KdMDA=="
       }
     },
     {
       "seq": 19,
-      "evidence_id": "evd_73N15C6SVN",
+      "evidence_id": "evd_CCFFAV3AGE",
       "time": 1795251607300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_CT752N078S",
+        "verdict_id": "vrd_2FT9NMM221",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -3606,31 +3606,31 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_EWSVSVE0MG"
+          "evd_9ZPGZ48E0V"
         ],
         "time": 1795251607300,
         "ladder_level": 0
       },
-      "prev_hash": "3ac49595ca5c4ad32623a7f8b427b08b9d1dd5a79a5bda4a05b606ce1617553e",
-      "hash": "68f5ba7ced38a3a5183d85ed7a2d5fde5a33abf1260cd3edc76a5b74f7492307",
+      "prev_hash": "af975354ba73c8679046d02194701113c911f78ef1dc30cc4c2228c972837601",
+      "hash": "55c573a57ad64528452485fddd2686006934515965af68896d117cd03072d5a6",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "GUNwVbpQz0nvq5Cx905gR2cRjkqj0PqclKZZgMWpiKCQsdGqLRku+K3u+8y4nE0iskkRPuNyu65fcOJM3K9uBA=="
+        "sig": "HnT6XG7o8yXDLdjiwyNsc5oQ4P/rSoXFXrlH9zZSVYLi3QE9mkyQ5+wD4sd5w0L0DJ6rbzexOYa/VaCuYVU8Dg=="
       }
     },
     {
       "seq": 20,
-      "evidence_id": "evd_ETA3HQV8HQ",
+      "evidence_id": "evd_57Z3NEX21F",
       "time": 1795251607300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_V4V4XSP6GE",
+        "verdict_id": "vrd_FYANG5ES0S",
         "decision": "record",
         "entity": {
           "type": "service",
-          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "id": "kh_c167259a675300c6662ea2f4",
           "role": 0
         },
         "risk": 0.15,
@@ -3642,22 +3642,22 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_EWSVSVE0MG"
+          "evd_9ZPGZ48E0V"
         ],
         "time": 1795251607300,
         "ladder_level": 0
       },
-      "prev_hash": "68f5ba7ced38a3a5183d85ed7a2d5fde5a33abf1260cd3edc76a5b74f7492307",
-      "hash": "c7e3214b647b5b0a333c64f9229814cb7f2594f2885e4185c99e2f9e0bee2e07",
+      "prev_hash": "55c573a57ad64528452485fddd2686006934515965af68896d117cd03072d5a6",
+      "hash": "96121afd8dfe968681af3001b7173bb690f607982781979fd5d45b438ab1b6a5",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "bwtS3Krv0cIVtSrmswHE8suei8RMGF/8fJezSU8Uff3bnqBrtFtCv+vQQtQI3U89NQJXoH275uiwLOwMsutDCQ=="
+        "sig": "KTPDwOUs16cJhWOY67LEeqmiGn9pqpICOjqDj4MMJTuphUmVJjHEfigymcj3yQkJj1K911zqHn9k6xPWmDGaCw=="
       }
     },
     {
       "seq": 21,
-      "evidence_id": "evd_1Y6DZZ9E1K",
+      "evidence_id": "evd_61D7ZFFBWN",
       "time": 1795251608300,
       "kind": "event",
       "incident_hint": "",
@@ -3691,7 +3691,7 @@
         },
         "actor": {
           "user": {
-            "uid": "kh_9431ec20e893f6f4590d6fc2",
+            "uid": "kh_c167259a675300c6662ea2f4",
             "name": "",
             "type": "service",
             "org_uid": ""
@@ -3745,22 +3745,22 @@
           "egress_destination": ""
         }
       },
-      "prev_hash": "c7e3214b647b5b0a333c64f9229814cb7f2594f2885e4185c99e2f9e0bee2e07",
-      "hash": "948c5446dd08e930aa6493f46fdc42fb2180f2af1cf358136d44d13a3d47f08a",
+      "prev_hash": "96121afd8dfe968681af3001b7173bb690f607982781979fd5d45b438ab1b6a5",
+      "hash": "ae218e5f865e6e694e244ca8938ff8573923f3b77ac2e4920a83bbc400189a39",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "QjzVEphqr/gl+LVY28BOfA6dpTu2GXCswBHaJKzVQR2Qwx/unWch8FFiEoUgQYz1sRg0E1F2c39ePDGNTO3ZBg=="
+        "sig": "pZiaN1zUnGEQL6gCn1xOwseHYWxsV5/Odcda60q0zMYzr84pexBTOECmd0QFqYFOba34O5TeD30ks6syvUZ+Ag=="
       }
     },
     {
       "seq": 22,
-      "evidence_id": "evd_SR11KC4KAN",
+      "evidence_id": "evd_3S9BNRJ4MF",
       "time": 1795251608300,
       "kind": "finding",
       "incident_hint": "",
       "payload": {
-        "finding_id": "fnd_2CNX2WQ5WK",
+        "finding_id": "fnd_HTBFCFRRS9",
         "rule": "bulk_read_anomaly",
         "rule_family": "exfil.bulk_read",
         "technique": "T1530",
@@ -3768,7 +3768,7 @@
         "confidence": 0.7,
         "severity": 4,
         "evidence_ids": [
-          "evd_1Y6DZZ9E1K"
+          "evd_61D7ZFFBWN"
         ],
         "entities": [
           {
@@ -3778,7 +3778,7 @@
           },
           {
             "type": "service",
-            "id": "kh_9431ec20e893f6f4590d6fc2",
+            "id": "kh_c167259a675300c6662ea2f4",
             "role": 1
           }
         ],
@@ -3787,25 +3787,25 @@
         "critical_positive_security": false,
         "deception_hit": false,
         "attack_stage": "data_theft",
-        "explanation": "bulk read far above the usage profile of edg_K8RE2YPHBZ",
-        "source_event": "evd_1Y6DZZ9E1K"
+        "explanation": "bulk read far above the usage profile of edg_556ZH62X9E",
+        "source_event": "evd_61D7ZFFBWN"
       },
-      "prev_hash": "948c5446dd08e930aa6493f46fdc42fb2180f2af1cf358136d44d13a3d47f08a",
-      "hash": "bbe909625eb8b9e79fa42e692761d17d52ab58ff2c7a0ec1232bdc337c63cdb4",
+      "prev_hash": "ae218e5f865e6e694e244ca8938ff8573923f3b77ac2e4920a83bbc400189a39",
+      "hash": "6871088487c41002dee8997f83d0c85c13b6b250b305b558b953480d630a9cf4",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "BW1KIjgfXfixm2T1r1UW41y2qUehN+Dn2eru+uunAch5wTXIXNSoZS/RozL6AFYdFb5IML6++N3NomoywlqdCw=="
+        "sig": "D9tN2pUIlOPQan0iOrmJaa+Y/dyY0GZHbSiT+rn7nFxfDIt6i4MnTccJ6SZbLvNny1/qmOLmDiMhpLWQYLxmDA=="
       }
     },
     {
       "seq": 23,
-      "evidence_id": "evd_WFYWYWYFGC",
+      "evidence_id": "evd_78R6EKC17W",
       "time": 1795251608300,
       "kind": "finding",
       "incident_hint": "",
       "payload": {
-        "finding_id": "fnd_BFR9PW3ANF",
+        "finding_id": "fnd_1XKJ8MRXGM",
         "rule": "invariant_breach",
         "rule_family": "consequence.per_identity_records",
         "technique": "T1657",
@@ -3813,7 +3813,7 @@
         "confidence": 1.0,
         "severity": 5,
         "evidence_ids": [
-          "evd_1Y6DZZ9E1K"
+          "evd_61D7ZFFBWN"
         ],
         "entities": [
           {
@@ -3823,7 +3823,7 @@
           },
           {
             "type": "service",
-            "id": "kh_9431ec20e893f6f4590d6fc2",
+            "id": "kh_c167259a675300c6662ea2f4",
             "role": 1
           }
         ],
@@ -3833,25 +3833,25 @@
         "deception_hit": false,
         "attack_stage": "impact",
         "explanation": "consequence invariant breached (per_identity_records: 60400 of 10000)",
-        "source_event": "evd_1Y6DZZ9E1K"
+        "source_event": "evd_61D7ZFFBWN"
       },
-      "prev_hash": "bbe909625eb8b9e79fa42e692761d17d52ab58ff2c7a0ec1232bdc337c63cdb4",
-      "hash": "65c23ca2be870f67bfcb0682a49744e4fc9c11b1fa2d6a38680932354bc25b16",
+      "prev_hash": "6871088487c41002dee8997f83d0c85c13b6b250b305b558b953480d630a9cf4",
+      "hash": "d5552e65ddecb0d3b28c404b7895a66bf988cee30a987fcc2a7904eeab026b14",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "msKl3JTcgPtwEKFuynGyU4pAX5EnSSWc2tfQCMTjsp4h1T5iKtmEs4P847pYWZ094NAVebrcbfYN5o0eaSVtCg=="
+        "sig": "WQmZ0cZqrHPqFWAvMTfGCNZD12Z7zBdLV0MBBHzmQBwJUd698bA5SROZ0A0OH+6AAfYhTwHjoTc6fjO5aPWECA=="
       }
     },
     {
       "seq": 24,
-      "evidence_id": "evd_595KYJSS58",
+      "evidence_id": "evd_KB55XGH8GA",
       "time": 1795251608300,
       "kind": "action_request",
       "incident_hint": "",
       "payload": {
         "request": {
-          "action_request_id": "act_E0K5W6AK90",
+          "action_request_id": "act_C0N5YZ53CV",
           "target": {
             "type": "ip",
             "id": "198.51.100.7",
@@ -3867,11 +3867,11 @@
           },
           "reversal_method": "ip.unban",
           "evidence_ids": [
-            "evd_1Y6DZZ9E1K",
-            "evd_SR11KC4KAN",
-            "evd_WFYWYWYFGC"
+            "evd_61D7ZFFBWN",
+            "evd_3S9BNRJ4MF",
+            "evd_78R6EKC17W"
           ],
-          "verdict_id": "vrd_83Q5H0MDES",
+          "verdict_id": "vrd_PEEKBHTBXP",
           "confidence_class": "two_source_high",
           "evidence_captured_first": false,
           "time": 1795251608300,
@@ -3881,22 +3881,22 @@
         "review": "Allowed",
         "needs_approval": false
       },
-      "prev_hash": "65c23ca2be870f67bfcb0682a49744e4fc9c11b1fa2d6a38680932354bc25b16",
-      "hash": "ee6faf4ced7f474f3af7a619c5edf14a9d0c89aaed7c5b2042b44dca3c8d3b2c",
+      "prev_hash": "d5552e65ddecb0d3b28c404b7895a66bf988cee30a987fcc2a7904eeab026b14",
+      "hash": "74ea1656f08d823757d97f120778d759c3fa1b05f016d80813662a9a5794422e",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "/Qlsd2eirUCFJWQBIVB6+jc/wX4jwXvd4xUP1+oLdCE08emgTJPdHgPTYvE0WUnLIf7Lef594rBFuSd5N7gKDA=="
+        "sig": "F4325vj/Nae83krW/7ytvl97niisPwgCs1gr54pUjtQaLJLaNheEmB1E3oaemYxyQNOa4BM1lxGI3Y/E2yHGBA=="
       }
     },
     {
       "seq": 25,
-      "evidence_id": "evd_2J38FP5VQT",
+      "evidence_id": "evd_JVSD1W1AZF",
       "time": 1795251608300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_83Q5H0MDES",
+        "verdict_id": "vrd_PEEKBHTBXP",
         "decision": "contain",
         "entity": {
           "type": "ip",
@@ -3916,33 +3916,33 @@
         "expires_at": 1795255208300,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_1Y6DZZ9E1K",
-          "evd_SR11KC4KAN",
-          "evd_WFYWYWYFGC"
+          "evd_61D7ZFFBWN",
+          "evd_3S9BNRJ4MF",
+          "evd_78R6EKC17W"
         ],
         "time": 1795251608300,
         "ladder_level": 4
       },
-      "prev_hash": "ee6faf4ced7f474f3af7a619c5edf14a9d0c89aaed7c5b2042b44dca3c8d3b2c",
-      "hash": "8bddd70f2b1c27544bd1f8b590dc264900ead5dfea22426ef0ea1d85042724ae",
+      "prev_hash": "74ea1656f08d823757d97f120778d759c3fa1b05f016d80813662a9a5794422e",
+      "hash": "08ef7eabc55d5f2cb6da6ccd16ef7086b12c5727c53c60885b57bd6d89926809",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "e/PHRUZlWyHJ79DS3unDdKOFwB5vV+2f5nF3yF9oP7AkOnYxwM1p56uEs6QAY/aVyazL3ptMxkLKxSZ3lO2xAw=="
+        "sig": "wVFZJmUG4m+fm5TXIaIaYiOCucMcXDal9dt5iMs+KPmYGX9s4Y59Jd9sJiiVZ+8OzqfuDviroIONmL5qVBifAw=="
       }
     },
     {
       "seq": 26,
-      "evidence_id": "evd_Y7ZDZW0VT7",
+      "evidence_id": "evd_7CTW3N2D73",
       "time": 1795251608300,
       "kind": "action_request",
       "incident_hint": "",
       "payload": {
         "request": {
-          "action_request_id": "act_R4FG4H4176",
+          "action_request_id": "act_33JA8XY0EW",
           "target": {
             "type": "service",
-            "id": "kh_9431ec20e893f6f4590d6fc2",
+            "id": "kh_c167259a675300c6662ea2f4",
             "role": 1
           },
           "action": "trust_edge.narrow",
@@ -3955,11 +3955,11 @@
           },
           "reversal_method": "trust_edge.restore",
           "evidence_ids": [
-            "evd_1Y6DZZ9E1K",
-            "evd_SR11KC4KAN",
-            "evd_WFYWYWYFGC"
+            "evd_61D7ZFFBWN",
+            "evd_3S9BNRJ4MF",
+            "evd_78R6EKC17W"
           ],
-          "verdict_id": "vrd_NG587R59X6",
+          "verdict_id": "vrd_0VEFRE31VT",
           "confidence_class": "two_source_high",
           "evidence_captured_first": false,
           "time": 1795251608300,
@@ -3969,26 +3969,26 @@
         "review": "Allowed",
         "needs_approval": false
       },
-      "prev_hash": "8bddd70f2b1c27544bd1f8b590dc264900ead5dfea22426ef0ea1d85042724ae",
-      "hash": "0dfa7ea3a1232d33d563289bb6c0bde4db1dfe6cc763adc4c01426e2f7591376",
+      "prev_hash": "08ef7eabc55d5f2cb6da6ccd16ef7086b12c5727c53c60885b57bd6d89926809",
+      "hash": "31a7ae798c4d573a8576f82282acaaead60528ed1465aa6c754f0acf9837e094",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "M8hClxb7QHHMrhIPj9WCiqxTlMuxytfpPGmxunsrjTnQh0B0zE8uSju8TNBusc2BbzDjwHmSkzUGL991mCQcCA=="
+        "sig": "0IqPUD/yus/klLOuuAqk1wXWBDFv1J+YOMZUUA1CovTV3ywI+dke7tnkBiJNRQDykppp6L1eHu1zrj6VeVEaCw=="
       }
     },
     {
       "seq": 27,
-      "evidence_id": "evd_Q72BARAW43",
+      "evidence_id": "evd_N2WA7T7VQQ",
       "time": 1795251608300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_NG587R59X6",
+        "verdict_id": "vrd_0VEFRE31VT",
         "decision": "contain",
         "entity": {
           "type": "service",
-          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "id": "kh_c167259a675300c6662ea2f4",
           "role": 0
         },
         "risk": 1.0,
@@ -4004,19 +4004,19 @@
         "expires_at": 1795255208300,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_1Y6DZZ9E1K",
-          "evd_SR11KC4KAN",
-          "evd_WFYWYWYFGC"
+          "evd_61D7ZFFBWN",
+          "evd_3S9BNRJ4MF",
+          "evd_78R6EKC17W"
         ],
         "time": 1795251608300,
         "ladder_level": 4
       },
-      "prev_hash": "0dfa7ea3a1232d33d563289bb6c0bde4db1dfe6cc763adc4c01426e2f7591376",
-      "hash": "90857c3362bfb504bd3919801cdd8f0d5c83161386fecd90e375ef4d6a13e1b6",
+      "prev_hash": "31a7ae798c4d573a8576f82282acaaead60528ed1465aa6c754f0acf9837e094",
+      "hash": "d6fd0424638155aff1e87e4524c58cc8a3f5ea533710d15ce1d1baadbe63d67d",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "62Q9CzYxxMk8FzEk9nV0Py1WERMuBKrdCURBZuUHCQ+OO8YQajeE9T58dFpW34/UrzGa6c04mbLjc0NfDHJ6Cg=="
+        "sig": "odG1b4xw/ozqNsSj0wsIBDEjKdrZFAaQxrIYYjYWiuNdDitIGaPSibVG2Me7SjmtnPpKXOm3F64dMVWd4i9eAA=="
       }
     }
   ],
@@ -4155,6 +4155,6 @@
   "signature": {
     "alg": "ed25519",
     "key_id": "replay-1",
-    "sig": "g3gJz8vyfioTcSW8LainGp+AwUccmoO42MMr8fnlBJD9B1d8Xb/gasgfTyLtuJlEPkPsRwXay2wSLDZ8pxdIDg=="
+    "sig": "sAua5+viZgh7jzU9jt21Wbu6y8ypnb7ArKjfiX+cEazWAdPFZiugbUTqIRIx+spBw60wjXLvhBiJErk7PMtsDQ=="
   }
 }

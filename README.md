@@ -18,10 +18,10 @@ those edges, and irreversible actions only execute with a valid intent chain.
 
 [![Replay of the live test: a payments API under attack behind Envoy, Coraza and IVAR](docs/media/live-test-replay.gif)](docs/media/live-test-replay.mp4)
 
-**[Watch the full replay (MP4, 32 s)](docs/media/live-test-replay.mp4)**
+**[Watch the full replay (MP4, 37 s)](docs/media/live-test-replay.mp4)**
 
 A real Express payments API behind Envoy, Coraza with the OWASP Core Rule Set
-and the IVAR edge filter, attacked live (`deploy/live`). In 23.6 seconds of
+and the IVAR edge filter, attacked live (`deploy/live`). In 28.3 seconds of
 real time: legitimate customers, a signed switch from observe to enforce with
 no restarts, a credential spray (throttled), an account takeover and a
 mass assignment privilege escalation (refused), a payout without an intent
@@ -31,7 +31,7 @@ control plane and core outages. 34 of 34 checks passed.
 
 The video is not a screen recording: it is the signed ReplayBundle built from
 the run's sealed evidence (`ivar-core replay`), re executed in the same engine
-(135 of 135 verdicts reproduced, 0 unobserved intervals) and rendered frame by
+(139 of 139 verdicts reproduced, 0 unobserved intervals) and rendered frame by
 frame (`scripts/export-replay.cjs`). Any incident exports the same way.
 
 ## The console
@@ -42,7 +42,7 @@ The console (`replay-viewer/`, served by the core at `/console/` when
 | | |
 |---|---|
 | [![Live overview](docs/media/console-live-overview.png)](docs/media/console-live-overview.png) | [![Session transcript](docs/media/console-live-sessions.png)](docs/media/console-live-sessions.png) |
-| **Overview**: KPIs, activity over time by decision, highest risk entities, rules fired, sensor health, integrity | **Sessions**: what each session sent (→) and received (←), with IVAR findings, verdicts and actions (◆) in line |
+| **Overview**: the outcome and the decision pipeline, activity over time by decision, highest risk entities, rules fired, sensor health, integrity | **Sessions**: what each session sent (→) and received (←), with IVAR findings, verdicts and actions (◆) in line |
 | [![Events and the decision chain](docs/media/console-live-events.png)](docs/media/console-live-events.png) | [![A replay frame](docs/media/live-test-replay-poster.png)](docs/media/live-test-replay.mp4) |
 | **Events**: every frame, searchable and filterable; the inspector shows the request and response with each field checked against the declared schema, the decision chain from event to receipt, the sealed evidence and the raw JSON | **Full screen replay** and **MP4 export**: the same renderer, so what you watch is what the video holds |
 
@@ -118,12 +118,727 @@ CORAZA_WASM=/path/to/coraza-proxy-wasm.wasm deploy/live/up.sh && python3 deploy/
 deploy/live/up.sh down
 ```
 
-Adding the SDK to an Express app (section 8.2):
+See [Integrating IVAR](#integrating-ivar) for every SDK, gateway, sensor and connector.
+
+## Integrating IVAR
+
+IVAR has one decision core and many ways to feed it. Every sensor (SDK,
+gateway filter, host agent, connector) sends OCSF events to the core, keeps
+the last signed policy on disk, and decides known attacks locally in about a
+millisecond. Everything starts in **observe**: nothing blocks until a signed
+policy says enforce *and* the component's own mode allows it.
+
+### Where to start
+
+| You run | Install | Section |
+|---|---|---|
+| A web app or API | The SDK for its framework | [Application SDKs](#application-sdks) |
+| Envoy, Istio, or a Proxy-Wasm gateway | The edge filter, with Coraza ahead of it | [Gateways and the edge](#gateways-and-the-edge) |
+| Kubernetes | The Helm chart (core, control plane, node agent, gateway plugin) | [Kubernetes](#kubernetes) |
+| Docker Compose | One extra Compose file | [Docker Compose](#docker-compose) |
+| Linux or Windows hosts, networks, databases | The host, network and database sensors | [Host, network and database sensors](#host-network-and-database-sensors) |
+| AI agents, MCP servers, model APIs | The AI gateway | [AI agents](#ai-agents-and-mcp-tools) |
+| CI runners and package installs | The build runner and the Python pipeline sensor | [Build pipelines](#build-pipelines-and-the-supply-chain) |
+| Cloud accounts, Okta, Entra, Workspace, GitHub, Salesforce | `ivar-connector` and the Terraform modules | [Cloud and identity](#cloud-identity-and-saas-connectors) |
+| Falco, Tetragon or Suricata already | The adapter endpoint | [Engines you already run](#engines-you-already-run) |
+| Anything else | Post events to the core | [Custom sensors](#custom-sensors) |
+
+### Run the core and the control plane
+
+Every integration talks to `ivar-core` (events, verdicts, evidence) and,
+optionally, `ivar-control` (signed policy, flags, plugins).
+
+```bash
+# Keys: one seed file per key; the key id is the file name.
+ivar-core keygen keys/policy-a.seed
+ivar-core keygen keys/policy-b.seed
+ivar-core keygen keys/evidence.seed
+ivar-core keygen keys/action.seed
+head -c 32 /dev/urandom | od -An -tx1 | tr -d ' \n' > keys/redaction.hex
+
+# The keyring sensors use to verify policy (weakening needs both policy keys).
+ivar-core keyring keyring.json keys/policy-a.seed=policy keys/policy-b.seed=policy
+
+# Validate the policy against the attack replay library, then sign it.
+ivar-control validate --source deploy/policy/policy.yaml --library replay-library
+ivar-control build --source deploy/policy/policy.yaml --keys keys/policy-a.seed,keys/policy-b.seed --out policy.bundle
+```
+
+`core.yaml`:
+
+```yaml
+http_listen: 0.0.0.0:8080
+grpc_listen: 0.0.0.0:7443
+data_dir: /var/lib/ivar
+policy_bundle: /etc/ivar/policy.bundle
+keyring: /etc/ivar/keyring.json
+evidence_key_seed_file: /etc/ivar/keys/evidence.seed
+action_key_seed_file: /etc/ivar/keys/action.seed
+redaction_key_hex_file: /etc/ivar/keys/redaction.hex
+public_url: https://ivar.internal
+expected_layers: [edge, app_sdk, host, network, database]
+console_dir: /usr/share/ivar/console      # optional: the operator console at /console/
+```
+
+```bash
+docker run -d --name ivar-core -p 8080:8080 -v "$PWD:/etc/ivar:ro" -v ivar-evidence:/var/lib/ivar \
+  ghcr.io/ivar/core:0.1.0 serve --config /etc/ivar/core.yaml
+```
+
+The redaction key is shared with every sensor: payload values and
+identifiers are replaced by keyed hashes before anything leaves the sensor.
+
+### Application SDKs
+
+Every SDK embeds the same verified core compiled to WebAssembly, so a
+decision made in Node is byte for byte the decision made in Go or PHP. Each
+one does the same four things:
+
+1. **Middleware** on every request: local fast path decision, event to the
+   core after the response, core verdicts applied to later requests.
+2. **Reports** for logins and business actions, so spraying, takeover and
+   abuse of a valid session can be correlated.
+3. **Action guards** on high consequence routes (payouts, role changes,
+   exports): intent binding, consequence invariants and time locks.
+4. **Failure behaviour**: faults fail open on public routes, within a
+   budget, and fail closed on admin routes (`/admin` by default).
+
+| Language | Package | Frameworks |
+|---|---|---|
+| Node.js | `@ivar/express` | Express 4 and 5 |
+| Python | `ivar` | FastAPI, Starlette and any ASGI app; Flask, Django and any WSGI app |
+| Go | `github.com/ivar/ivar/sdk/go` | `net/http` and every router that takes an `http.Handler` (chi, gorilla, echo, gin through adapters) |
+| Java | `dev.ivar:ivar-java` | Spring Boot, Jakarta EE, any Servlet container |
+| PHP | `ivar/ivar-php` | Laravel, or any PHP app through `Guardian` |
+| .NET | `Ivar.AspNetCore` | ASP.NET Core |
+
+#### Node.js (Express)
+
+```bash
+npm install @ivar/express
+```
 
 ```js
-import { ivar } from '@ivar/express';
-app.use(ivar({ mode: 'observe', identity: (req) => req.user?.id }));
+const express = require('express');
+const fs = require('node:fs');
+const { ivar, mintIntent, attestStep, stepPublicKey, INTENT_HEADER } = require('@ivar/express');
+
+const mw = ivar({
+  mode: 'observe',                                   // 'enforce' once the rollout allows it
+  identity: (req) => req.user?.id,
+  session: (req) => req.sessionID,
+  roles: (req) => req.user?.roles ?? [],
+  tenant: (req) => req.user?.orgId,
+  coreUrl: process.env.IVAR_CORE_URL,                 // http://ivar-core:8080
+  controlUrl: process.env.IVAR_CONTROL_URL,           // signed policy updates, no restart
+  policyBundle: fs.readFileSync('policy.bundle', 'utf8'),
+  policyKeyring: JSON.parse(fs.readFileSync('keyring.json', 'utf8')),
+  policyStateFile: '/var/lib/myapp/ivar-policy.bundle', // last verified policy survives restarts
+  redactionKey: fs.readFileSync('redaction.hex', 'utf8').trim(),
+  sensorId: 'payments-api',
+  adminPrefixes: ['/admin', '/internal'],
+  onAlert: (a) => logger.warn({ ivar: a.kind }, a.message),
+});
+
+const app = express();
+app.set('trust proxy', ['loopback', '10.0.0.0/8']);   // the real client IP, not the gateway's
+app.use(express.json());
+app.use(mw);
+
+// Report logins so credential spraying and account takeover are correlated.
+app.post('/login', async (req, res) => {
+  const ok = await checkPassword(req.body.email, req.body.password);
+  req.ivar.login({ success: ok, account: req.body.email });
+  if (!ok) return res.status(401).end();
+  res.json({ session: await startSession(req.body.email) });
+});
+
+// Report business actions that are not money movements.
+app.post('/exports', (req, res) => {
+  req.ivar.action('customer_export', { records: req.body.ids.length });
+  res.json(runExport(req.body.ids));
+});
+
+// Guard a high consequence action with an intent chain (section 6.2).
+const stepKeys = { authenticated_session: process.env.STEP_SESSION_PUB, ledger_entry: process.env.STEP_LEDGER_PUB, payout_instruction: process.env.STEP_PAYOUT_PUB };
+app.post('/payouts',
+  mw.guard('payout', { rootPublicKey: process.env.INTENT_ROOT_PUB, stepKeys }, { value: (req) => Number(req.body.amount) }),
+  (req, res) => res.json(sendPayout(req.body)));
+
+app.get('/ivar/policy', (_req, res) => res.json(mw.policy())); // which signed policy is in force
 ```
+
+Issuing the intent chain the guard checks: the service that receives the
+customer's request mints it, each step attests it with its own key, and the
+token travels in the `Ivar-Intent` header to the sink.
+
+```js
+let { token, rootPublicKey } = mintIntent(ROOT_SEED, `int_${id}`, 'payout', sessionId, { amount: 500 });
+token = attestStep(SESSION_STEP_SEED, 'authenticated_session', token, rootPublicKey); // auth service
+token = attestStep(LEDGER_STEP_SEED, 'ledger_entry', token, rootPublicKey);           // ledger service
+token = attestStep(PAYOUT_STEP_SEED, 'payout_instruction', token, rootPublicKey);     // payout service
+await fetch('https://payments/payouts', { method: 'POST', headers: { [INTENT_HEADER]: token }, body });
+// stepPublicKey(seed) gives the public key each sink is configured with.
+```
+
+A valid credential with no business reason behind it is refused; a payout
+over the intent's limit is refused; one over a time lock threshold is held
+with a cancellation window.
+
+#### Python (FastAPI, Starlette, any ASGI app)
+
+```bash
+pip install ivar
+```
+
+```python
+import json
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+from ivar import INTENT_HEADER, verify_policy_bundle
+from ivar.asgi import IvarMiddleware
+
+policy = verify_policy_bundle(open("policy.bundle").read(), json.load(open("keyring.json")))
+
+app = FastAPI()
+app.add_middleware(
+    IvarMiddleware,
+    mode="observe",
+    identity=lambda scope: scope.get("state", {}).get("user_id"),
+    session=lambda scope: dict(scope["headers"]).get(b"x-session", b"").decode() or None,
+    roles=lambda scope: scope.get("state", {}).get("roles", []),
+    policy=policy,
+    core_url="http://ivar-core:8080",
+    redaction_key=open("redaction.hex").read().strip(),
+    sensor_id="orders-api",
+    admin_prefixes=("/admin",),
+)
+
+@app.post("/login")
+async def login(request: Request):
+    guardian, info = request.scope["state"]["ivar"]
+    body = await request.json()
+    ok = check_password(body["email"], body["password"])
+    guardian.report_login(info, success=ok, account=body["email"])
+    return {"ok": ok}
+
+payout_guard = None
+
+@app.post("/payouts")
+async def payout(request: Request):
+    global payout_guard
+    guardian, info = request.scope["state"]["ivar"]
+    payout_guard = payout_guard or guardian.sink("payout", ROOT_PUBLIC_KEY, STEP_KEYS)
+    body = await request.json()
+    d = payout_guard.check(info, request.headers.get(INTENT_HEADER), value=body["amount"])
+    if d.action != "allow":
+        return JSONResponse(d.body or {}, status_code=d.status)
+    return send_payout(body)
+```
+
+#### Python (Flask, Django, any WSGI app)
+
+```python
+from ivar.wsgi import IvarWSGIMiddleware
+
+# Flask
+app.wsgi_app = IvarWSGIMiddleware(app.wsgi_app, mode="observe",
+                                  identity=lambda environ: environ.get("REMOTE_USER"),
+                                  core_url="http://ivar-core:8080", sensor_id="flask-app")
+
+# Django: wsgi.py
+application = IvarWSGIMiddleware(get_wsgi_application(), mode="observe", core_url="http://ivar-core:8080", sensor_id="django-app")
+```
+
+The `Guardian` behind both middlewares can be used directly for anything
+that is not HTTP (queues, RPC, CLIs): `Guardian.inspect(RequestInfo(...))`
+returns the decision, `report_login`, `report_action` and `sink(...)` work
+as above.
+
+#### Go (net/http)
+
+```bash
+go get github.com/ivar/ivar/sdk/go
+```
+
+```go
+package main
+
+import (
+	"net/http"
+	"os"
+	"strconv"
+
+	ivar "github.com/ivar/ivar/sdk/go"
+)
+
+func main() {
+	mw, err := ivar.New(ivar.Options{
+		Mode:          "observe",
+		Identity:      func(r *http.Request) string { return userID(r) },
+		Session:       func(r *http.Request) string { return r.Header.Get("X-Session") },
+		Roles:         func(r *http.Request) []string { return roles(r) },
+		CoreURL:       os.Getenv("IVAR_CORE_URL"),
+		Policy:        verifiedPolicy(), // ivar.VerifyPolicyBundle(rt, bundleBase64, keyring, 0)
+		RedactionKey:  os.Getenv("IVAR_REDACTION_KEY"),
+		SensorID:      "ledger-api",
+		AdminPrefixes: []string{"/admin"},
+		OnAlert:       func(kind, msg string) { log.Printf("ivar %s: %s", kind, msg) },
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer mw.Close()
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("POST /login", func(w http.ResponseWriter, r *http.Request) {
+		ok := checkPassword(r)
+		mw.ReportLogin(r, ok, r.FormValue("email"))
+	})
+	payout, err := mw.Guard("payout", rootPublicKey, stepKeys, ivar.GuardOptions{
+		Value: func(r *http.Request) float64 { v, _ := strconv.ParseFloat(r.FormValue("amount"), 64); return v },
+	}, http.HandlerFunc(sendPayout))
+	if err != nil {
+		log.Fatal(err)
+	}
+	mux.Handle("POST /payouts", payout)
+
+	http.ListenAndServe(":8000", mw.Handler(mux)) // chi: r.Use(mw.Handler); gin: gin.WrapH
+}
+```
+
+Intent tokens in Go: `ivar.MintIntent`, `ivar.AttestStep`,
+`ivar.StepPublicKey`, header `ivar.IntentHeader`.
+
+#### Java (Spring Boot, Jakarta EE, any Servlet container)
+
+```xml
+<dependency>
+  <groupId>dev.ivar</groupId>
+  <artifactId>ivar-java</artifactId>
+  <version>0.1.0</version>
+</dependency>
+```
+
+```java
+@Configuration
+class IvarConfig {
+    @Bean
+    IvarFilter ivarFilter() {
+        IvarFilter.Options o = new IvarFilter.Options();
+        o.mode = "observe";
+        o.identity = r -> r.getUserPrincipal() == null ? null : r.getUserPrincipal().getName();
+        o.session = r -> r.getHeader("X-Session");
+        o.roles = r -> roles(r);
+        o.coreUrl = System.getenv("IVAR_CORE_URL");
+        o.policy = Ivar.verifyPolicyBundle(IvarRuntime.shared(), bundleBase64, keyring, 0);
+        o.redactionKey = System.getenv("IVAR_REDACTION_KEY");
+        o.sensorId = "accounts-service";
+        o.adminPrefixes = List.of("/admin", "/actuator");
+        return new IvarFilter(o);
+    }
+
+    @Bean
+    FilterRegistrationBean<IvarFilter> ivarRegistration(IvarFilter f) {
+        FilterRegistrationBean<IvarFilter> reg = new FilterRegistrationBean<>(f);
+        reg.setOrder(Ordered.HIGHEST_PRECEDENCE + 10); // after the security filter that sets the principal
+        return reg;
+    }
+}
+
+@RestController
+class PayoutController {
+    private final ActionGuard guard;
+
+    PayoutController(IvarFilter ivar) {
+        this.guard = ivar.guard("payout", ROOT_PUBLIC_KEY, STEP_KEYS, null);
+    }
+
+    @PostMapping("/payouts")
+    void payout(@RequestBody Payout p, HttpServletRequest req, HttpServletResponse res) throws IOException {
+        if (!guard.check(req, res, p.amount(), 0, false)) return; // the guard wrote 403, 409 or 202
+        payouts.send(p);
+    }
+}
+```
+
+On plain Jakarta EE register the same filter in `web.xml` or with
+`ServletContext.addFilter`. Intent tokens: `Ivar.mintIntent`,
+`Ivar.attestStep`, `Ivar.stepPublicKey`, header `IvarFilter.INTENT_HEADER`.
+
+#### PHP (Laravel, or any PHP app)
+
+```bash
+composer require ivar/ivar-php
+```
+
+The SDK runs the core with wasmtime through FFI: enable `ffi.enable=1` and
+install the wasmtime C API version pinned in `composer.json`.
+
+```php
+// app/Providers/AppServiceProvider.php
+use Ivar\Guardian;
+use Ivar\VerdictCache;
+
+public function register(): void
+{
+    $this->app->singleton(Guardian::class, fn () => new Guardian([
+        'mode' => 'observe',
+        'core_url' => env('IVAR_CORE_URL'),
+        'policy' => \Ivar\Ivar::verifyPolicyBundle(file_get_contents(base_path('policy.bundle')), file_get_contents(base_path('keyring.json'))),
+        'redaction_key' => trim(file_get_contents(base_path('redaction.hex'))),
+        'sensor_id' => 'shop',
+        'admin_prefixes' => ['/admin', '/nova'],
+        'verdict_cache' => new VerdictCache(storage_path('ivar-verdicts.json')), // APCu when enabled
+    ]));
+}
+
+// bootstrap/app.php
+->withMiddleware(fn ($middleware) => $middleware->append(\Ivar\Laravel\IvarMiddleware::class))
+```
+
+```php
+// A guarded action in a controller.
+public function payout(Request $request, Guardian $ivar)
+{
+    $info = \Ivar\Laravel\IvarMiddleware::info($request);
+    $d = $ivar->guard('payout', ROOT_PUBLIC_KEY, STEP_KEYS)
+              ->check($info, $request->header('Ivar-Intent'), (float) $request->input('amount'));
+    if ($d['action'] !== 'allow') {
+        return response()->json($d['body'] ?? [], $d['status']);
+    }
+    return $this->payouts->send($request->all());
+}
+```
+
+Without Laravel: build the request array yourself (`method`, `path`, `ip`,
+`headers`, `identity`, `session`, `body_keys`), call
+`$guardian->inspect($info)` before your handler and
+`$guardian->report($guardian->event($info, 'http.request', 4002, $status))`
+after it. PHP workers share no memory, so core verdicts are kept in APCu or
+a small file and applied by every worker.
+
+#### .NET (ASP.NET Core)
+
+```bash
+dotnet add package Ivar.AspNetCore
+```
+
+```csharp
+using Ivar;
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddIvar(o =>
+{
+    o.Mode = "observe";
+    o.Identity = ctx => ctx.User.Identity?.Name;
+    o.Session = ctx => ctx.Request.Headers["X-Session"];
+    o.CoreUrl = builder.Configuration["Ivar:CoreUrl"];
+    o.PolicyJson = IvarCore.VerifyPolicyBundle(new IvarRuntime(), bundleBase64, keyringJson, 0);
+    o.RedactionKey = builder.Configuration["Ivar:RedactionKey"]!;
+    o.SensorId = "billing-api";
+    o.AdminPrefixes = ["/admin"];
+});
+
+var app = builder.Build();
+app.UseAuthentication();
+app.UseIvar();          // after authentication, so the identity is known
+
+var payoutGuard = app.Services.GetRequiredService<IvarGuardian>().Guard("payout", rootPublicKey, stepKeys);
+app.MapPost("/payouts", async (HttpContext ctx, Payout p) =>
+{
+    if (!await payoutGuard.CheckAsync(ctx, value: p.Amount)) return Results.Empty; // the guard wrote the response
+    return Results.Ok(await payouts.SendAsync(p));
+});
+app.Run();
+```
+
+### Gateways and the edge
+
+The edge filter is a Proxy-Wasm module (`ivar_edge_filter.wasm`, also the
+`ghcr.io/ivar/edge-filter` OCI image). Run Coraza with the OWASP Core Rule
+Set ahead of it: Coraza catches known payloads, IVAR decides on identity,
+intent and behaviour, and reads Coraza's matches as one more signal.
+
+#### Envoy
+
+The reference config is `deploy/envoy/envoy.yaml`
+(`deploy/envoy/generate.py` writes it with your keys). The filter chain:
+
+```yaml
+http_filters:
+  - name: coraza
+    typed_config:
+      '@type': type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
+      config:
+        name: coraza
+        vm_config: { runtime: envoy.wasm.runtime.v8, code: { local: { filename: /etc/envoy/coraza-proxy-wasm.wasm } } }
+  - name: ivar
+    typed_config:
+      '@type': type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
+      config:
+        name: ivar
+        root_id: ivar
+        configuration:
+          '@type': type.googleapis.com/google.protobuf.StringValue
+          value: |
+            {"sensor_id": "edge-1", "mode": "observe", "redaction_key_hex": "<redaction.hex>",
+             "fail_open_budget_pct": 0.1, "admin_prefixes": ["/admin"], "max_body_bytes": 65536,
+             "core_cluster": "ivar_core", "core_authority": "ivar-core",
+             "control_cluster": "ivar_control", "control_authority": "ivar-control",
+             "keyring": <keyring.json>, "policy_bundle_base64": "", "tick_ms": 500, "max_outbox": 10000}
+        vm_config: { runtime: envoy.wasm.runtime.v8, code: { local: { filename: /etc/envoy/ivar_edge_filter.wasm } } }
+  - name: envoy.filters.http.router
+```
+
+with `ivar_core` and `ivar_control` clusters pointing at the core and the
+control plane. The filter fetches a signed bundle from the control plane;
+until one verifies, admin routes fail closed and public routes fail open
+within the budget.
+
+#### Istio
+
+The Helm chart's `gateway.mode: istio` installs two `WasmPlugin` resources
+on the ingress gateway: Coraza in the `AUTHN` phase and the IVAR filter
+after it. `gateway.mode: envoyfilter` patches with `EnvoyFilter` instead.
+
+```bash
+helm install ivar deploy/helm/ivar -n ivar \
+  --set gateway.mode=istio --set gateway.selector.istio=ingressgateway \
+  --set-file gateway.keyringJson=keyring.json \
+  --set-file gateway.policyBundle=policy.bundle \
+  --set gateway.redactionKeyHex="$(cat redaction.hex)"
+```
+
+#### Other Proxy-Wasm hosts
+
+Kong, APISIX and NGINX (with a Proxy-Wasm module) load the same
+`ivar_edge_filter.wasm` with the same JSON configuration; the core and
+control plane are reached as upstreams. These hosts have not been run in
+this repository's tests (see [Verified here](#verified-here-and-what-was-not)).
+
+### Kubernetes
+
+The chart deploys the core (one shard per replica, each with its own
+evidence chain), the control plane, the node agent DaemonSet, the
+connectors, the admission webhook and the gateway plugin, with network
+policies between them. Create the secrets first:
+
+```bash
+kubectl create ns ivar
+kubectl -n ivar create secret generic ivar-keys --from-file=keys/evidence.seed --from-file=keys/action.seed \
+  --from-file=keys/redaction.hex --from-file=keys/flags-1.seed --from-file=keys/cosign.pub --from-file=keys/operators.json
+kubectl -n ivar create secret generic ivar-tuf --from-file=tuf/
+kubectl -n ivar create secret generic ivar-policy --from-file=policy.bundle --from-file=keyring.json
+helm install ivar deploy/helm/ivar -n ivar -f my-values.yaml
+```
+
+Key values: `core.replicas`, `core.expectedLayers`, `agent.mode`
+(`native` scans `/proc`; `tetragon` reads Tetragon's export and applies
+generated TracingPolicies), `agent.sensorMode`, `gateway.mode`
+(`istio`, `envoyfilter`, `none`), `gateway.coraza.enabled`. Applications in
+the cluster point their SDK at `http://ivar-core.ivar:8080`.
+
+### Docker Compose
+
+```bash
+docker compose -f docker-compose.yaml -f deploy/compose/docker-compose.ivar.yaml up -d
+```
+
+This adds one `ivar` service and an `ivar` network with no application
+change. Join each application service to the network and point its SDK or
+sensor at `http://ivar:8080`. `./ivar` holds `core.yaml`, `keyring.json`,
+`policy.bundle` and `keys/`.
+
+### Host, network and database sensors
+
+Every sensor reads the same YAML config:
+
+```yaml
+sensor_id: web-01
+sensor_type: host
+mode: observe                       # enforce only after the rollout allows it
+core_url: http://ivar-core:8080
+control_url: http://ivar-control:8090
+keyring_file: /etc/ivar/keyring.json
+redaction_key_hex: <redaction.hex>
+state_dir: /var/lib/ivar-sensor     # the last verified policy and the outbox
+buffer_capacity: 10000
+flush_ms: 500
+heartbeat_ms: 10000
+```
+
+| Sensor | Run it | What it sees and does |
+|---|---|---|
+| Linux host | `ivar-linux-agent --config c.yaml --mode native` or `--mode tetragon --tetragon-export /var/run/cilium/tetragon/tetragon.log` | Process starts (a shell under a web server), credential files, persistence; kills or isolates in enforce |
+| Windows host | `ivar-windows-agent --config c.yaml` | The same on Windows (type checked, not yet run on Windows) |
+| Network | `ivar-network-sensor --config c.yaml --interface eth0`, `--eve /var/log/suricata/eve.json`, or `--inline` | Flows, DNS, beacons, lateral movement; Suricata alerts as signals |
+| Database | `ivar-database-sensor --config c.yaml audit pgaudit /var/log/postgresql/audit.log` (also `mysql`, `mongodb`, `mssql`) | Bulk reads and privilege changes from audit logs |
+| PostgreSQL proxy | `ivar-database-sensor --config c.yaml proxy 0.0.0.0:6432 db:5432` | Inline: query shape, rows returned, per identity |
+| Logs | `ivar-log-collector --config c.yaml --syslog 0.0.0.0:5514 --netflow 0.0.0.0:2055` | Syslog and NetFlow from devices that cannot run a sensor |
+| Workstation | `ivar-workstation-sensor --config c.yaml --allow-extensions <ids>` | Canary secrets, browser extensions, token theft |
+
+### AI agents and MCP tools
+
+`ivar-ai-gateway` sits between agents and their tools or models: `POST /mcp`
+for MCP servers and `POST /v1/*` for model APIs. The agent runtime sets
+`X-Agent-Id`; intent tokens travel in `Ivar-Intent`, so an agent can only
+call a high consequence tool with a chain behind it. Decoy tools catch an
+agent that has been steered.
+
+```bash
+ivar-ai-gateway --config c.yaml --gateway gateway.yaml --listen 0.0.0.0:8443
+# Point the agent's MCP client and model base URL at https://ai-gateway:8443
+```
+
+### Build pipelines and the supply chain
+
+```bash
+# In a CI job: a DNS allowlist proxy, egress rules and a runner memory watch.
+ivar-build-runner start --config c.yaml --allow registry.npmjs.org,github.com
+# Fail the build when an installed package differs from its pin.
+ivar-build-runner verify-packages --lockfile package-lock.json --installed node_modules/.package-lock.json
+# Report workflow changes in a pull request.
+ivar-build-runner check-workflows --base base/ --head .
+```
+
+Data and ML pipelines in Python: code that runs while a dataset or model is
+loaded (unpickling into `os`, `exec`, a network call home) is reported, and
+refused in enforce.
+
+```python
+from ivar.pipeline import PipelineSensor
+
+sensor = PipelineSensor(mode="enforce", report=send_to_core)
+with sensor.guarded_load("community/dataset", allow_hosts={"huggingface.co"}):
+    ds = load_dataset("community/dataset")
+```
+
+### Cloud, identity and SaaS connectors
+
+`ivar-connector` reads `IVAR_CORE_URL`, `IVAR_SENSOR_ID` and provider
+credentials from the environment.
+
+```bash
+ivar-connector cloud        # CloudTrail through EventBridge, Azure Event Grid, GCP Pub/Sub push
+ivar-connector okta         # also entra, workspace, salesforce, github: audit pollers
+ivar-connector k8s          # Kubernetes audit webhook, Vault audit socket, admission webhook
+ivar-connector telco        # SIM swap checks (TIRMS, MTN Chenosis)
+ivar-connector indicators   # the shared indicator network
+```
+
+The Terraform modules wire the cloud side in one apply
+(`deploy/terraform/examples/complete`):
+
+```hcl
+module "aws" {
+  source       = "./deploy/terraform/modules/aws"
+  receiver_url = var.receiver_url
+  token        = var.receiver_token
+}
+module "azure" {
+  source          = "./deploy/terraform/modules/azure"
+  receiver_url    = var.receiver_url
+  token           = var.receiver_token
+  subscription_id = var.azure_subscription_id
+}
+module "gcp" {
+  source       = "./deploy/terraform/modules/gcp"
+  receiver_url = var.receiver_url
+  token        = var.receiver_token
+  project      = var.gcp_project
+}
+module "policy" {
+  source      = "./deploy/terraform/modules/policy"
+  source_file = "deploy/policy/policy.yaml"
+  key_files   = ["keys/policy-a.seed", "keys/policy-b.seed"]
+}
+```
+
+Responses outside IVAR (revoke an Okta session, suspend an Entra user,
+disable a cloud key) run as signed responder plugins with declared
+permissions:
+
+```yaml
+# plugins/okta-responder/plugin.yaml
+name: okta-responder
+version: 1.4.0
+type: responder
+api: ivar.plugin/v1
+permissions:
+  actions: [session.revoke, user.suspend]
+  network: ["*.okta.com:443"]
+  secrets: [okta_api_token]
+limits: { memory_mb: 128, cpu_ms_per_call: 50, timeout_ms: 2000 }
+signature: sigstore
+```
+
+`scripts/sign-plugin.sh` signs a plugin; the plugin host refuses unsigned
+or drifted ones and gives each only the secrets it declares.
+
+### Engines you already run
+
+Falco, Tetragon and Suricata output is accepted as is and mapped to OCSF:
+
+```bash
+curl -X POST http://ivar-core:8080/v1/adapters/falco    -H 'content-type: application/json' --data @falco-event.json
+curl -X POST http://ivar-core:8080/v1/adapters/tetragon -H 'content-type: application/json' --data @tetragon-event.json
+curl -X POST http://ivar-core:8080/v1/adapters/suricata -H 'content-type: application/json' --data @eve-line.json
+```
+
+Point Falco's `http_output`, Tetragon's export forwarder or a Suricata
+`eve.json` shipper at those URLs.
+
+### Custom sensors
+
+Anything that can make an HTTP request can be a sensor. Send OCSF events
+with the `ivar` extension (identifiers already keyed hashed); the response
+carries any verdicts to apply.
+
+```bash
+curl -X POST http://ivar-core:8080/v1/events -H 'content-type: application/json' -d '{
+  "sensor_id": "billing-batch",
+  "events": [{
+    "class_uid": 6003, "category_uid": 6, "activity_name": "business.action", "time": 1795000000000,
+    "actor": { "user": { "uid": "kh_9f2c...", "type": "human" } },
+    "src_endpoint": { "ip": "10.1.2.3" },
+    "ivar": { "sensor_id": "billing-batch", "sensor_type": "app_sdk", "observation_point": "app_sdk",
+              "sensor_seq": 42, "business_action": "refund", "value_moved": 1200 }
+  }]
+}'
+# => {"accepted": 1, "verdicts": [...]}
+```
+
+Sequence numbers must increase per sensor: a gap is shown as an unobserved
+interval, never inferred. `GET /v1/verdicts?since=<cursor>` streams verdicts
+to sensors that cannot wait for a response.
+
+### Use cases and how to wire them
+
+| Threat | Wire | What IVAR does |
+|---|---|---|
+| Credential spraying, account takeover | SDK middleware plus `login` reports; edge filter | Correlates failures across accounts and sources; throttles the source, challenges the account, protects the victim from lockout |
+| A stolen but valid session moving money | SDK action guard on the payout route; intent issuer in the request path | Refuses an action with no intent chain; holds large ones behind a time lock |
+| Mass assignment and privilege escalation | SDK with the OpenAPI spec in policy (`declared intent`) | Blocks writes to privileged fields the route never declared |
+| API scraping and data exfiltration | SDK `action` reports with `records`; database sensor | Consequence invariants on records read per identity; contains the session |
+| Probing and reconnaissance | Edge filter decoy routes; canary secrets on workstations | Any touch of a decoy contains the source |
+| A web shell or RCE | Linux agent (native or Tetragon) | A shell under a web server process is blocked and the host isolated |
+| A compromised AI agent | AI gateway in front of MCP servers and models | Tools need an intent chain; decoy tools reveal steering |
+| Supply chain and poisoned datasets | Build runner in CI; `PipelineSensor` in ML jobs | Egress allowlists, pin verification, refused load time code |
+| Cloud key or admin account misuse | `ivar-connector cloud` and identity pollers, responder plugins | Risk across cloud and identity, then revoke through a signed responder |
+| SIM swap before a high value action | `ivar-connector telco` | Raises risk on the account before a payout executes |
+| Insider bulk export | SDK reports plus database audit | Invariant breach alert, two source rule before any containment |
+
+### Rolling out
+
+1. **Observe** everywhere: install, verify the real client IP is seen
+   (the SDKs alert when it is not), keep sensor errors under 1%.
+2. **Learn**: baselines build only after the compromise assessment.
+3. **Enforce by policy**: switch `detection_mode` to `enforce` in the policy
+   and sign it. No deploy: every sensor picks it up from the control plane.
+   Weakening it again needs both policy keys.
+4. **Replay** any verdict from sealed evidence in the console before and
+   after each change.
 
 ## How a request is decided
 
