@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	ivar "github.com/ivar/ivar/sdk/go"
+	ivar "github.com/jhmeel/ivar/sdk/go"
 )
 
 func shippedDecisions(t *testing.T) string {

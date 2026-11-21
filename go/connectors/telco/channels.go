@@ -3,7 +3,7 @@ package telco
 import (
 	"time"
 
-	"github.com/ivar/ivar/go/internal/ocsf"
+	"github.com/jhmeel/ivar/go/internal/ocsf"
 )
 
 // USSD and agent network channels join like any other channel (section 17):

@@ -4,7 +4,11 @@ version = "0.1.0"
 description = "IVAR application SDK for Python: ASGI (FastAPI, Starlette) and WSGI (Flask, Django) middleware over the verified WebAssembly decision core"
 requires-python = ">=3.9"
 license = { text = "Apache-2.0" }
+authors = [{ name = "Jhmeel Mikail" }]
 dependencies = ["wasmtime>=36"]
+
+[project.urls]
+Repository = "https://github.com/jhmeel/Ivar"
 
 [build-system]
 requires = ["setuptools>=68"]

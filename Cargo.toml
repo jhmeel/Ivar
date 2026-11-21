@@ -27,6 +27,8 @@ members = [
 version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0"
+authors = ["Jhmeel Mikail"]
+repository = "https://github.com/jhmeel/Ivar"
 
 [workspace.dependencies]
 prost = "0.14"

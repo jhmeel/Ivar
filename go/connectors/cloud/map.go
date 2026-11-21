@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ivar/ivar/go/internal/ocsf"
+	"github.com/jhmeel/ivar/go/internal/ocsf"
 )
 
 // Activity names from the core's vocabulary.

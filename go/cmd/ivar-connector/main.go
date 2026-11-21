@@ -24,13 +24,13 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/ivar/ivar/go/connectors/cloud"
-	"github.com/ivar/ivar/go/connectors/identity"
-	"github.com/ivar/ivar/go/connectors/indicators"
-	"github.com/ivar/ivar/go/connectors/k8s"
-	"github.com/ivar/ivar/go/connectors/telco"
-	"github.com/ivar/ivar/go/internal/coreclient"
-	ivar "github.com/ivar/ivar/sdk/go"
+	"github.com/jhmeel/ivar/go/connectors/cloud"
+	"github.com/jhmeel/ivar/go/connectors/identity"
+	"github.com/jhmeel/ivar/go/connectors/indicators"
+	"github.com/jhmeel/ivar/go/connectors/k8s"
+	"github.com/jhmeel/ivar/go/connectors/telco"
+	"github.com/jhmeel/ivar/go/internal/coreclient"
+	ivar "github.com/jhmeel/ivar/sdk/go"
 )
 
 func env(k, d string) string {

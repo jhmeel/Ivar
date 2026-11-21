@@ -3,6 +3,7 @@
   "description": "IVAR application SDK for PHP: Laravel middleware and action sink over the verified WebAssembly decision core, run by wasmtime through FFI",
   "type": "library",
   "license": "Apache-2.0",
+  "authors": [{ "name": "Jhmeel Mikail", "homepage": "https://github.com/jhmeel" }],
   "require": {
     "php": ">=8.1",
     "ext-ffi": "*",

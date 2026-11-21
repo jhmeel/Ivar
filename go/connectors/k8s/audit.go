@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ivar/ivar/go/internal/ocsf"
+	"github.com/jhmeel/ivar/go/internal/ocsf"
 )
 
 // AuditEvent is the subset of audit.k8s.io/v1 Event the sensor reads.

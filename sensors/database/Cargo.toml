@@ -4,6 +4,8 @@ description = "Database sensor (section 8): PostgreSQL, MySQL, MongoDB and SQL S
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+authors.workspace = true
+repository.workspace = true
 
 [dependencies]
 ivar-contracts = { path = "../../crates/ivar-contracts" }

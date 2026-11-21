@@ -1,4 +1,4 @@
-module github.com/ivar/ivar/sdk/go
+module github.com/jhmeel/ivar/sdk/go
 
 go 1.24.7
 

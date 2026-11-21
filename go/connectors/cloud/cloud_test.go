@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ivar/ivar/go/internal/coreclient"
+	"github.com/jhmeel/ivar/go/internal/coreclient"
 )
 
 func TestMappings(t *testing.T) {

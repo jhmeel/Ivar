@@ -14,7 +14,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ivar/ivar/go/internal/ocsf"
+	"github.com/jhmeel/ivar/go/internal/ocsf"
 )
 
 // Client sends batches to POST {core}/v1/events.

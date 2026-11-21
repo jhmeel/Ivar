@@ -5,6 +5,8 @@
   "main": "dist/src/security.config.js",
   "types": "dist/src/security.config.d.ts",
   "license": "Apache-2.0",
+  "author": "Jhmeel Mikail (https://github.com/jhmeel)",
+  "repository": { "type": "git", "url": "https://github.com/jhmeel/Ivar.git" },
   "scripts": { "build": "tsc -p tsconfig.json", "test": "npm run build && node --test dist/test/*.test.js" },
   "devDependencies": { "@types/node": "22.15.30", "typescript": "5.8.3" }
 }

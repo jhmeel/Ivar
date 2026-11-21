@@ -4,6 +4,8 @@ description = "JSON level API over the decision core, shared by the wasm-bindgen
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+authors.workspace = true
+repository.workspace = true
 
 [dependencies]
 ivar-contracts = { path = "../ivar-contracts" }

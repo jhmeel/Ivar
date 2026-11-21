@@ -14,8 +14,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ivar/ivar/go/internal/coreclient"
-	"github.com/ivar/ivar/go/internal/ocsf"
+	"github.com/jhmeel/ivar/go/internal/coreclient"
+	"github.com/jhmeel/ivar/go/internal/ocsf"
 )
 
 // Source is one provider's audit feed.

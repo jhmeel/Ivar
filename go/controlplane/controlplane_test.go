@@ -18,7 +18,7 @@ import (
 	"testing"
 	"time"
 
-	ivar "github.com/ivar/ivar/sdk/go"
+	ivar "github.com/jhmeel/ivar/sdk/go"
 )
 
 func key(id string, seed byte) PolicyKey {

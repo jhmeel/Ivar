@@ -4,6 +4,8 @@ description = "Edge filter (section 8): a Proxy-Wasm filter for Envoy, Istio, NG
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+authors.workspace = true
+repository.workspace = true
 
 [lib]
 crate-type = ["cdylib", "rlib"]

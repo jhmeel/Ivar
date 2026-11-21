@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ivar/ivar/go/internal/ocsf"
+	"github.com/jhmeel/ivar/go/internal/ocsf"
 )
 
 // Okta reads the System Log (/api/v1/logs) and revokes sessions or suspends users.

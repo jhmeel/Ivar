@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"time"
 
-	ivar "github.com/ivar/ivar/sdk/go"
+	ivar "github.com/jhmeel/ivar/sdk/go"
 	"gopkg.in/yaml.v3"
 )
 

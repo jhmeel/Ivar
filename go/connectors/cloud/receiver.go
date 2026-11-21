@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/ivar/ivar/go/internal/coreclient"
+	"github.com/jhmeel/ivar/go/internal/coreclient"
 )
 
 // Receiver accepts the three providers' event streams.

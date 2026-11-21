@@ -5,6 +5,13 @@
   <artifactId>ivar-java</artifactId>
   <version>0.1.0</version>
   <name>IVAR application SDK for Java</name>
+  <url>https://github.com/jhmeel/Ivar</url>
+  <licenses>
+    <license><name>Apache-2.0</name><url>https://www.apache.org/licenses/LICENSE-2.0</url></license>
+  </licenses>
+  <developers>
+    <developer><name>Jhmeel Mikail</name><url>https://github.com/jhmeel</url></developer>
+  </developers>
   <description>Servlet filter (Spring Boot, Jakarta EE) and action sink over the verified WebAssembly decision core</description>
   <properties>
     <maven.compiler.release>17</maven.compiler.release>

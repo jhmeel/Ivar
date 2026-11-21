@@ -4,6 +4,8 @@ description = "AI gateway sensor (section 8): a proxy in front of LLM gateways a
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+authors.workspace = true
+repository.workspace = true
 
 [dependencies]
 ivar-contracts = { path = "../../crates/ivar-contracts" }

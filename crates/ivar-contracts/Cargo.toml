@@ -4,6 +4,8 @@ description = "Versioned data contracts (spec §9): OCSF SecurityEvent with IVAR
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+authors.workspace = true
+repository.workspace = true
 
 [dependencies]
 prost.workspace = true

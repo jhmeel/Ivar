@@ -1,4 +1,4 @@
-module github.com/ivar/ivar/deploy/helm/chartcheck
+module github.com/jhmeel/ivar/deploy/helm/chartcheck
 
 go 1.24.7
 

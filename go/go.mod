@@ -1,9 +1,9 @@
-module github.com/ivar/ivar/go
+module github.com/jhmeel/ivar/go
 
 go 1.24.7
 
 require (
-	github.com/ivar/ivar/sdk/go v0.0.0
+	github.com/jhmeel/ivar/sdk/go v0.0.0
 	github.com/sigstore/sigstore v1.8.4
 	github.com/theupdateframework/go-tuf/v2 v2.0.2
 	gopkg.in/yaml.v3 v3.0.1
@@ -23,4 +23,4 @@ require (
 	gopkg.in/go-jose/go-jose.v2 v2.6.3 // indirect
 )
 
-replace github.com/ivar/ivar/sdk/go => ../sdk/go
+replace github.com/jhmeel/ivar/sdk/go => ../sdk/go

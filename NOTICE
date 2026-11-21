@@ -1,0 +1,24 @@
+IVAR: Intent Verified Adaptive Response
+Copyright 2026 Jhmeel Mikail
+
+This product was designed and written by Jhmeel Mikail
+(https://github.com/jhmeel), including the design specification
+"Intent-Bound Defence Against Agentic Intrusion" that it implements.
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+Attribution required by the License: any redistribution of this work or of
+a derivative work, in source or object form, must keep this NOTICE file (or
+its contents, in the documentation or the notices shown by the software)
+and must state which files were changed. Please credit the project as:
+
+    IVAR by Jhmeel Mikail, https://github.com/jhmeel/Ivar
+
+This product includes third party software:
+
+  biscuit-auth 6.0.0, Apache License 2.0, Copyright the Biscuit authors.
+  Vendored in third_party/biscuit-auth with one change in src/time.rs,
+  described in third_party/README.md.
+
+  mp4-muxer 5.2.1, MIT License, Copyright (c) 2023 Vanilagy.
+  Vendored unmodified in replay-viewer/vendor/mp4-muxer.

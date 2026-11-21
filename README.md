@@ -13,6 +13,7 @@
 
 <p align="center">
   <a href="https://github.com/jhmeel/Ivar/actions/workflows/ci.yml"><img src="https://github.com/jhmeel/Ivar/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="License: Apache-2.0"></a>
   <img src="https://img.shields.io/badge/core-Rust%20%E2%86%92%20WebAssembly-d95926" alt="Core: Rust to WebAssembly">
   <img src="https://img.shields.io/badge/SDKs-Node%20%C2%B7%20Python%20%C2%B7%20Go%20%C2%B7%20Java%20%C2%B7%20PHP%20%C2%B7%20.NET-1d1d1f" alt="SDKs">
   <img src="https://img.shields.io/badge/edge-Envoy%20%C2%B7%20Istio%20%C2%B7%20Proxy--Wasm-1d1d1f" alt="Edge">
@@ -51,6 +52,8 @@ bulk exports only execute with a valid intent chain behind them.
 - [Operating IVAR](#operating-ivar)
 - [Specification traceability](#specification-traceability)
 - [Verification status](#verification-status)
+- [Contributing](#contributing)
+- [License and credit](#license-and-credit)
 
 ## Why IVAR
 
@@ -262,7 +265,7 @@ one does the same four things:
 |---|---|---|
 | Node.js | `@ivar/express` | Express 4 and 5 |
 | Python | `ivar` | FastAPI, Starlette and any ASGI app; Flask, Django and any WSGI app |
-| Go | `github.com/ivar/ivar/sdk/go` | `net/http` and every router that takes an `http.Handler` (chi, gorilla, echo, gin through adapters) |
+| Go | `github.com/jhmeel/ivar/sdk/go` | `net/http` and every router that takes an `http.Handler` (chi, gorilla, echo, gin through adapters) |
 | Java | `dev.ivar:ivar-java` | Spring Boot, Jakarta EE, any Servlet container |
 | PHP | `ivar/ivar-php` | Laravel, or any PHP app through `Guardian` |
 | .NET | `Ivar.AspNetCore` | ASP.NET Core |
@@ -413,7 +416,7 @@ as above.
 #### Go (net/http)
 
 ```bash
-go get github.com/ivar/ivar/sdk/go
+go get github.com/jhmeel/ivar/sdk/go
 ```
 
 ```go
@@ -424,7 +427,7 @@ import (
 	"os"
 	"strconv"
 
-	ivar "github.com/ivar/ivar/sdk/go"
+	ivar "github.com/jhmeel/ivar/sdk/go"
 )
 
 func main() {
@@ -1039,3 +1042,24 @@ Not verified here, so test them in your environment before relying on them:
   package mirror was unreachable; its binaries build in the shared stage.
 * No load test at production scale, no external security review, and the
   indicator network has not had the legal review section 17 requires.
+
+## Contributing
+
+Issues and pull requests are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md).
+Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
+
+## License and credit
+
+IVAR, its design and the specification it implements are the work of
+**[Jhmeel Mikail](https://github.com/jhmeel)**, released to the community
+under the [Apache License 2.0](LICENSE).
+
+You may use, copy, modify and distribute it, including commercially. When you
+redistribute it or a work based on it, the license requires you to keep the
+copyright and [NOTICE](NOTICE) file, which credit the author, and to mark the
+files you changed. Please credit it as:
+
+> IVAR by Jhmeel Mikail, https://github.com/jhmeel/Ivar
+
+For papers and articles, GitHub's **Cite this repository** button uses
+[CITATION.cff](CITATION.cff).

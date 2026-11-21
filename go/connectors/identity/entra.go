@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ivar/ivar/go/internal/ocsf"
+	"github.com/jhmeel/ivar/go/internal/ocsf"
 )
 
 // Entra reads Microsoft Graph sign ins and directory audits (Entra ID and

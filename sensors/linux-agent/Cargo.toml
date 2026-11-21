@@ -4,6 +4,8 @@ description = "Linux host agent (section 8): servers, VMs and Kubernetes nodes. 
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+authors.workspace = true
+repository.workspace = true
 
 [dependencies]
 ivar-contracts = { path = "../../crates/ivar-contracts" }

@@ -22,8 +22,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ivar/ivar/go/controlplane"
-	ivar "github.com/ivar/ivar/sdk/go"
+	"github.com/jhmeel/ivar/go/controlplane"
+	ivar "github.com/jhmeel/ivar/sdk/go"
 )
 
 func seedKey(path string) controlplane.PolicyKey {

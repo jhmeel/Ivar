@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use IVAR, or build on its design, please cite it as below."
+title: "IVAR: Intent Verified Adaptive Response"
+abstract: >-
+  Intent bound defence against agentic intrusion: a trust graph of
+  identities, workloads and data, eight detection methods, a safeguarded
+  response ladder, intent binding for irreversible actions, and a hash
+  chained evidence store that makes every verdict replayable.
+authors:
+  - family-names: Mikail
+    given-names: Jhmeel
+type: software
+license: Apache-2.0
+repository-code: "https://github.com/jhmeel/Ivar"
+version: 0.1.0
+date-released: 2026-11-21
+keywords:
+  - security
+  - intrusion detection
+  - intrusion prevention
+  - intent binding
+  - webassembly
+  - envoy
