@@ -5,82 +5,137 @@
   </picture>
 </p>
 
-# IVAR: Intent Verified Adaptive Response
+<h3 align="center">Intent Verified Adaptive Response</h3>
 
-IVAR is intent bound defence against agentic intrusion.
+<p align="center">
+  Intent bound defence against agentic intrusion: every irreversible action needs a reason, every decision can be replayed.
+</p>
 
-An implementation of the design specification *Intent-Bound Defence Against
-Agentic Intrusion*. The core model is a live graph of trust edges between
-identities, workloads and data; detections, risk and every response act on
-those edges, and irreversible actions only execute with a valid intent chain.
+<p align="center">
+  <a href="https://github.com/jhmeel/Ivar/actions/workflows/ci.yml"><img src="https://github.com/jhmeel/Ivar/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
+  <img src="https://img.shields.io/badge/core-Rust%20%E2%86%92%20WebAssembly-d95926" alt="Core: Rust to WebAssembly">
+  <img src="https://img.shields.io/badge/SDKs-Node%20%C2%B7%20Python%20%C2%B7%20Go%20%C2%B7%20Java%20%C2%B7%20PHP%20%C2%B7%20.NET-1d1d1f" alt="SDKs">
+  <img src="https://img.shields.io/badge/edge-Envoy%20%C2%B7%20Istio%20%C2%B7%20Proxy--Wasm-1d1d1f" alt="Edge">
+</p>
 
-## The live test, replayed
+<p align="center">
+  <a href="#quick-start">Quick start</a> ·
+  <a href="#architecture">Architecture</a> ·
+  <a href="#integrating-ivar">Integrations</a> ·
+  <a href="#the-console">Console</a> ·
+  <a href="#the-live-test-replayed">Live test</a>
+</p>
 
-[![Replay of the live test: a payments API under attack behind Envoy, Coraza and IVAR](docs/media/live-test-replay.gif)](docs/media/live-test-replay.mp4)
+---
 
-**[Watch the full replay (MP4, 37 s)](docs/media/live-test-replay.mp4)**
+IVAR is an implementation of the design specification *Intent-Bound Defence
+Against Agentic Intrusion*. It models an estate as a live graph of trust edges
+between identities, workloads and data. Detections, risk and every response
+act on those edges, and irreversible actions such as payouts, role changes and
+bulk exports only execute with a valid intent chain behind them.
 
-A real Express payments API behind Envoy, Coraza with the OWASP Core Rule Set
-and the IVAR edge filter, attacked live (`deploy/live`). In 28.3 seconds of
-real time: legitimate customers, a signed switch from observe to enforce with
-no restarts, a credential spray (throttled), an account takeover and a
-mass assignment privilege escalation (refused), a payout without an intent
-chain (refused), a time locked payout (held), decoy hits (contained), a
-victim lockout attempt and a shared network neighbour (both protected), then
-control plane and core outages. 34 of 34 checks passed.
+<p align="center">
+  <a href="docs/media/live-test-replay.mp4"><img src="docs/media/live-test-replay.gif" alt="Replay of the live test: a payments API under attack behind Envoy, Coraza and IVAR" width="760"></a>
+  <br><sub>A live attack on a real payments API, replayed from its sealed evidence. <a href="docs/media/live-test-replay.mp4">Watch the MP4</a>.</sub>
+</p>
 
-The video is not a screen recording: it is the signed ReplayBundle built from
-the run's sealed evidence (`ivar-core replay`), re executed in the same engine
-(139 of 139 verdicts reproduced, 0 unobserved intervals) and rendered frame by
-frame (`scripts/export-replay.cjs`). Any incident exports the same way.
+## Contents
 
-## The console
+- [Why IVAR](#why-ivar)
+- [Architecture](#architecture)
+- [Quick start](#quick-start)
+- [Integrating IVAR](#integrating-ivar)
+- [The console](#the-console)
+- [The live test, replayed](#the-live-test-replayed)
+- [Repository layout](#repository-layout)
+- [Operating IVAR](#operating-ivar)
+- [Specification traceability](#specification-traceability)
+- [Verification status](#verification-status)
 
-The console (`replay-viewer/`, served by the core at `/console/` when
-`console_dir` is set) shows a verified replay or follows a live core.
+## Why IVAR
 
-| | |
+- **A stolen credential is not a reason.** High consequence actions run only
+  with an intent chain minted where the customer's request began and attested
+  by every step, so a valid session with no business reason behind it is refused.
+- **One verified decision core, everywhere.** The core is written once in Rust
+  and compiled to WebAssembly for every SDK and the edge filter: the decision
+  in Node is byte for byte the decision in Go, PHP or Envoy.
+- **Safe to switch on.** Everything installs in observe. Enforcement is signed
+  runtime policy, weakening it needs two keys, and every automatic action
+  passes safeguards: blast radius budgets, protected entities, shared networks
+  never banned, a two source rule and per rule circuit breakers.
+- **Evidence, not logs.** Every event and verdict is sealed in a hash chain
+  signed per shard. Any incident replays deterministically, is re verified by
+  a third party, and exports as a video.
+- **Works with what you run.** Coraza and the OWASP Core Rule Set at the edge;
+  Falco, Tetragon and Suricata on hosts and networks; Okta, Entra, Workspace,
+  GitHub and the three clouds through connectors and signed responders.
+
+## Architecture
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/brand/ivar-architecture-dark.svg">
+    <img src="docs/brand/ivar-architecture.svg" alt="IVAR architecture: sensors send redacted events to ivar-core, which correlates, scores and responds; ivar-control signs the policy every component enforces" width="100%">
+  </picture>
+</p>
+
+| Component | Role |
 |---|---|
-| [![Live overview](docs/media/console-live-overview.png)](docs/media/console-live-overview.png) | [![Session transcript](docs/media/console-live-sessions.png)](docs/media/console-live-sessions.png) |
-| **Overview**: the outcome and the decision pipeline, activity over time by decision, highest risk entities, rules fired, sensor health, integrity | **Sessions**: what each session sent (→) and received (←), with IVAR findings, verdicts and actions (◆) in line |
-| [![Events and the decision chain](docs/media/console-live-events.png)](docs/media/console-live-events.png) | [![A replay frame](docs/media/live-test-replay-poster.png)](docs/media/live-test-replay.mp4) |
-| **Events**: every frame, searchable and filterable; the inspector shows the request and response with each field checked against the declared schema, the decision chain from event to receipt, the sealed evidence and the raw JSON | **Full screen replay** and **MP4 export**: the same renderer, so what you watch is what the video holds |
+| **Sensors** | SDKs, the edge filter, host, network and database sensors, the AI gateway, the build runner and the connectors. Each builds OCSF events, redacts payloads and identifiers with a keyed hash at the source, and decides known attacks locally from its last signed policy. |
+| **`ivar-core`** | Correlates events on the trust graph, runs the eight detection methods, scores risk, picks a response under Cedar policy and the safeguards, enforces intent binding, and seals the evidence. Sharded by entity, each shard with its own evidence chain. |
+| **`ivar-control`** | Builds and signs policy after replaying the attack library against it, publishes it through TUF with signed flags, and runs the plugin registry and staged rollout. |
+| **Responders and sinks** | Signed plugins carry responses into identity providers and clouds; SIEM, OpenTelemetry and CAEP sinks carry the record out. |
+| **Console** | Follows a live core or verifies and replays a bundle in the browser, with MP4, CSV and JSON export. |
 
-* **Live mode** polls the core's sealed evidence and re verifies the whole
-  hash chain on every update; a record that does not link halts the view, an
-  unreachable core is retried.
-* **Replay mode** checks the bundle signature and evidence chain, then re
-  executes every event in the browser before anything renders.
-* Playback moves one cursor through every view; *As of playhead* limits every
-  view to what had happened by then. Links carry filters
-  (`#/events?decision=contain&entity=ip:198.51.100.7`), exports are CSV,
-  JSON and MP4, and keys are `1` to `5` (views), `j`/`k` (frames), space,
-  arrows, `F` (full screen) and `Esc`.
-* Payload values never leave the sensor (section 16): the console shows field
-  names, routes, statuses, keyed hashes and decisions, and says so.
+### How a request is decided
 
-## Layout
+```mermaid
+sequenceDiagram
+    autonumber
+    participant C as Client
+    participant E as Edge<br/>(Coraza, then IVAR)
+    participant A as App with SDK
+    participant K as ivar-core
+    participant P as ivar-control
+    P-->>E: signed policy bundle
+    P-->>A: signed policy bundle
+    C->>E: request
+    E->>E: local fast path, about 1 ms
+    alt known attack or contained source
+        E-->>C: 403 with verdict id
+    else
+        E->>A: forward
+        A->>A: SDK fast path and action guard
+        A-->>C: response
+    end
+    E-)K: redacted events
+    A-)K: redacted events
+    K->>K: trust graph, detection, risk, Cedar, safeguards
+    K->>K: seal evidence in the hash chain
+    K-->>E: verdicts for later requests
+    K-->>A: verdicts for later requests
+```
 
-| Path | What it is | Language |
-|---|---|---|
-| `proto/ivar/v1` | Data contracts: events, entities, findings, risk, verdicts, actions, envelopes, ingest | Protobuf |
-| `crates/ivar-contracts` | Contract types, signed policy bundles, ReplayBundle, crypto agile signing | Rust |
-| `crates/ivar-core` | Trust fabric, declared intent compiler, eight detection methods, risk, Cedar policy, response ladder, safeguards, intent binding (Biscuit), invariants and time locks, evidence chain | Rust |
-| `crates/ivar-replay` | Deterministic replay, counterfactual replay, attack replay library runner | Rust |
-| `crates/ivar-server` | Core service (`ivar-core`): HTTP and gRPC ingest, operator API, sinks, responders | Rust |
-| `crates/ivar-edge-filter` | Proxy-Wasm edge filter for Envoy, Istio, Kong, APISIX, NGINX | Rust to Wasm |
-| `crates/ivar-wasm`, `crates/ivar-abi` | The same core compiled to WebAssembly for every SDK | Rust to Wasm |
-| `crates/ivar-plugin-host` | Signed plugins: cosign, wasmi sandbox, process plugins, lifecycle, drift | Rust |
-| `crates/ivar-ai` | AI layer with autonomy levels A0 to A3 and guardrails | Rust |
-| `crates/ivar-sensor-kit` | Shared sensor runtime; Falco, Tetragon and Suricata adapters | Rust |
-| `sensors/*` | Linux and Windows host agents, network, database, AI gateway, log collector, workstation, build runner | Rust |
-| `sdk/*` | Application SDKs: Node (Express), Python (ASGI, WSGI), Go, Java, PHP (Laravel), .NET | Mixed |
-| `go/` | Control plane (`ivar-control`: policy build, TUF, signed flags, plugin registry, rollout) and connectors (`ivar-connector`: cloud, identity, Kubernetes, telco, indicators, responders) | Go |
-| `config/` | `security.config.ts`: the hardening configuration with the section 15 settings and fixes F1 to F9 | TypeScript |
-| `plugins/` | Responder manifests, including the specification's `okta-responder` unchanged | YAML |
-| `replay-library/` | Attack replay library: incidents and attacks on the IVAR itself | YAML |
-| `replay-viewer/` | Operator console: verified replays and live mode, events, sessions, entities, graph, full screen replay, MP4, CSV and JSON export | JS and Wasm |
-| `deploy/` | Dockerfile, Helm chart, Compose service, Terraform modules, Envoy config, policy source, operator decisions, local stack | Mixed |
+1. A sensor builds an OCSF event with the `ivar` extension and redacts
+   payloads and identifiers with a keyed hash before anything leaves it.
+2. The sensor's local fast path decides known attacks from its last signed
+   policy in about a millisecond; everything else is forwarded.
+3. The core correlates the event on the trust graph, runs the eight methods,
+   and scores each entity on two timescales (30 minute and 7 day half lives)
+   with rule family maxima and independent sources.
+4. Risk bands (0.30, 0.60, 0.85) pick a rung on the seven level ladder; every
+   automatic action passes the safeguards (blast radius budget split by
+   confidence class, protected entities, shared networks never banned, two
+   source rule, per rule circuit breaker, evidence first, reversal, actor not
+   target) and Cedar.
+5. Evidence is sealed in a hash chain signed per shard, so any verdict can be
+   replayed deterministically from its evidence and policy version.
+
+DETECTION_MODE is signed runtime policy. A sensor blocks only when its own
+mode and the verified policy both say enforce, so a sensor installed in
+observe for rollout phase 1 never blocks, and a signed observe policy stops
+every sensor from blocking with no deploy.
 
 ## Quick start
 
@@ -615,7 +670,7 @@ helm install ivar deploy/helm/ivar -n ivar \
 Kong, APISIX and NGINX (with a Proxy-Wasm module) load the same
 `ivar_edge_filter.wasm` with the same JSON configuration; the core and
 control plane are reached as upstreams. These hosts have not been run in
-this repository's tests (see [Verified here](#verified-here-and-what-was-not)).
+this repository's tests (see [Verified here](#verification-status)).
 
 ### Kubernetes
 
@@ -840,27 +895,87 @@ to sensors that cannot wait for a response.
 4. **Replay** any verdict from sealed evidence in the console before and
    after each change.
 
-## How a request is decided
+## The console
 
-1. A sensor builds an OCSF event with the `ivar` extension and redacts
-   payloads and identifiers with a keyed hash before anything leaves it.
-2. The sensor's local fast path decides known attacks from its last signed
-   policy in about a millisecond; everything else is forwarded.
-3. The core correlates the event on the trust graph, runs the eight methods,
-   and scores each entity on two timescales (30 minute and 7 day half lives)
-   with rule family maxima and independent sources.
-4. Risk bands (0.30, 0.60, 0.85) pick a rung on the seven level ladder; every
-   automatic action passes the safeguards (blast radius budget split by
-   confidence class, protected entities, shared networks never banned, two
-   source rule, per rule circuit breaker, evidence first, reversal, actor not
-   target) and Cedar.
-5. Evidence is sealed in a hash chain signed per shard, so any verdict can be
-   replayed deterministically from its evidence and policy version.
+The console (`replay-viewer/`, served by the core at `/console/` when
+`console_dir` is set) shows a verified replay or follows a live core.
 
-DETECTION_MODE is signed runtime policy. A sensor blocks only when its own
-mode and the verified policy both say enforce, so a sensor installed in
-observe for rollout phase 1 never blocks, and a signed observe policy stops
-every sensor from blocking with no deploy.
+| | |
+|---|---|
+| [![Live overview](docs/media/console-live-overview.png)](docs/media/console-live-overview.png) | [![Session transcript](docs/media/console-live-sessions.png)](docs/media/console-live-sessions.png) |
+| **Overview**: the outcome and the decision pipeline, activity over time by decision, highest risk entities, rules fired, sensor health, integrity | **Sessions**: what each session sent (→) and received (←), with IVAR findings, verdicts and actions (◆) in line |
+| [![Events and the decision chain](docs/media/console-live-events.png)](docs/media/console-live-events.png) | [![A replay frame](docs/media/live-test-replay-poster.png)](docs/media/live-test-replay.mp4) |
+| **Events**: every frame, searchable and filterable; the inspector shows the request and response with each field checked against the declared schema, the decision chain from event to receipt, the sealed evidence and the raw JSON | **Full screen replay** and **MP4 export**: the same renderer, so what you watch is what the video holds |
+
+* **Live mode** polls the core's sealed evidence and re verifies the whole
+  hash chain on every update; a record that does not link halts the view, an
+  unreachable core is retried.
+* **Replay mode** checks the bundle signature and evidence chain, then re
+  executes every event in the browser before anything renders.
+* Playback moves one cursor through every view; *As of playhead* limits every
+  view to what had happened by then. Links carry filters
+  (`#/events?decision=contain&entity=ip:198.51.100.7`), exports are CSV,
+  JSON and MP4, and keys are `1` to `5` (views), `j`/`k` (frames), space,
+  arrows, `F` (full screen) and `Esc`.
+* Payload values never leave the sensor (section 16): the console shows field
+  names, routes, statuses, keyed hashes and decisions, and says so.
+
+## The live test, replayed
+
+[![A frame of the replay](docs/media/live-test-replay-poster.png)](docs/media/live-test-replay.mp4)
+
+**[Watch the full replay (MP4, 37 s)](docs/media/live-test-replay.mp4)**
+
+A real Express payments API behind Envoy, Coraza with the OWASP Core Rule Set
+and the IVAR edge filter, attacked live (`deploy/live`). In 28.3 seconds of
+real time: legitimate customers, a signed switch from observe to enforce with
+no restarts, a credential spray (throttled), an account takeover and a
+mass assignment privilege escalation (refused), a payout without an intent
+chain (refused), a time locked payout (held), decoy hits (contained), a
+victim lockout attempt and a shared network neighbour (both protected), then
+control plane and core outages. 34 of 34 checks passed.
+
+The video is not a screen recording: it is the signed ReplayBundle built from
+the run's sealed evidence (`ivar-core replay`), re executed in the same engine
+(139 of 139 verdicts reproduced, 0 unobserved intervals) and rendered frame by
+frame (`scripts/export-replay.cjs`). Any incident exports the same way.
+
+## Repository layout
+
+| Path | What it is | Language |
+|---|---|---|
+| `proto/ivar/v1` | Data contracts: events, entities, findings, risk, verdicts, actions, envelopes, ingest | Protobuf |
+| `crates/ivar-contracts` | Contract types, signed policy bundles, ReplayBundle, crypto agile signing | Rust |
+| `crates/ivar-core` | Trust fabric, declared intent compiler, eight detection methods, risk, Cedar policy, response ladder, safeguards, intent binding (Biscuit), invariants and time locks, evidence chain | Rust |
+| `crates/ivar-replay` | Deterministic replay, counterfactual replay, attack replay library runner | Rust |
+| `crates/ivar-server` | Core service (`ivar-core`): HTTP and gRPC ingest, operator API, sinks, responders | Rust |
+| `crates/ivar-edge-filter` | Proxy-Wasm edge filter for Envoy, Istio, Kong, APISIX, NGINX | Rust to Wasm |
+| `crates/ivar-wasm`, `crates/ivar-abi` | The same core compiled to WebAssembly for every SDK | Rust to Wasm |
+| `crates/ivar-plugin-host` | Signed plugins: cosign, wasmi sandbox, process plugins, lifecycle, drift | Rust |
+| `crates/ivar-ai` | AI layer with autonomy levels A0 to A3 and guardrails | Rust |
+| `crates/ivar-sensor-kit` | Shared sensor runtime; Falco, Tetragon and Suricata adapters | Rust |
+| `sensors/*` | Linux and Windows host agents, network, database, AI gateway, log collector, workstation, build runner | Rust |
+| `sdk/*` | Application SDKs: Node (Express), Python (ASGI, WSGI), Go, Java, PHP (Laravel), .NET | Mixed |
+| `go/` | Control plane (`ivar-control`: policy build, TUF, signed flags, plugin registry, rollout) and connectors (`ivar-connector`: cloud, identity, Kubernetes, telco, indicators, responders) | Go |
+| `config/` | `security.config.ts`: the hardening configuration with the section 15 settings and fixes F1 to F9 | TypeScript |
+| `plugins/` | Responder manifests, including the specification's `okta-responder` unchanged | YAML |
+| `replay-library/` | Attack replay library: incidents and attacks on the IVAR itself | YAML |
+| `replay-viewer/` | Operator console: verified replays and live mode, events, sessions, entities, graph, full screen replay, MP4, CSV and JSON export | JS and Wasm |
+| `deploy/` | Dockerfile, Helm chart, Compose service, Terraform modules, Envoy config, policy source, operator decisions, local stack | Mixed |
+
+## Operating IVAR
+
+* **Keys.** `ivar-core keygen` writes a seed; `ivar-core keyring` builds the
+  keyring from seed files (the key id is the file name). Policy changes that
+  weaken protection need two named policy keys; the control plane refuses
+  to sign them with one, and every sensor refuses a forged one.
+* **Policy.** `ivar-control validate` loads the policy in the core and runs
+  the attack replay library; `ivar-control build` signs it. Reference
+  `operator-decisions.yaml` from `policy.yaml`; the build refuses
+  unconfirmed decisions.
+* **Operators.** The core's operator routes trust `X-Ivar-Operator`,
+  `X-Ivar-Roles` and `X-Ivar-Hardware-2fa` from the staff SSO proxy in front
+  of it. Do not expose those routes without that proxy.
 
 ## Specification traceability
 
@@ -894,21 +1009,7 @@ every sensor from blocking with no deploy.
 | 21 Open decisions | `deploy/policy/operator-decisions.yaml`, enforced by `ivar-control build` |
 | Appendix A, F1 to F9 | `config/test/defects.test.ts`, one test per defect with the review's own input |
 
-## Operating it
-
-* **Keys.** `ivar-core keygen` writes a seed; `ivar-core keyring` builds the
-  keyring from seed files (the key id is the file name). Policy changes that
-  weaken protection need two named policy keys; the control plane refuses
-  to sign them with one, and every sensor refuses a forged one.
-* **Policy.** `ivar-control validate` loads the policy in the core and runs
-  the attack replay library; `ivar-control build` signs it. Reference
-  `operator-decisions.yaml` from `policy.yaml`; the build refuses
-  unconfirmed decisions.
-* **Operators.** The core's operator routes trust `X-Ivar-Operator`,
-  `X-Ivar-Roles` and `X-Ivar-Hardware-2fa` from the staff SSO proxy in front
-  of it. Do not expose those routes without that proxy.
-
-## Verified here, and what was not
+## Verification status
 
 Verified in this repository's test suites and the local stack:
 
