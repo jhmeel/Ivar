@@ -24,15 +24,37 @@ export function renderOverview(el, ctx) {
   const firstTime = m.rows[0]?.f.time;
   const lastTime = m.rows[m.rows.length - 1]?.f.time;
   el.innerHTML = `
-    <div class="kpis">
-      ${kpi('Events observed', t.events, `${m.sensors.filter((s) => s.events).length} sensors · ${t.sources} source${t.sources === 1 ? "" : "s"}`, 'events?kind=event', 'event')}
-      ${kpi('Findings', t.findings, `${m.rules.length} rules fired`, 'events?kind=finding', 'finding')}
-      ${kpi('Verdicts', t.verdicts, `${t.enforced} enforcing (${pct(t.enforced, t.verdicts)})`, 'events?kind=verdict', 'record')}
-      ${kpi('Blocked or contained', blocked, `contain ${m.decisions.contain ?? 0} · block ${m.decisions.block ?? 0} · refuse ${m.decisions.refuse ?? 0}`, 'events?decision=contain', 'contain')}
+    <div class="ov-top">
+      <section class="hero" aria-label="Outcome">
+        <div class="hero-head">
+          <div class="h-label">Outcome</div>
+          <div class="h-meter" title="Share of verdicts issued in enforce mode"><span>Enforcing</span><b>${pct(t.enforced, t.verdicts)}</b><i><em style="width:${t.verdicts ? (t.enforced / t.verdicts) * 100 : 0}%"></em></i></div>
+        </div>
+        <div class="h-main" data-go="events?decision=contain" tabindex="0" role="button">
+          <div class="h-value">${blocked}</div>
+          <div>
+            <div class="h-title">${blocked === 1 ? 'request or source' : 'requests or sources'} blocked or contained</div>
+            <div class="h-sub">contain ${m.decisions.contain ?? 0} · block ${m.decisions.block ?? 0} · refuse ${m.decisions.refuse ?? 0} · from ${t.events} events across ${m.sensors.filter((s) => s.events).length} sensors in ${esc(formatElapsed(m.span))}</div>
+          </div>
+        </div>
+        <ol class="flow" aria-label="Decision pipeline">
+          ${[
+            ['Events', t.events, 'events?kind=event', 'event', `${t.sources} source${t.sources === 1 ? '' : 's'}`],
+            ['Findings', t.findings, 'events?kind=finding', 'finding', `${m.rules.length} rule${m.rules.length === 1 ? '' : 's'}`],
+            ['Verdicts', t.verdicts, 'events?kind=verdict', 'record', 'scored'],
+            ['Enforced', t.enforced, 'events?kind=verdict', 'block', pct(t.enforced, t.verdicts)],
+            ['Actions', t.actions, 'events?kind=action_request', 'action', `${m.kinds.action_receipt ?? 0} receipts`],
+          ].map(([l, v, go, c, sub]) => `<li class="step" data-go="${esc(go)}" tabindex="0" role="button"><div class="s-label"><i class="dot" style="background:var(--${c})"></i>${esc(l)}</div><div class="s-value">${esc(v)}</div><div class="s-sub">${esc(sub)}</div></li>`).join('')}
+        </ol>
+      </section>
       ${kpi('Throttled or challenged', (m.decisions.throttle ?? 0) + (m.decisions.challenge ?? 0), `throttle ${m.decisions.throttle ?? 0} · challenge ${m.decisions.challenge ?? 0}`, 'events?decision=throttle', 'throttle')}
-      ${kpi('Response actions', t.actions, `${m.kinds.action_receipt ?? 0} receipts`, 'events?kind=action_request', 'action')}
-      ${kpi('Sessions', t.sessions, `${m.entities.length} entities`, 'sessions', 'ent-session')}
-      ${kpi('Unobserved intervals', t.gaps, t.gaps ? 'sequence gaps: events lost in transit' : 'every sensor sequence complete', 'events?kind=gap', 'gap')}
+      ${kpi('Sessions', t.sessions, 'transcripts with every request and response', 'sessions', 'ent-session')}
+      ${kpi('Entities', m.entities.length, `${m.entities.filter((e) => e.lastDecision).length} with a decision against them`, 'entities', 'ent-user')}
+      <div class="kpi ${t.gaps ? 'k-warn' : 'k-ok'}" data-go="events?kind=gap" tabindex="0" role="button">
+        <div class="k-label">${t.gaps ? '<i class="dot" style="background:var(--warn)"></i>' : '<svg class="k-check" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7"/><path d="m5 8.2 2 2 4-4.4"/></svg>'}Unobserved intervals</div>
+        <div class="k-value">${t.gaps}</div>
+        <div class="k-sub">${t.gaps ? 'sequence gaps: events lost in transit' : 'every sensor sequence complete'}</div>
+      </div>
     </div>
 
     <section class="pane chart" aria-label="Activity over time">
@@ -91,9 +113,9 @@ export function renderOverview(el, ctx) {
   el.querySelector('#ov-decisions').appendChild(decisionBar(m.decisions));
   el.querySelectorAll('.spark').forEach((td) => td.appendChild(sparkline(m.byEntity.get(td.dataset.key).risk, m.span)));
   el.querySelectorAll('[data-go]').forEach((k) => {
-    const go = () => ctx.go(k.dataset.go);
+    const go = (e) => (e?.stopPropagation(), ctx.go(k.dataset.go));
     k.addEventListener('click', go);
-    k.addEventListener('keydown', (e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), go()));
+    k.addEventListener('keydown', (e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), go(e)));
   });
   el.querySelectorAll('[data-entity-row]').forEach((tr) => tr.addEventListener('click', () => ctx.go(`entities?entity=${encodeURIComponent(tr.dataset.entityRow)}`)));
   el.querySelectorAll('[data-rule]').forEach((tr) => tr.addEventListener('click', () => ctx.go(`events?kind=finding&q=${encodeURIComponent(tr.dataset.rule)}`)));
