@@ -36,8 +36,8 @@ act on those edges, and irreversible actions such as payouts, role changes and
 bulk exports only execute with a valid intent chain behind them.
 
 <p align="center">
-  <a href="docs/media/live-test-replay.mp4"><img src="docs/media/live-test-replay.gif" alt="Replay of the live test: a payments API under attack behind Envoy, Coraza and IVAR" width="760"></a>
-  <br><sub>A live attack on a real payments API, replayed from its sealed evidence. <a href="docs/media/live-test-replay.mp4">Watch the MP4</a>.</sub>
+  <a href="docs/media/ivar-console-walkthrough.mp4"><img src="docs/media/ivar-console-walkthrough.gif" alt="The IVAR console: a verified replay of a live attack, the outcome, the event inspector and a session transcript" width="820"></a>
+  <br><sub>The operator console on a live attack, replayed from sealed evidence. <a href="docs/media/ivar-console-walkthrough.mp4">Watch the full walkthrough</a> (2 min, 1080p, with sound).</sub>
 </p>
 
 ## Contents
@@ -57,7 +57,7 @@ bulk exports only execute with a valid intent chain behind them.
 
 ## Why IVAR
 
-- **A stolen credential is not a reason.** High consequence actions run only
+- **A stolen credential is not a reason.** High-consequence actions run only
   with an intent chain minted where the customer's request began and attested
   by every step, so a valid session with no business reason behind it is refused.
 - **One verified decision core, everywhere.** The core is written once in Rust
@@ -66,9 +66,9 @@ bulk exports only execute with a valid intent chain behind them.
 - **Safe to switch on.** Everything installs in observe. Enforcement is signed
   runtime policy, weakening it needs two keys, and every automatic action
   passes safeguards: blast radius budgets, protected entities, shared networks
-  never banned, a two source rule and per rule circuit breakers.
+  never banned, a two-source rule and per-rule circuit breakers.
 - **Evidence, not logs.** Every event and verdict is sealed in a hash chain
-  signed per shard. Any incident replays deterministically, is re verified by
+  signed per shard. Any incident replays deterministically, is re-verified by
   a third party, and exports as a video.
 - **Works with what you run.** Coraza and the OWASP Core Rule Set at the edge;
   Falco, Tetragon and Suricata on hosts and networks; Okta, Entra, Workspace,
@@ -125,12 +125,12 @@ sequenceDiagram
 2. The sensor's local fast path decides known attacks from its last signed
    policy in about a millisecond; everything else is forwarded.
 3. The core correlates the event on the trust graph, runs the eight methods,
-   and scores each entity on two timescales (30 minute and 7 day half lives)
+   and scores each entity on two timescales (30-minute and 7-day half-lives)
    with rule family maxima and independent sources.
-4. Risk bands (0.30, 0.60, 0.85) pick a rung on the seven level ladder; every
+4. Risk bands (0.30, 0.60, 0.85) pick a rung on the seven-level ladder; every
    automatic action passes the safeguards (blast radius budget split by
    confidence class, protected entities, shared networks never banned, two
-   source rule, per rule circuit breaker, evidence first, reversal, actor not
+   source rule, per-rule circuit breaker, evidence first, reversal, actor not
    target) and Cedar.
 5. Evidence is sealed in a hash chain signed per shard, so any verdict can be
    replayed deterministically from its evidence and policy version.
@@ -167,8 +167,8 @@ CORAZA_WASM=/path/to/coraza-proxy-wasm.wasm deploy/local/up.sh && python3 deploy
 A live test: installs from the release images in front of a real Express
 payments API using the SDK, then runs legitimate traffic and an attack
 campaign (credential spray, account takeover, mass assignment, payout
-without intent, time locked payout, decoys, victim lockout, shared
-networks), forensics (incidents, evidence chain, signed replay re verified
+without intent, time-locked payout, decoys, victim lockout, shared
+networks), forensics (incidents, evidence chain, signed replay re-verified
 by a third party) and resilience (control plane down, core down, restart):
 
 ```bash
@@ -256,7 +256,7 @@ one does the same four things:
    core after the response, core verdicts applied to later requests.
 2. **Reports** for logins and business actions, so spraying, takeover and
    abuse of a valid session can be correlated.
-3. **Action guards** on high consequence routes (payouts, role changes,
+3. **Action guards** on high-consequence routes (payouts, role changes,
    exports): intent binding, consequence invariants and time locks.
 4. **Failure behaviour**: faults fail open on public routes, within a
    budget, and fail closed on admin routes (`/admin` by default).
@@ -317,7 +317,7 @@ app.post('/exports', (req, res) => {
   res.json(runExport(req.body.ids));
 });
 
-// Guard a high consequence action with an intent chain (section 6.2).
+// Guard a high-consequence action with an intent chain (section 6.2).
 const stepKeys = { authenticated_session: process.env.STEP_SESSION_PUB, ledger_entry: process.env.STEP_LEDGER_PUB, payout_instruction: process.env.STEP_PAYOUT_PUB };
 app.post('/payouts',
   mw.guard('payout', { rootPublicKey: process.env.INTENT_ROOT_PUB, stepKeys }, { value: (req) => Number(req.body.amount) }),
@@ -340,7 +340,7 @@ await fetch('https://payments/payouts', { method: 'POST', headers: { [INTENT_HEA
 ```
 
 A valid credential with no business reason behind it is refused; a payout
-over the intent's limit is refused; one over a time lock threshold is held
+over the intent's limit is refused; one over a time-lock threshold is held
 with a cancellation window.
 
 #### Python (FastAPI, Starlette, any ASGI app)
@@ -741,7 +741,7 @@ heartbeat_ms: 10000
 `ivar-ai-gateway` sits between agents and their tools or models: `POST /mcp`
 for MCP servers and `POST /v1/*` for model APIs. The agent runtime sets
 `X-Agent-Id`; intent tokens travel in `Ivar-Intent`, so an agent can only
-call a high consequence tool with a chain behind it. Decoy tools catch an
+call a high-consequence tool with a chain behind it. Decoy tools catch an
 agent that has been steered.
 
 ```bash
@@ -850,7 +850,7 @@ Point Falco's `http_output`, Tetragon's export forwarder or a Suricata
 ### Custom sensors
 
 Anything that can make an HTTP request can be a sensor. Send OCSF events
-with the `ivar` extension (identifiers already keyed hashed); the response
+with the `ivar` extension (identifiers already replaced by keyed hashes); the response
 carries any verdicts to apply.
 
 ```bash
@@ -885,7 +885,7 @@ to sensors that cannot wait for a response.
 | Supply chain and poisoned datasets | Build runner in CI; `PipelineSensor` in ML jobs | Egress allowlists, pin verification, refused load time code |
 | Cloud key or admin account misuse | `ivar-connector cloud` and identity pollers, responder plugins | Risk across cloud and identity, then revoke through a signed responder |
 | SIM swap before a high value action | `ivar-connector telco` | Raises risk on the account before a payout executes |
-| Insider bulk export | SDK reports plus database audit | Invariant breach alert, two source rule before any containment |
+| Insider bulk export | SDK reports plus database audit | Invariant breach alert, two-source rule before any containment |
 
 ### Rolling out
 
@@ -903,6 +903,12 @@ to sensors that cannot wait for a response.
 The console (`replay-viewer/`, served by the core at `/console/` when
 `console_dir` is set) shows a verified replay or follows a live core.
 
+**[Watch the walkthrough](docs/media/ivar-console-walkthrough.mp4)** (2 min,
+1080p): verification, the overview, playback, the event inspector, session
+transcripts, entities, the trust graph and full screen replay. It is recorded
+from the real console by `scripts/record-walkthrough.cjs`, with a score from
+`scripts/walkthrough-score.py`, so it can be regenerated after any change.
+
 | | |
 |---|---|
 | [![Live overview](docs/media/console-live-overview.png)](docs/media/console-live-overview.png) | [![Session transcript](docs/media/console-live-sessions.png)](docs/media/console-live-sessions.png) |
@@ -910,7 +916,7 @@ The console (`replay-viewer/`, served by the core at `/console/` when
 | [![Events and the decision chain](docs/media/console-live-events.png)](docs/media/console-live-events.png) | [![A replay frame](docs/media/live-test-replay-poster.png)](docs/media/live-test-replay.mp4) |
 | **Events**: every frame, searchable and filterable; the inspector shows the request and response with each field checked against the declared schema, the decision chain from event to receipt, the sealed evidence and the raw JSON | **Full screen replay** and **MP4 export**: the same renderer, so what you watch is what the video holds |
 
-* **Live mode** polls the core's sealed evidence and re verifies the whole
+* **Live mode** polls the core's sealed evidence and re-verifies the whole
   hash chain on every update; a record that does not link halts the view, an
   unreachable core is retried.
 * **Replay mode** checks the bundle signature and evidence chain, then re
@@ -934,12 +940,12 @@ and the IVAR edge filter, attacked live (`deploy/live`). In 28.3 seconds of
 real time: legitimate customers, a signed switch from observe to enforce with
 no restarts, a credential spray (throttled), an account takeover and a
 mass assignment privilege escalation (refused), a payout without an intent
-chain (refused), a time locked payout (held), decoy hits (contained), a
+chain (refused), a time-locked payout (held), decoy hits (contained), a
 victim lockout attempt and a shared network neighbour (both protected), then
 control plane and core outages. 34 of 34 checks passed.
 
-The video is not a screen recording: it is the signed ReplayBundle built from
-the run's sealed evidence (`ivar-core replay`), re executed in the same engine
+This video is not a screen recording: it is the signed ReplayBundle built from
+the run's sealed evidence (`ivar-core replay`), re-executed in the same engine
 (139 of 139 verdicts reproduced, 0 unobserved intervals) and rendered frame by
 frame (`scripts/export-replay.cjs`). Any incident exports the same way.
 
@@ -987,7 +993,7 @@ frame (`scripts/export-replay.cjs`). Any incident exports the same way.
 | 3, 4 Threat model and incidents | `replay-library/incidents/*.yaml`, one scenario per incident, all passing |
 | 5 Principles | Crypto agility in `ivar-contracts/src/sign.rs`; reversible responses in `ivar-core/src/response` |
 | 6.1 Trust edges | `ivar-core/src/trust` |
-| 6.2 Intent binding | `ivar-core/src/intent` (Biscuit third party blocks per chain step), SDK `guard` calls |
+| 6.2 Intent binding | `ivar-core/src/intent` (Biscuit third-party blocks per chain step), SDK `guard` calls |
 | 6.3 Declared intent | `ivar-core/src/declare` (OpenAPI, IAM, Kubernetes, GitHub workflows, npm lockfiles, Terraform plans) |
 | 7.1 Decision flow | `ivar-core/src/engine`, `ivar-core/src/sensor/fast_path.rs` |
 | 7.2 Proven components | Falco, Tetragon, Suricata adapters in `ivar-sensor-kit/src/adapters`; Coraza ahead of the edge filter in `deploy/envoy` and the Helm chart |
@@ -1003,7 +1009,7 @@ frame (`scripts/export-replay.cjs`). Any incident exports the same way.
 | 13 Incident replay | `crates/ivar-replay`, `replay-viewer/` |
 | 14 Plugins | `crates/ivar-plugin-host`, `plugins/` |
 | 15 Policy and configuration | `config/src/security.config.ts`, `go/controlplane/build.go`, signed flags in `go/controlplane/flags.go` |
-| 16 Securing the IVAR | Two key rule for weakening (`sign.rs`), TUF (`go/controlplane/tuf.go`), redaction (`ivar-core/src/redact.rs`), evidence chain (`ivar-core/src/evidence`) |
+| 16 Securing the IVAR | Two-key rule for weakening (`sign.rs`), TUF (`go/controlplane/tuf.go`), redaction (`ivar-core/src/redact.rs`), evidence chain (`ivar-core/src/evidence`) |
 | 16.1 Attacks on the IVAR | `replay-library/self-defence/*.yaml`, `ivar-core/tests/self_defence.rs` |
 | 17 Regional signals | `go/connectors/telco` (TIRMS, MTN Chenosis), `go/connectors/indicators` |
 | 18 Performance | Latency budgets checked in the SDK tests (Node p99 0.02 ms, Java p99 0.52 ms) |
@@ -1019,7 +1025,7 @@ Verified in this repository's test suites and the local stack:
 * Rust, Node, Python, Go, Java, PHP and .NET test suites.
 * Envoy 1.33 running the IVAR filter, with and without Coraza and the
   Core Rule Set: observe, live signed rollout, enforcement, refusal of a
-  forged one key weakening, and enforcement through a control plane outage.
+  forged one-key weakening, and enforcement through a control plane outage.
 * The core image running under the Compose file with a real signed bundle.
 * The live test (`deploy/live`): the release images in front of a real
   Express API, 34 of 34 checks, reproduced on clean installs, with the
@@ -1040,7 +1046,7 @@ Not verified here, so test them in your environment before relying on them:
   was available).
 * The sensors image could not be built in this environment because its
   package mirror was unreachable; its binaries build in the shared stage.
-* No load test at production scale, no external security review, and the
+* No load test at production-scale, no external security review, and the
   indicator network has not had the legal review section 17 requires.
 
 ## Contributing

@@ -24,6 +24,6 @@ the specification (`replay-library/self-defence`).
 
 ## Status
 
-IVAR has not had an external security review or a production scale load
+IVAR has not had an external security review or a production-scale load
 test (see "Verification status" in the README). Evaluate it in observe mode
 before relying on it to block.
