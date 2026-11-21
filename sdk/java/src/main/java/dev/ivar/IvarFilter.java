@@ -55,6 +55,8 @@ public final class IvarFilter implements Filter {
     final Ivar.Core core;
     private final BlockingQueue<JsonNode> queue = new ArrayBlockingQueue<>(10_000);
     private final AtomicLong seq = new AtomicLong();
+    // Events submitted but not yet scored, counting the one the worker holds.
+    private final AtomicLong pending = new AtomicLong();
     private final Thread worker;
     private final HttpClient http = HttpClient.newHttpClient();
 
@@ -166,13 +168,22 @@ public final class IvarFilter implements Filter {
     }
 
     void submit(JsonNode ev) {
-        if (!queue.offer(ev)) opts.onAlert.accept("fail_open", "event buffer full");
+        pending.incrementAndGet();
+        if (!queue.offer(ev)) {
+            pending.decrementAndGet();
+            opts.onAlert.accept("fail_open", "event buffer full");
+        }
     }
 
     private void drain() {
         while (true) {
+            JsonNode ev;
             try {
-                JsonNode ev = queue.take();
+                ev = queue.take();
+            } catch (InterruptedException e) {
+                return;
+            }
+            try {
                 JsonNode verdicts;
                 if (core != null) {
                     verdicts = core.process(ev, Ivar.now()).get("verdicts");
@@ -186,15 +197,16 @@ public final class IvarFilter implements Filter {
                 return;
             } catch (Exception e) {
                 opts.onAlert.accept("sdk_fault", String.valueOf(e.getMessage()));
+            } finally {
+                pending.decrementAndGet();
             }
         }
     }
 
-    /** Wait until queued events were scored. */
+    /** Wait until every submitted event was scored and its verdicts applied. */
     public void flush(long timeoutMs) throws InterruptedException {
         long deadline = System.currentTimeMillis() + timeoutMs;
-        while (!queue.isEmpty() && System.currentTimeMillis() < deadline) TimeUnit.MILLISECONDS.sleep(5);
-        TimeUnit.MILLISECONDS.sleep(30);
+        while (pending.get() > 0 && System.currentTimeMillis() < deadline) TimeUnit.MILLISECONDS.sleep(5);
     }
 
     /** Action sink for one high consequence action. */
