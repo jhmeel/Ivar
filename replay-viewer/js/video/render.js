@@ -13,7 +13,7 @@ export const HEIGHT = 720;
 
 const C = {
   bg: '#0d0d0f', panel: '#1c1c1e', panel2: '#2c2c2e', line: '#38383a', lineStrong: '#48484a',
-  ink: '#f5f5f7', ink2: '#c7c7cc', muted: '#8e8e93', accent: '#0a84ff', verified: '#32d74b',
+  ink: '#f5f5f7', ink2: '#c7c7cc', muted: '#8e8e93', accent: '#0a84ff', brand: '#eb6834', verified: '#32d74b',
   record: '#199e70', throttle: '#c98500', challenge: '#9085e9', block: '#d95926', contain: '#e66767', refuse: '#d55181',
   event: '#8e8e93', gap: '#48484a', fast: '#3987e5', slow: '#199e70', band: 'rgba(230,103,103,0.13)',
 };
@@ -86,24 +86,13 @@ function panel(g, x, y, w, h, title, note) {
   if (note) text(g, note, x + w - 16, y + 26, { size: 12, color: C.muted, align: 'right' });
 }
 
-function shield(g, x, y, s) {
-  g.save();
-  g.translate(x, y);
-  g.scale(s / 32, s / 32);
-  g.strokeStyle = C.accent;
-  g.lineWidth = 2.2;
-  g.lineJoin = 'round';
-  g.lineCap = 'round';
-  g.beginPath();
-  g.moveTo(16, 2); g.lineTo(4, 7); g.lineTo(4, 15);
-  g.bezierCurveTo(4, 22.2, 9.1, 28.4, 16, 30);
-  g.bezierCurveTo(22.9, 28.4, 28, 22.2, 28, 15);
-  g.lineTo(28, 7); g.closePath();
-  g.stroke();
-  g.beginPath();
-  g.moveTo(10, 16); g.lineTo(14, 16); g.lineTo(16, 11); g.lineTo(19, 21); g.lineTo(21, 16); g.lineTo(23, 16);
-  g.stroke();
-  g.restore();
+// The IVAR mark: a V of pixels with one that does not belong, in the brand orange.
+const MARK_ON = [[0, 0], [4, 0], [0, 1], [4, 1], [1, 2], [3, 2], [1, 3], [3, 3], [2, 4]];
+function mark(g, x, y, s) {
+  const k = s / 120;
+  const cell = (cx, cy, fill) => roundRect(g, x + (8 + cx * 21.5) * k, y + (8 + cy * 21.5) * k, 17.5 * k, 17.5 * k, 4 * k, fill);
+  for (const [cx, cy] of MARK_ON) cell(cx, cy, C.ink);
+  cell(2, 1, C.brand);
 }
 
 /** Precomputed facts the renderer needs, so each video frame is cheap. */
@@ -139,7 +128,7 @@ export function frameAt(frames, ms) {
 function header(g, bundle, P) {
   g.fillStyle = C.bg;
   g.fillRect(0, 0, WIDTH, HEIGHT);
-  shield(g, 24, 18, 30);
+  mark(g, 22, 16, 34);
   text(g, 'IVAR', 64, 36, { size: 18, weight: 700 });
   text(g, 'Incident replay', 64, 52, { size: 12, color: C.muted });
   text(g, bundle.incident_id, 200, 36, { size: 16, weight: 600, font: MONO, max: 420 });
