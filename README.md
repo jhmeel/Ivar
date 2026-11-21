@@ -203,9 +203,15 @@ repositories). Its own dependencies resolve from Maven Central as usual.
 **.NET**:
 
 ```bash
-mkdir -p packages && curl -L -o packages/Ivar.AspNetCore.0.1.0.nupkg https://github.com/jhmeel/Ivar/releases/download/v0.1.0/Ivar.AspNetCore.0.1.0.nupkg
-dotnet add package Ivar.AspNetCore --version 0.1.0 --source ./packages
+mkdir -p packages
+curl -L -o packages/Ivar.AspNetCore.0.1.0.nupkg https://github.com/jhmeel/Ivar/releases/download/v0.1.0/Ivar.AspNetCore.0.1.0.nupkg
+dotnet new nugetconfig
+dotnet nuget add source ./packages --name ivar-release --configfile nuget.config
+dotnet add package Ivar.AspNetCore --version 0.1.0
 ```
+
+The folder is added next to nuget.org, which still serves the SDK's own
+dependencies.
 
 **From source**: `scripts/build-wasm.sh` builds the core for every SDK, and
 each SDK then builds in place (`sdk/<language>`). Releases are made by
@@ -494,6 +500,7 @@ go get github.com/jhmeel/ivar/sdk/go@v0.1.0
 package main
 
 import (
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -653,10 +660,10 @@ a small file and applied by every worker.
 
 #### .NET (ASP.NET Core)
 
+With the release package added as a source (see [Installation](#installation)):
+
 ```bash
-mkdir -p packages
-curl -L -o packages/Ivar.AspNetCore.0.1.0.nupkg https://github.com/jhmeel/Ivar/releases/download/v0.1.0/Ivar.AspNetCore.0.1.0.nupkg
-dotnet add package Ivar.AspNetCore --version 0.1.0 --source ./packages
+dotnet add package Ivar.AspNetCore --version 0.1.0
 ```
 
 ```csharp
@@ -669,7 +676,7 @@ builder.Services.AddIvar(o =>
     o.Identity = ctx => ctx.User.Identity?.Name;
     o.Session = ctx => ctx.Request.Headers["X-Session"];
     o.CoreUrl = builder.Configuration["Ivar:CoreUrl"];
-    o.PolicyJson = IvarCore.VerifyPolicyBundle(new IvarRuntime(), bundleBase64, keyringJson, 0);
+    o.PolicyJson = IvarApi.VerifyPolicyBundle(new IvarRuntime(), bundleBase64, keyringJson, 0);
     o.RedactionKey = builder.Configuration["Ivar:RedactionKey"]!;
     o.SensorId = "billing-api";
     o.AdminPrefixes = ["/admin"];
