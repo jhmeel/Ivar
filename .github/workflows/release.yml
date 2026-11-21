@@ -53,7 +53,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
-        with: { name: wasm }
+        with: { name: wasm, path: sdk }
       - uses: actions/setup-node@v4
         with: { node-version: "22" }
       - uses: actions/setup-python@v5
@@ -97,7 +97,7 @@ jobs:
       - uses: actions/setup-go@v5
         with: { go-version: "1.24.7" }
       - uses: actions/download-artifact@v4
-        with: { name: wasm }
+        with: { name: wasm, path: sdk }
       - name: Build
         run: |
           v="${TAG#v}"
@@ -157,11 +157,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
-        with: { path: dist, merge-multiple: true }
+        with: { name: packages, path: dist }
+      - uses: actions/download-artifact@v4
+        with: { name: binaries, path: dist }
       - name: Checksums
-        run: |
-          rm -rf dist/sdk
-          cd dist && sha256sum * > SHA256SUMS && cat SHA256SUMS
+        run: cd dist && sha256sum * > SHA256SUMS && cat SHA256SUMS
       - name: Tags
         run: |
           git config user.name "github-actions[bot]"
