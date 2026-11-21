@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PackageId>Ivar.AspNetCore</PackageId>
+    <Version>0.1.0</Version>
+    <Description>IVAR application SDK for ASP.NET Core: middleware and action sink over the verified WebAssembly decision core</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Wasmtime" Version="34.0.2" />
+    <EmbeddedResource Include="wasm/ivar_core.wasm" LogicalName="ivar_core.wasm" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,8 @@
+name: binance_ai_tool_reaches_signing
+source: Binance, 29 October 2026
+description: Engineer workstations were compromised, then an internal AI tool was abused to reach wallet signing. Decoy tools in every agent's tool list reveal goal hijack; intent bound signing refuses actions without a chain.
+settings: { detection_mode: enforce }
+steps:
+  - name: Hijacked agent reaches for the decoy export tool
+    event: { activity: ai.tool_call, sensor: aigw-1, sensor_type: ai_gateway, user: { uid: ops-assistant, type: agent }, attrs: { tool: export_all_customers } }
+    expect: { decision: contain, actions_include: [agent.suspend], incident: true }

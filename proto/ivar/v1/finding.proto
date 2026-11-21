@@ -1,0 +1,39 @@
+// Finding: rule, technique, confidence, severity, evidence references.
+// Produced by detection engines, consumed by the risk engine.
+syntax = "proto3";
+
+package ivar.v1;
+
+import "ivar/v1/entity.proto";
+
+// Finding: rule, technique, confidence, severity, evidence references.
+enum DetectionMethod {
+  DETECTION_METHOD_UNSPECIFIED = 0;
+  SIGNATURES = 1;
+  POSITIVE_SECURITY = 2;
+  BEHAVIOUR_BASELINES = 3;
+  SEQUENCE_CORRELATION = 4;
+  MACHINE_LEARNING = 5;
+  DECEPTION = 6;
+  DECLARED_INTENT_DRIFT = 7;
+  CONSEQUENCE_INVARIANTS = 8;
+}
+
+message Finding {
+  string finding_id = 1;
+  string rule = 2;
+  string rule_family = 3;           // f in the risk formula
+  string technique = 4;             // MITRE ATT&CK / OWASP agentic id
+  DetectionMethod method = 5;
+  double confidence = 6;            // c
+  uint32 severity = 7;              // 1..5
+  repeated string evidence_ids = 8;
+  repeated EntityRef entities = 9;
+  string observation_point = 10;
+  int64 time = 11;
+  bool critical_positive_security = 12;  // may skip bands (§10.1)
+  bool deception_hit = 13;               // may skip bands (§10.1)
+  string attack_stage = 14;
+  string explanation = 15;
+  string source_event = 16;              // independence key: distinct events count separately
+}

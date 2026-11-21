@@ -1,0 +1,16 @@
+// Entity references shared by findings, risk, trust edges and verdicts.
+syntax = "proto3";
+
+package ivar.v1;
+
+enum EntityRole {
+  ENTITY_ROLE_UNSPECIFIED = 0;
+  ACTOR = 1;
+  TARGET = 2;
+}
+
+message EntityRef {
+  string type = 1;   // ip, user, session, api_key, device, process, host, service, agent, token, package, oauth_grant
+  string id = 2;
+  EntityRole role = 3;
+}

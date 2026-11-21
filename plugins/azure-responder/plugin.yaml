@@ -1,0 +1,10 @@
+name: azure-responder
+version: 1.0.0
+type: responder
+api: ivar.plugin/v1
+permissions:
+  actions: [trust_edge.narrow]
+  network: ["management.azure.com:443"]
+  secrets: [azure_token]
+limits: { memory_mb: 128, cpu_ms_per_call: 50, timeout_ms: 5000 }
+signature: sigstore

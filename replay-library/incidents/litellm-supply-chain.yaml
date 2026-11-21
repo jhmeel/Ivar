@@ -1,0 +1,20 @@
+name: litellm_compromised_release
+source: LiteLLM 1.107.0, 21 October 2026; open source supply chain worms, March to October 2026
+description: A compromised release pipeline published a malicious version. Pinned versions, package quarantine and default deny build egress prevent it.
+settings: { detection_mode: enforce }
+npm_lockfile: |
+  {"lockfileVersion":3,"packages":{"":{"name":"app"},"node_modules/litellm":{"version":"1.106.2","integrity":"sha512-pinned","resolved":"https://registry.npmjs.org/litellm/-/litellm-1.106.2.tgz"}}}
+github_workflow: |
+  name: build
+  jobs:
+    test:
+      x-ivar-egress: [registry.npmjs.org]
+      steps:
+        - run: npm ci
+steps:
+  - name: Build runner installs an unpinned malicious version
+    event: { activity: package.install, sensor: runner-1, sensor_type: build_runner, app: ci-build, attrs: { package: litellm, version: 1.107.0, integrity: sha512-evil } }
+    expect: { decision_in: [block, contain], findings_include: [package_integrity_mismatch] }
+  - name: The package tries to send CI secrets out
+    event: { activity: net.connect, sensor: runner-1, sensor_type: build_runner, app: ci-build, egress: exfil.example.net, dst: { ip: 192.0.2.77, port: 443, host: exfil.example.net }, attrs: { holder: "ci_job:build/test" } }
+    expect: { decision_in: [block, contain], findings_include: [build_undeclared_egress] }

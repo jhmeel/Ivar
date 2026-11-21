@@ -1,0 +1,73 @@
+# The seven decisions the operator confirms before build (section 21).
+# Values are the design's defaults. ivar-control build refuses this file
+# until every decision names who confirmed it, so no deployment runs on
+# defaults nobody agreed to. Reference it from policy.yaml with
+#   operator_decisions_file: operator-decisions.yaml
+
+# 1. Default AI autonomy level: off (A0), advise (A1), propose (A2) or
+#    bounded (A3). A1: the AI layer explains and suggests, a person acts.
+ai_autonomy:
+  value: advise
+  confirmed_by: ""
+  confirmed_on: ""
+
+# 2. Platforms in the first rollout wave (protection tier by platform, 8.1).
+first_wave_platforms:
+  value: [kubernetes, self_managed_linux, managed_platforms]
+  confirmed_by: ""
+  confirmed_on: ""
+
+# 3. Blast radius budget and protected entities: at most 0.5% of established
+#    accounts contained automatically per 10 minutes, split by confidence
+#    class. Protected entities are never contained automatically.
+blast_radius:
+  value:
+    auto_contain_max_users_pct: 0.5
+    protected_entities:
+      - { entity: { type: user, id: break-glass-admin, role: 2 }, class: break_glass_admin }
+      - { entity: { type: service, id: health-checker, role: 2 }, class: health_check }
+      - { entity: { type: service, id: backup-system, role: 2 }, class: backup_system }
+      - { entity: { type: service, id: identity-provider, role: 2 }, class: identity_service }
+  confirmed_by: ""
+  confirmed_on: ""
+
+# 4. Evidence retention that applicable regulation requires: 400 days
+#    searchable minimum (EVIDENCE_RETENTION).
+evidence_retention_days:
+  value: 400
+  confirmed_by: ""
+  confirmed_on: ""
+
+# 5. Time lock threshold and delay for each irreversible action, in a
+#    structured file (TIME_LOCKS). Default: payouts above the threshold wait
+#    30 minutes and named owners can cancel.
+time_locks_file:
+  value: time-locks.yaml
+  confirmed_by: ""
+  confirmed_on: ""
+
+# 6. Actions that require intent binding in the first release, and the mode
+#    they start in. Enforcement arrives in rollout phase 4.
+intent_binding:
+  value:
+    actions: [payout, role.grant, export, key.sign, refund]
+    mode: observe
+  confirmed_by: ""
+  confirmed_on: ""
+
+# 7. Whether to join the shared indicator network. Off until Nigerian counsel
+#    reviews it: keyed hashes are personal data under the NDPA 2023, so
+#    joining needs a lawful basis (likely legitimate interest), the
+#    Legitimate Interest Assessment the NDPC GAID 2025 requires, a data
+#    sharing agreement, and the cross border rules for participants abroad.
+shared_indicator_network:
+  value:
+    join: false
+    lawful_basis: ""
+    legitimate_interest_assessment: ""
+    data_sharing_agreement: ""
+    counsel_review: ""
+    cross_border_review: ""
+  confirmed_by: ""
+  confirmed_on: ""
+  note: pending review by Nigerian counsel

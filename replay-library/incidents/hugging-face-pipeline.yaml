@@ -1,0 +1,13 @@
+name: hugging_face_dataset_code_execution
+source: Hugging Face, 16 July 2026
+description: A malicious dataset ran code, then an AI agent system moved across clusters at machine speed.
+settings: { detection_mode: enforce }
+steps:
+  - name: Code executes while a dataset loads
+    event: { activity: dataset.load, sensor: pipe-1, sensor_type: data_pipeline, user: { uid: loader-worker, type: service }, attrs: { dataset: community/evil, code_execution: "true" } }
+    expect: { decision_in: [block, contain], findings_include: [code_exec_during_load] }
+  - name: The agent reaches many hosts within a minute
+    repeat: 6
+    every_ms: 5000
+    event: { activity: net.connect, sensor: net-1, sensor_type: network, user: { uid: loader-worker, type: service }, dst: { ip: "10.4.0.{i}", port: 22 } }
+    expect: { findings_include: [machine_speed_lateral], decision: contain }

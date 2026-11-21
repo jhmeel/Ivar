@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IVAR Replay Viewer</title>
+<link rel="stylesheet" href="css/viewer.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 4 7v8c0 7.2 5.1 13.4 12 15 6.9-1.6 12-7.8 12-15V7L16 2Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 16h4l2-5 3 10 2-5h2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div>
+      <div class="brand-name">IVAR</div>
+      <div class="brand-sub">Incident replay</div>
+    </div>
+  </div>
+  <div class="loaders">
+    <label class="btn btn-ghost file">
+      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 3h8l4 4v10H4z M12 3v4h4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      <span data-name="Bundle">Bundle</span>
+      <input type="file" id="bundle-file" accept=".json" multiple>
+    </label>
+    <label class="btn btn-ghost file">
+      <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="7" cy="10" r="3.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 10H18M15 10v3M17.5 10v2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span data-name="Keyring">Keyring</span>
+      <input type="file" id="keyring-file" accept=".json">
+    </label>
+    <label class="field">
+      <span>Redaction key</span>
+      <input type="text" id="redaction-key" placeholder="hex" spellcheck="false" autocomplete="off">
+    </label>
+    <button id="load-sample" type="button" class="btn btn-primary">Load sample</button>
+  </div>
+</header>
+
+<div id="seal" class="seal idle" role="status">
+  <div class="seal-icon" aria-hidden="true"></div>
+  <div class="seal-body">
+    <div id="status" class="seal-title">Drop a ReplayBundle here or load one above</div>
+    <div id="seal-checks" class="seal-checks">A replay renders only after it reproduces the live verdicts exactly, checked here in your browser.</div>
+  </div>
+  <dl id="seal-meta" class="seal-meta"></dl>
+</div>
+
+<main id="viewer" hidden>
+  <section class="controls" aria-label="Controls">
+    <div class="transport">
+      <button id="step-back" type="button" class="btn btn-icon" aria-label="Step back" title="Step back (left arrow)">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 4v12M16 4 8 10l8 6z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+      </button>
+      <button id="play" type="button" class="btn btn-play" aria-label="Play" title="Play or pause (space)">
+        <svg class="i-play" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 4l10 6-10 6z" fill="currentColor"/></svg>
+        <svg class="i-pause" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 4h3.5v12H5zM11.5 4H15v12h-3.5z" fill="currentColor"/></svg>
+      </button>
+      <button id="step" type="button" class="btn btn-icon" aria-label="Step forward" title="Step forward (right arrow)">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M15 4v12M4 4l8 6-8 6z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <label class="field compact">
+      <span>Speed</span>
+      <select id="speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option><option value="16">16×</option><option value="64">64×</option><option value="256">256×</option></select>
+    </label>
+    <div class="segmented" role="radiogroup" aria-label="Replay">
+      <label><input type="radio" name="mode" value="live" checked><span>Live</span></label>
+      <label><input type="radio" name="mode" value="counterfactual"><span>Counterfactual</span></label>
+    </div>
+    <div class="clock">
+      <div><span class="clock-label">Frame</span><span id="clock-frame"></span></div>
+      <div><span class="clock-label">Real elapsed</span><span id="clock-elapsed"></span></div>
+    </div>
+    <div class="scrub"><input id="scrub" type="range" min="0" value="0" aria-label="Frame"></div>
+  </section>
+  <div id="cf-banner" class="banner" hidden></div>
+  <section class="pane timeline" aria-label="Timeline"><header><h2>Timeline</h2><span class="pane-note">corrected clock, skew shown</span></header><div id="timeline"></div></section>
+  <section class="pane estate" aria-label="Estate map"><header><h2>Estate map</h2><span class="pane-note">sensors by layer</span></header><div id="estate"></div></section>
+  <section class="pane pipeline" aria-label="Pipeline view"><header><h2>Pipeline</h2><span class="pane-note">per hop latency</span></header><div id="pipeline"></div></section>
+  <section class="pane trust" aria-label="Trust graph"><header><h2>Trust graph</h2><span class="pane-note">edges seen so far</span></header><div id="trust"></div></section>
+  <section class="pane risk" aria-label="Risk view"><header><h2>Risk</h2><span class="pane-note">two timescales, policy bands</span></header><div id="risk"></div></section>
+  <section class="pane inspector" aria-label="Inspector"><header><h2>Inspector</h2><span class="pane-note">sealed evidence behind this frame</span></header><div id="inspector"></div></section>
+</main>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

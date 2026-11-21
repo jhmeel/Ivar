@@ -1,0 +1,48 @@
+[package]
+name = "ivar-server"
+description = "The IVAR core service: OCSF ingest over gRPC and HTTP, the decision core, the evidence store, adapters for Falco, Tetragon and Suricata, responders, sinks (SIEM, OpenTelemetry, approvals, Shared Signals) and incident replay"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "ivar-core"
+path = "src/main.rs"
+
+[[bin]]
+name = "ivar-replay-library"
+path = "src/bin/replay_library.rs"
+
+[dependencies]
+ivar-contracts = { path = "../ivar-contracts" }
+ivar-core = { path = "../ivar-core" }
+ivar-replay = { path = "../ivar-replay" }
+ivar-ai = { path = "../ivar-ai" }
+ivar-plugin-host = { path = "../ivar-plugin-host" }
+ivar-sensor-kit = { path = "../ivar-sensor-kit" }
+serde.workspace = true
+serde_json.workspace = true
+serde_yaml.workspace = true
+base64.workspace = true
+hex.workspace = true
+sha2.workspace = true
+thiserror.workspace = true
+anyhow.workspace = true
+prost.workspace = true
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time", "signal", "fs"] }
+axum = "0.8"
+tonic = "0.14"
+tonic-prost = "0.14"
+tokio-stream = "0.1"
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls", "blocking"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+
+[build-dependencies]
+tonic-prost-build = "0.14"
+protoc-bin-vendored.workspace = true
+
+[dev-dependencies]
+tower = { version = "0.5", features = ["util"] }
+http-body-util = "0.1"
+tempfile = "3"

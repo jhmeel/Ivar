@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["image", "secrets", "core", "control", "agent", "gateway", "admission"],
+  "properties": {
+    "core": {
+      "type": "object",
+      "properties": {
+        "replicas": { "type": "integer", "minimum": 1 },
+        "publicUrl": { "type": "string", "pattern": "^https?://" }
+      }
+    },
+    "agent": {
+      "type": "object",
+      "properties": {
+        "mode": { "enum": ["native", "tetragon"] },
+        "sensorMode": { "enum": ["observe", "enforce"] }
+      }
+    },
+    "gateway": {
+      "type": "object",
+      "properties": {
+        "mode": { "enum": ["istio", "envoyfilter", "none"] },
+        "sensorMode": { "enum": ["observe", "enforce"] },
+        "failOpenBudgetPct": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "admission": {
+      "type": "object",
+      "properties": {
+        "mode": { "enum": ["observe", "enforce"] },
+        "failurePolicy": { "enum": ["Ignore", "Fail"] }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+name: screenconnect_partner_remote_access
+source: ConnectWise ScreenConnect partners, 11 November 2026
+description: Partner accounts were accessed, with third party extensions suspected. Allowlist remote tools and extensions, and flag new remote sessions.
+settings: { detection_mode: enforce }
+rule_params:
+  remote_tool_not_allowlisted: { allowlist: [approved-rmm] }
+  extension_not_allowlisted: { allowlist: [approved-ext] }
+steps:
+  - name: Remote session through a tool that is not allowlisted
+    event: { activity: remote.session, sensor: ws-1, sensor_type: workstation, user: { uid: partner-7, type: human }, attrs: { tool: screenconnect } }
+    expect: { findings_include: [remote_tool_not_allowlisted, new_remote_session] }
+  - name: Unknown extension installed
+    event: { activity: extension.install, sensor: ws-1, sensor_type: workstation, user: { uid: partner-7, type: human }, attrs: { extension: shady-ext } }
+    expect: { findings_include: [extension_not_allowlisted], decision_in: [block, contain] }

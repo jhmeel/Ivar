@@ -1,0 +1,23 @@
+[package]
+name = "ivar-plugin-host"
+description = "Plugin system (section 14): signed manifests, permission checks, a WebAssembly sandbox with resource limits, separate process plugins with scoped credentials, the activation lifecycle and drift monitoring"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+ivar-contracts = { path = "../ivar-contracts" }
+ivar-core = { path = "../ivar-core" }
+serde.workspace = true
+serde_json.workspace = true
+serde_yaml.workspace = true
+sha2.workspace = true
+base64.workspace = true
+hex.workspace = true
+thiserror.workspace = true
+wasmi = "0.40"
+p256 = { version = "0.13", features = ["ecdsa", "pem"] }
+libc = "0.2"
+
+[dev-dependencies]
+wat = "1"

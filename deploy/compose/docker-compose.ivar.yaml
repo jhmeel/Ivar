@@ -1,0 +1,32 @@
+# Adds IVAR to an existing Compose project: one service and one shared
+# network, no application change.
+#
+#   docker compose -f docker-compose.yaml -f docker-compose.ivar.yaml up -d
+#
+# Join each application service to the ivar network and point its SDK or
+# sensor at http://ivar:8080 (events and signed policy). ./ivar holds
+# core.yaml, keyring.json, policy.bundle and keys/ (see README.md here).
+services:
+  ivar:
+    image: ghcr.io/ivar/core:0.1.0
+    command: [serve, --config, /etc/ivar/core.yaml]
+    environment:
+      IVAR_SHARD: "0"
+      IVAR_SHARDS: "1"
+    volumes:
+      - ./ivar:/etc/ivar:ro
+      - ivar-evidence:/var/lib/ivar
+    networks: [ivar]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    restart: unless-stopped
+    healthcheck:
+      # distroless has no shell or curl; the core binary probes itself.
+      test: ["CMD", "/usr/local/bin/ivar-core", "health"]
+      interval: 30s
+networks:
+  ivar:
+    name: ivar
+volumes:
+  ivar-evidence:

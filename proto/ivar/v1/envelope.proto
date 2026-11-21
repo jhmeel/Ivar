@@ -1,0 +1,13 @@
+// Signed envelope. Crypto agile: the algorithm is named, so a post quantum
+// algorithm can be introduced without changing any contract (principle 7).
+syntax = "proto3";
+
+package ivar.v1;
+
+message SignedEnvelope {
+  string alg = 1;             // "ed25519" today; a post quantum algorithm such as ML DSA when introduced
+  string key_id = 2;
+  bytes payload = 3;          // the serialized message
+  bytes signature = 4;
+  string payload_type = 5;    // "ivar.v1.ActionRequest", ...
+}

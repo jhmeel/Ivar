@@ -1,0 +1,21 @@
+[package]
+name = "ivar-sensor-kit"
+description = "Shared sensor runtime: OCSF event delivery with buffering, heartbeats, signed policy refresh, the local fast path and the verdict cache"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+ivar-contracts = { path = "../ivar-contracts" }
+ivar-core = { path = "../ivar-core" }
+serde.workspace = true
+serde_json.workspace = true
+serde_yaml.workspace = true
+base64.workspace = true
+hex.workspace = true
+anyhow.workspace = true
+ureq = { version = "2", features = ["json"] }
+
+[features]
+# Test support for sensor crates (test_support::sensor_with_policy).
+testing = []

@@ -1,0 +1,40 @@
+{{- range $kind, $c := .Values.connectors }}
+{{- if $c.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ivar-connector-{{ $kind }}
+  labels: {{- include "ivar.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: ivar-connector-{{ $kind }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app.kubernetes.io/name: ivar-connector-{{ $kind }} }
+  template:
+    metadata:
+      labels: {{- include "ivar.labels" $ | nindent 8 }}
+        app.kubernetes.io/name: ivar-connector-{{ $kind }}
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: connector
+          image: {{ include "ivar.image" (dict "root" $ "name" "connectors") }}
+          args: [{{ $kind }}]
+          env:
+            - { name: IVAR_CORE_URL, value: {{ include "ivar.coreUrl" $ }} }
+            - { name: IVAR_SENSOR_ID, value: {{ $kind }}-connector }
+            - { name: IVAR_LISTEN, value: ":8085" }
+          envFrom: [{ secretRef: { name: {{ $c.envFrom }} } }]
+          ports: [{ name: http, containerPort: 8085 }]
+          securityContext: {{- include "ivar.restricted" $ | nindent 12 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ivar-connector-{{ $kind }}
+spec:
+  selector: { app.kubernetes.io/name: ivar-connector-{{ $kind }} }
+  ports: [{ name: http, port: 8085, targetPort: http }]
+---
+{{- end }}
+{{- end }}

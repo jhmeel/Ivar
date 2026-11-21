@@ -1,0 +1,15 @@
+name: beget_management_plane_wipe
+source: Beget, 1 November 2026; IDC Frontier, 7 October 2026
+description: The management layer was reached, then data and backups were wiped. Destructive actions are a protected class with two person approval and a time lock.
+settings: { detection_mode: enforce }
+steps:
+  - name: Snapshots deleted in bulk from the management plane
+    repeat: 6
+    every_ms: 1000
+    event: { activity: snapshot.delete, sensor: mgmt-1, sensor_type: management_plane, user: { uid: ops-admin, type: human }, destructive: true, attrs: { snapshot: "snap-{i}" } }
+    expect: { decision_in: [block, contain], findings_include: [backup_deletion, invariant_breach], incident: true }
+  - name: Mass encryption across virtual machines
+    repeat: 120
+    every_ms: 100
+    event: { activity: file.rename, sensor: host-9, sensor_type: host, device: { uid: hv-1, host: hv-1, type: server }, process: { pid: 666, name: locker, parent: bash, path: "/vm/disk{i}.vmdk.locked" } }
+    expect: { findings_include: [mass_encryption] }

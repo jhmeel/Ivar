@@ -1,0 +1,105 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ivar-core
+  labels: {{- include "ivar.labels" . | nindent 4 }}
+data:
+  core.yaml: |
+    http_listen: 0.0.0.0:8080
+    grpc_listen: 0.0.0.0:7443
+    data_dir: /var/lib/ivar
+    policy_bundle: /etc/ivar/policy/policy.bundle
+    keyring: /etc/ivar/policy/keyring.json
+    evidence_key_seed_file: /etc/ivar/keys/evidence.seed
+    action_key_seed_file: /etc/ivar/keys/action.seed
+    redaction_key_hex_file: /etc/ivar/keys/redaction.hex
+    public_url: {{ .Values.core.publicUrl }}
+    expected_layers: {{ toJson .Values.core.expectedLayers }}
+    {{- with .Values.core.sinks }}
+    sinks: {{- toYaml . | nindent 6 }}
+    {{- end }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ivar-core
+  labels: {{- include "ivar.labels" . | nindent 4 }}
+    app.kubernetes.io/name: ivar-core
+spec:
+  serviceName: ivar-core-shards
+  replicas: {{ .Values.core.replicas }}
+  podManagementPolicy: Parallel
+  selector:
+    matchLabels: { app.kubernetes.io/name: ivar-core }
+  template:
+    metadata:
+      labels: {{- include "ivar.labels" . | nindent 8 }}
+        app.kubernetes.io/name: ivar-core
+      annotations:
+        checksum/config: {{ toJson .Values.core | sha256sum }}
+    spec:
+      automountServiceAccountToken: false
+      securityContext: { fsGroup: 65532 }
+      containers:
+        - name: core
+          image: {{ include "ivar.image" (dict "root" . "name" "core") }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args: [serve, --config, /etc/ivar/core.yaml]
+          env:
+            - { name: IVAR_SHARD, value: ordinal }
+            - { name: IVAR_SHARDS, value: {{ .Values.core.replicas | quote }} }
+          ports:
+            - { name: http, containerPort: 8080 }
+            - { name: grpc, containerPort: 7443 }
+          readinessProbe: { httpGet: { path: /healthz, port: http }, periodSeconds: 5 }
+          livenessProbe: { httpGet: { path: /healthz, port: http }, periodSeconds: 20 }
+          resources: {{- toYaml .Values.core.resources | nindent 12 }}
+          securityContext: {{- include "ivar.restricted" . | nindent 12 }}
+          volumeMounts:
+            - { name: config, mountPath: /etc/ivar/core.yaml, subPath: core.yaml }
+            - { name: keys, mountPath: /etc/ivar/keys, readOnly: true }
+            - { name: policy, mountPath: /etc/ivar/policy, readOnly: true }
+            - { name: evidence, mountPath: /var/lib/ivar }
+      volumes:
+        - { name: config, configMap: { name: ivar-core } }
+        - { name: keys, secret: { secretName: {{ .Values.secrets.keys }}, defaultMode: 0400 } }
+        - { name: policy, secret: { secretName: {{ .Values.secrets.policy }} } }
+  volumeClaimTemplates:
+    - metadata: { name: evidence }
+      spec:
+        accessModes: [ReadWriteOnce]
+        {{- with .Values.core.storage.storageClass }}
+        storageClassName: {{ . }}
+        {{- end }}
+        resources: { requests: { storage: {{ .Values.core.storage.size }} } }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ivar-core
+  labels: {{- include "ivar.labels" . | nindent 4 }}
+spec:
+  selector: { app.kubernetes.io/name: ivar-core }
+  ports:
+    - { name: http, port: 8080, targetPort: http }
+    - { name: grpc, port: 7443, targetPort: grpc, appProtocol: grpc }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ivar-core-shards
+  labels: {{- include "ivar.labels" . | nindent 4 }}
+spec:
+  clusterIP: None
+  selector: { app.kubernetes.io/name: ivar-core }
+  ports:
+    - { name: http, port: 8080, targetPort: http }
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: ivar-core
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels: { app.kubernetes.io/name: ivar-core }

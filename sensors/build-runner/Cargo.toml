@@ -1,0 +1,14 @@
+[package]
+name = "ivar-build-runner"
+description = "Build runner sensor (section 8.3): GitHub Actions, GitLab CI, Jenkins and CircleCI. Package installs, runner memory access, outbound connections and workflow changes; default deny egress; can block builds, connections and package versions"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+ivar-contracts = { path = "../../crates/ivar-contracts" }
+ivar-core = { path = "../../crates/ivar-core" }
+ivar-sensor-kit = { path = "../../crates/ivar-sensor-kit" }
+serde.workspace = true
+serde_json.workspace = true
+anyhow.workspace = true

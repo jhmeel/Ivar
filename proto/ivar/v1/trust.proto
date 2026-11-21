@@ -1,0 +1,38 @@
+// TrustEdge: holder, resource, permission, granted by, purpose, scope, expiry,
+// declared or observed, usage profile. Produced by the declaration compiler,
+// identity connectors and the SDK; consumed by the risk engine and responders.
+syntax = "proto3";
+
+package ivar.v1;
+
+import "ivar/v1/entity.proto";
+
+// TrustEdge: holder, resource, permission, granted by, purpose, scope, expiry,
+// declared or observed, usage profile.
+message UsageProfile {
+  uint64 uses = 1;
+  int64 first_used = 2;
+  int64 last_used = 3;
+  repeated string contexts = 4;        // device/network contexts seen (token presented from new context)
+  double mean_records_per_use = 5;
+  double max_records_per_use = 6;
+  map<string, uint64> actions = 7;
+}
+
+message TrustEdge {
+  string edge_id = 1;
+  EntityRef holder = 2;
+  string resource = 3;
+  string permission = 4;
+  string granted_by = 5;
+  string purpose = 6;
+  string scope = 7;
+  int64 expiry = 8;          // epoch ms; 0 = no expiry (flagged as standing privilege)
+  bool declared = 9;
+  bool observed = 10;
+  UsageProfile usage = 11;
+  string declared_in = 12;   // file/declaration that explains the edge
+  string state = 13;         // active, narrowed, revoked
+  double risk = 14;
+  string owner = 15;         // named human owner (principle 3)
+}

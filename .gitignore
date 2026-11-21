@@ -1,0 +1,15 @@
+target/
+node_modules/
+dist/
+*.wasm
+!replay-viewer/pkg/*.wasm
+# Generated keys, bundles and evidence from deploy/local/up.sh
+deploy/local/.state/
+# Build output
+__pycache__/
+*.pyc
+sdk/java/target/
+sdk/dotnet/**/bin/
+sdk/dotnet/**/obj/
+sdk/node/core-wasm/
+.build-ca.crt

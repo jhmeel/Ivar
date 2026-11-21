@@ -1,0 +1,22 @@
+[package]
+name = "ivar-ai-gateway"
+description = "AI gateway sensor (section 8): a proxy in front of LLM gateways and MCP servers. Sees prompts, responses, tool calls and data sent to models; blocks prompts and tool calls; puts decoy tools in every agent's tool list"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+ivar-contracts = { path = "../../crates/ivar-contracts" }
+ivar-core = { path = "../../crates/ivar-core" }
+ivar-sensor-kit = { path = "../../crates/ivar-sensor-kit" }
+serde.workspace = true
+serde_json.workspace = true
+serde_yaml.workspace = true
+anyhow.workspace = true
+regex = "1"
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+axum = "0.8"
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+
+[dev-dependencies]
+ivar-sensor-kit = { path = "../../crates/ivar-sensor-kit", features = ["testing"] }

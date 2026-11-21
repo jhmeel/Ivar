@@ -1,0 +1,24 @@
+{
+  "keys": {
+    "evidence-1": [
+      {
+        "key_id": "evidence-1",
+        "alg": "ed25519",
+        "bytes": "ed4928c628d1c2c6eae90338905995612959273a5c63f93636c14614ac8737d1"
+      },
+      [
+        "evidence"
+      ]
+    ],
+    "replay-1": [
+      {
+        "key_id": "replay-1",
+        "alg": "ed25519",
+        "bytes": "ca93ac1705187071d67b83c7ff0efe8108e8ec4530575d7726879333dbdabe7c"
+      },
+      [
+        "replay"
+      ]
+    ]
+  }
+}

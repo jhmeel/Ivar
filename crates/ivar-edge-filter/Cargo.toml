@@ -1,0 +1,21 @@
+[package]
+name = "ivar-edge-filter"
+description = "Edge filter (section 8): a Proxy-Wasm filter for Envoy, Istio, NGINX, Kong and APISIX that runs the sensor fast path from signed policy and reports OCSF events to the core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+ivar-contracts = { path = "../ivar-contracts" }
+ivar-core = { path = "../ivar-core" }
+serde.workspace = true
+serde_json.workspace = true
+base64.workspace = true
+hex.workspace = true
+log = "0.4"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+proxy-wasm = "0.2.5"

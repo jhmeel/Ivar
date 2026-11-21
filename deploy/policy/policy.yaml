@@ -1,0 +1,23 @@
+# Policy source for ivar-control build. Same table shape as the hardening
+# settings; resolve order is profile default, environment override, hard
+# limits and cross checks (checked by the core when the bundle loads), then
+# signed runtime flags.
+version: 1
+policy_version: payments-2026.11.1
+profile: payments
+valid_days: 30
+settings:
+  detection_mode: observe
+  auto_contain_max_users_pct: 0.5
+  ai_autonomy: advise
+  evidence_retention_days: 400
+  fail_open_budget_pct: 0.1
+time_locks_file: time-locks.yaml
+intent_binding:
+  payout: enforce
+  role.grant: observe
+  export: observe
+shared_networks: ["100.64.0.0/10"]
+declarations:
+  - kind: openapi
+    file: openapi.yaml

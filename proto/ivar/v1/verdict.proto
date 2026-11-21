@@ -1,0 +1,23 @@
+// Verdict: decision, reason, expiry, policy version.
+// Produced by a sensor or the policy decision, consumed by enforcement points.
+syntax = "proto3";
+
+package ivar.v1;
+
+import "ivar/v1/entity.proto";
+
+// Verdict: decision, reason, expiry, policy version.
+message Verdict {
+  string verdict_id = 1;
+  string decision = 2;          // allow, record, throttle, challenge, block, contain, refuse
+  EntityRef entity = 3;
+  double risk = 4;
+  repeated string reasons = 5;
+  repeated string sources = 6;
+  string policy_version = 7;
+  int64 expires_at = 8;
+  string mode = 9;              // observe or enforce; in observe mode the verdict records what would have happened
+  repeated string evidence_ids = 10;
+  int64 time = 11;
+  uint32 ladder_level = 12;
+}

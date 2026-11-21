@@ -1,0 +1,28 @@
+// Ingest gateway service: sensors send OCSF events over gRPC.
+syntax = "proto3";
+
+package ivar.v1;
+
+import "ivar/v1/event.proto";
+import "ivar/v1/verdict.proto";
+
+// Ingest gateway: sensors send OCSF over gRPC.
+message IngestAck {
+  uint64 accepted = 1;
+  repeated Verdict verdicts = 2;
+}
+
+message PolicyRequest {
+  string sensor_id = 1;
+  uint64 have_version = 2;
+}
+
+message PolicyResponse {
+  bytes bundle = 1;   // signed archive
+}
+
+service Ingest {
+  rpc Send(stream SecurityEvent) returns (IngestAck);
+  rpc SendOne(SecurityEvent) returns (IngestAck);
+  rpc FetchPolicy(PolicyRequest) returns (PolicyResponse);
+}

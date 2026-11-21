@@ -1,0 +1,31 @@
+# Validates policy and tests rules before release (section 8.2): the core
+# must load the policy and the attack replay library must pass. Signing
+# happens outside CI, with named policy keys held by people.
+name: policy
+on:
+  pull_request:
+    paths: [deploy/policy/**, replay-library/**, crates/ivar-core/**, plugins/**]
+  push:
+    branches: [main]
+    paths: [deploy/policy/**, replay-library/**, crates/ivar-core/**, plugins/**]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with: { targets: wasm32-wasip1 }
+      - uses: actions/setup-go@v5
+        with: { go-version: "1.24.7" }
+      - name: Build the core, its WebAssembly runtime and ivar-control
+        run: |
+          cargo build --release --locked -p ivar-server -p ivar-abi
+          cargo build --release --locked -p ivar-abi --target wasm32-wasip1
+          cp target/wasm32-wasip1/release/ivar_abi.wasm sdk/go/wasm/ivar_core.wasm
+          (cd go && go build -o ../target/release/ivar-control ./cmd/ivar-control)
+      - name: Validate the policy and run the attack replay library
+        run: PATH="$PWD/target/release:$PATH" ivar-control validate --source deploy/policy/policy.yaml --library replay-library
+      - name: Plugin manifests pass the registry permission check
+        run: cargo test --release --locked -p ivar-plugin-host --test shipped_manifests

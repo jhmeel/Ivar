@@ -1,0 +1,10 @@
+name: workspace-responder
+version: 1.0.0
+type: responder
+api: ivar.plugin/v1
+permissions:
+  actions: [oauth_grant.revoke]
+  network: ["admin.googleapis.com:443"]
+  secrets: [google_token]
+limits: { memory_mb: 128, cpu_ms_per_call: 50, timeout_ms: 2000 }
+signature: sigstore

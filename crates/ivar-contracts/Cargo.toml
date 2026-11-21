@@ -1,0 +1,22 @@
+[package]
+name = "ivar-contracts"
+description = "Versioned data contracts (spec §9): OCSF SecurityEvent with IVAR extension, Finding, EntityRisk, TrustEdge, Incident, Verdict, ActionRequest, ActionReceipt, PolicyBundle, PluginManifest, IntentToken, Invariant, ReplayBundle"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+prost.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+serde_yaml.workspace = true
+sha2.workspace = true
+hex.workspace = true
+base64.workspace = true
+ed25519-dalek.workspace = true
+thiserror.workspace = true
+tar = { version = "0.4", default-features = false }
+
+[build-dependencies]
+prost-build.workspace = true
+protoc-bin-vendored.workspace = true

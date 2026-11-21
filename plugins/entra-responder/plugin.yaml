@@ -1,0 +1,10 @@
+name: entra-responder
+version: 1.0.0
+type: responder
+api: ivar.plugin/v1
+permissions:
+  actions: [session.revoke, user.suspend, oauth_grant.revoke]
+  network: ["graph.microsoft.com:443"]
+  secrets: [graph_token]
+limits: { memory_mb: 128, cpu_ms_per_call: 50, timeout_ms: 2000 }
+signature: sigstore

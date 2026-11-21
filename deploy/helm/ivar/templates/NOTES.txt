@@ -1,0 +1,10 @@
+IVAR is installed in {{ .Release.Namespace }} in rollout phase 1: sensors
+record, nothing blocks until a signed policy says enforce.
+
+Secrets the chart expects (create them before installing):
+  {{ .Values.secrets.keys }}:   evidence.seed action.seed redaction.hex flags-1.seed cosign.pub operators.json
+  {{ .Values.secrets.tuf }}:    root1.seed root2.seed targets1.seed targets2.seed snapshot.seed timestamp.seed
+  {{ .Values.secrets.policy }}: policy.bundle keyring.json   (ivar-control build, ivar-core keyring)
+
+Phase 1 exit test: real client IP verified, sensor error under 1%, and the
+compromise assessment done before any baseline is learned.

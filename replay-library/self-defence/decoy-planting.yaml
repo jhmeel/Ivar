@@ -1,0 +1,13 @@
+name: decoy_planting
+source: Section 16.1
+description: A stolen honey token is placed in a victim's context to get the victim contained. Decoys are bound to the context they were issued for; a hit from elsewhere opens an incident instead of containing.
+settings: { detection_mode: enforce }
+decoys:
+  - { decoy_id: dcy_deploy_token_laptops, kind: fake_deploy_token, marker: fp_8a1c, issued_context: "laptop:dev-17", protects: "deploy pipeline" }
+steps:
+  - name: Honey token used from the victim's context, not the one it was issued to
+    event: { activity: http.request, sensor: sdk-1, sensor_type: app_sdk, user: { uid: victim, type: human }, http: { method: POST, path: /deploy, status: 401 }, attrs: { token_fp: fp_8a1c, context: "laptop:victim-3" } }
+    expect: { incident: true, never_contain: ["user:victim"] }
+  - name: The same token from the laptop it was issued to contains
+    event: { activity: http.request, sensor: sdk-1, sensor_type: app_sdk, user: { uid: intruder, type: human }, http: { method: POST, path: /deploy, status: 401 }, attrs: { token_fp: fp_8a1c, context: "laptop:dev-17" } }
+    expect: { decision: contain }

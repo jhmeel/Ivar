@@ -1,0 +1,19 @@
+name: data_theft_and_lateral_movement
+source: Section 3.1 coverage across the attack chain
+description: DNS tunnelling, internal scanning, cloud metadata and secret file access.
+settings: { detection_mode: enforce }
+steps:
+  - name: Cloud metadata access from a web process
+    event: { activity: net.connect, sensor: host-2, sensor_type: host, device: { uid: vm-2, host: api-2, type: vm }, process: { pid: 77, name: node, parent: node }, dst: { ip: 169.254.169.254, port: 80 } }
+    expect: { findings_include: [metadata_access] }
+  - name: Secret file read
+    event: { activity: file.read, sensor: host-2, sensor_type: host, device: { uid: vm-2, host: api-2, type: vm }, process: { pid: 77, name: node, parent: node, path: /root/.aws/credentials } }
+    expect: { findings_include: [secret_file_read] }
+  - name: Internal scanning
+    repeat: 25
+    every_ms: 500
+    event: { activity: net.connect, sensor: net-1, sensor_type: network, device: { uid: vm-2, host: api-2, type: vm }, dst: { ip: "10.0.1.{i}", port: 445 } }
+    expect: { findings_include: [internal_scan] }
+  - name: DNS tunnelling
+    event: { activity: dns.query, sensor: net-1, sensor_type: network, device: { uid: vm-2, host: api-2, type: vm }, attrs: { query: aGVsbG8gd29ybGQgdGhpcyBpcyBleGZpbHRyYXRpb24gZGF0YQ.t.example.net } }
+    expect: { findings_include: [dns_tunnelling], decision_in: [block, contain] }

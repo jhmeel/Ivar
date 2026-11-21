@@ -1,0 +1,72 @@
+{{- if .Values.admission.enabled }}
+# Kubernetes audit, Vault audit and the admission webhook that refuses
+# images without a valid deploy intent chain. Destructive or fleet wide
+# changes in protected namespaces need two operator approvals.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ivar-connector-k8s
+  labels: {{- include "ivar.labels" . | nindent 4 }}
+    app.kubernetes.io/name: ivar-connector-k8s
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app.kubernetes.io/name: ivar-connector-k8s }
+  template:
+    metadata:
+      labels: {{- include "ivar.labels" . | nindent 8 }}
+        app.kubernetes.io/name: ivar-connector-k8s
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: connector
+          image: {{ include "ivar.image" (dict "root" . "name" "connectors") }}
+          args: [k8s]
+          env:
+            - { name: IVAR_CORE_URL, value: {{ include "ivar.coreUrl" . }} }
+            - { name: IVAR_SENSOR_ID, value: k8s-connector }
+            - { name: IVAR_LISTEN, value: ":8443" }
+            - { name: IVAR_MODE, value: {{ .Values.admission.mode }} }
+            - { name: IVAR_PROTECTED_NAMESPACES, value: {{ toJson .Values.admission.protectedNamespaces | quote }} }
+            - { name: IVAR_TLS_CERT, value: /etc/ivar/tls/tls.crt }
+            - { name: IVAR_TLS_KEY, value: /etc/ivar/tls/tls.key }
+            - name: IVAR_OPERATOR_KEYS
+              valueFrom: { secretKeyRef: { name: {{ .Values.secrets.keys }}, key: operators.json } }
+          ports: [{ name: https, containerPort: 8443 }]
+          readinessProbe: { tcpSocket: { port: https } }
+          securityContext: {{- include "ivar.restricted" . | nindent 12 }}
+          volumeMounts: [{ name: tls, mountPath: /etc/ivar/tls, readOnly: true }]
+      volumes:
+        - { name: tls, secret: { secretName: {{ .Values.admission.tlsSecret }} } }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ivar-connector-k8s
+spec:
+  selector: { app.kubernetes.io/name: ivar-connector-k8s }
+  ports: [{ name: https, port: 443, targetPort: https }]
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: ivar-deploy-intent
+webhooks:
+  - name: deploy-intent.ivar.dev
+    admissionReviewVersions: [v1]
+    sideEffects: None
+    timeoutSeconds: 5
+    failurePolicy: {{ .Values.admission.failurePolicy }}
+    clientConfig:
+      service: { name: ivar-connector-k8s, namespace: {{ .Release.Namespace }}, path: /admission, port: 443 }
+      {{- with .Values.admission.caBundle }}
+      caBundle: {{ . }}
+      {{- end }}
+    namespaceSelector:
+      matchExpressions:
+        - { key: kubernetes.io/metadata.name, operator: NotIn, values: {{ toJson .Values.admission.excludeNamespaces }} }
+    rules:
+      - { apiGroups: [""], apiVersions: [v1], operations: [CREATE, UPDATE], resources: [pods] }
+      - { apiGroups: [apps], apiVersions: [v1], operations: [CREATE, UPDATE], resources: [deployments, statefulsets, daemonsets] }
+      - { apiGroups: [rbac.authorization.k8s.io], apiVersions: [v1], operations: [CREATE, UPDATE, DELETE], resources: [clusterrolebindings, rolebindings] }
+{{- end }}

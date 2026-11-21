@@ -1,0 +1,5 @@
+# TIME_LOCKS: threshold, delay and cancelling owners for each irreversible action.
+- action: payout
+  threshold: 25000
+  delay_secs: 1800
+  cancelling_owners: [user:cfo, user:treasury_lead]

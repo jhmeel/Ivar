@@ -1,0 +1,10 @@
+name: vercel_third_party_oauth_canary
+source: Vercel, 19 April 2026; Railway, 20 October 2026
+description: A third party AI tool's OAuth app was compromised and used to read environment variables. Canary secrets reveal the read.
+settings: { detection_mode: enforce }
+decoys:
+  - { decoy_id: dcy_env_stripe, kind: canary_env, marker: STRIPE_SECRET_KEY_BACKUP, issued_context: "*", protects: "managed platform env" }
+steps:
+  - name: OAuth grant presented from a new context reads environment variables
+    event: { activity: secret.read, sensor: cloud-1, sensor_type: cloud, attrs: { oauth_grant: grant-ai-notes, secret: env, env_var: STRIPE_SECRET_KEY_BACKUP } }
+    expect: { decision: contain, actions_include: [oauth_grant.revoke] }

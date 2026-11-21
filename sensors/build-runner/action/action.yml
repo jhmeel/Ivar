@@ -1,0 +1,18 @@
+name: IVAR build runner sensor
+description: Default deny egress, runner memory protection and package pin checks for this job
+inputs:
+  allowed-endpoints:
+    description: Comma separated names this job may reach, in addition to its declared egress
+    required: false
+    default: ""
+  mode:
+    description: observe or enforce
+    required: false
+    default: observe
+  core-url:
+    description: IVAR core ingest URL
+    required: true
+runs:
+  using: node20
+  main: index.js
+  post: post.js

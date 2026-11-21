@@ -1,0 +1,11 @@
+name: connectwise_cloud_backup_app_self_grant
+source: ConnectWise Cloud Backup, 15 October 2026
+description: A stolen app credential bypassed user MFA, and apps granted themselves admin roles. Revoke self granted roles and new secrets within seconds of the audit event.
+settings: { detection_mode: enforce }
+steps:
+  - name: App grants itself an admin role
+    event: { activity: iam.grant, sensor: idp-connector, sensor_type: saas_identity, user: { uid: backup-app, type: service }, attrs: { grantee: backup-app, role: GlobalAdmin, resource: "tenant:contoso", operation: grant } }
+    expect: { decision_in: [block, contain], findings_include: [app_self_granted_role], incident: true }
+  - name: The same app creates a new secret
+    event: { activity: app.secret_create, sensor: idp-connector, sensor_type: saas_identity, user: { uid: backup-app, type: service } }
+    expect: { decision: contain, actions_include: [trust_edge.narrow] }

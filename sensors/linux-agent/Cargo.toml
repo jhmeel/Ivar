@@ -1,0 +1,21 @@
+[package]
+name = "ivar-linux-agent"
+description = "Linux host agent (section 8): servers, VMs and Kubernetes nodes. eBPF enforcement through Tetragon tracing policies generated from IVAR policy, with a native /proc collector and evidence first enforcement where Tetragon is absent"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+ivar-contracts = { path = "../../crates/ivar-contracts" }
+ivar-core = { path = "../../crates/ivar-core" }
+ivar-sensor-kit = { path = "../../crates/ivar-sensor-kit" }
+serde.workspace = true
+serde_json.workspace = true
+serde_yaml.workspace = true
+sha2.workspace = true
+hex.workspace = true
+anyhow.workspace = true
+libc = "0.2"
+
+[dev-dependencies]
+base64.workspace = true

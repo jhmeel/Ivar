@@ -1,0 +1,15 @@
+[package]
+name = "ivar-network-sensor"
+description = "Network sensor (section 8): traffic mirror or inline gateway. Flows, DNS and TLS metadata from raw packets, known attack traffic from Suricata EVE; cuts connections when inline"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+ivar-contracts = { path = "../../crates/ivar-contracts" }
+ivar-core = { path = "../../crates/ivar-core" }
+ivar-sensor-kit = { path = "../../crates/ivar-sensor-kit" }
+serde.workspace = true
+serde_json.workspace = true
+anyhow.workspace = true
+libc = "0.2"

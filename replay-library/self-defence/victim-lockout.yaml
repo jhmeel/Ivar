@@ -1,0 +1,10 @@
+name: victim_lockout
+source: Section 16.1
+description: Failed logins sprayed at an executive's account raise its risk until the system contains it. Target side evidence only raises protection, never containment.
+settings: { detection_mode: enforce }
+steps:
+  - name: Failed logins from many sources at one account
+    repeat: 40
+    every_ms: 1000
+    event: { activity: auth.login, sensor: sdk-1, sensor_type: app_sdk, src_ip: "203.0.113.{i}", target: "user:ceo", success: false }
+    expect: { never_contain: ["user:ceo"] }

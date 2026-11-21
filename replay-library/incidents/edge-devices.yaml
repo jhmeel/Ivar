@@ -1,0 +1,11 @@
+name: edge_device_compromise
+source: FortiBleed, 6 October 2026; Cisco SD WAN, 25 February 2026
+description: Edge devices lack host telemetry, so device log collection gives early warning of new admins and downgrades.
+settings: { detection_mode: enforce }
+steps:
+  - name: New admin account on a firewall
+    event: { activity: device.admin_create, sensor: logc-1, sensor_type: log, user: { uid: admin2, type: human }, device: { uid: fw-1, host: fw-1, type: appliance } }
+    expect: { findings_include: [new_admin_account] }
+  - name: Software downgrade on the same device
+    event: { activity: device.version_change, sensor: logc-1, sensor_type: log, user: { uid: admin2, type: human }, device: { uid: fw-1, host: fw-1, type: appliance }, attrs: { direction: downgrade, from: "17.12", to: "17.3" } }
+    expect: { findings_include: [version_downgrade], decision_in: [block, challenge, contain] }

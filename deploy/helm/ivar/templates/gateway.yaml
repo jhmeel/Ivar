@@ -1,0 +1,87 @@
+{{- if ne .Values.gateway.mode "none" }}
+{{- $ns := .Release.Namespace }}
+{{- $core := printf "outbound|8080||ivar-core.%s.svc.cluster.local" $ns }}
+{{- $control := printf "outbound|8090||ivar-control.%s.svc.cluster.local" $ns }}
+{{- $edge := dict
+    "sensor_id" "edge-gateway"
+    "mode" .Values.gateway.sensorMode
+    "fail_open_budget_pct" .Values.gateway.failOpenBudgetPct
+    "admin_prefixes" .Values.gateway.adminPrefixes
+    "max_body_bytes" .Values.gateway.maxBodyBytes
+    "core_cluster" $core
+    "core_authority" (printf "ivar-core.%s.svc" $ns)
+    "control_cluster" $control
+    "control_authority" (printf "ivar-control.%s.svc" $ns)
+    "keyring" (required "gateway.keyring (the policy keyring JSON) is required: --set-file gateway.keyringJson=keyring.json" .Values.gateway.keyringJson | fromJson)
+    "policy_bundle_base64" (required "gateway.policyBundle is required: --set-file gateway.policyBundle=policy.bundle" .Values.gateway.policyBundle | trim)
+    "redaction_key_hex" (required "gateway.redactionKeyHex is required" .Values.gateway.redactionKeyHex)
+    "tick_ms" 1000
+    "max_outbox" 10000 }}
+{{- $coraza := dict "directives_map" (dict "default" (list "Include @demo-conf" "Include @crs-setup-conf" (printf "SecAction \"id:900200,phase:1,nolog,pass,t:none,setvar:'tx.allowed_methods=%s'\"" .Values.gateway.coraza.allowedMethods) "SecRuleEngine On" "Include @owasp_crs/*.conf")) "default_directives" "default" }}
+{{- if eq .Values.gateway.mode "istio" }}
+{{- if .Values.gateway.coraza.enabled }}
+# Coraza with the OWASP Core Rule Set: virtual patching ahead of the IVAR filter.
+apiVersion: extensions.istio.io/v1alpha1
+kind: WasmPlugin
+metadata:
+  name: coraza
+  namespace: {{ .Values.gateway.namespace }}
+spec:
+  selector:
+    matchLabels: {{- toYaml .Values.gateway.selector | nindent 6 }}
+  url: {{ .Values.gateway.coraza.url }}
+  phase: AUTHN
+  priority: 100
+  failStrategy: FAIL_OPEN
+  pluginConfig: {{- toYaml $coraza | nindent 4 }}
+---
+{{- end }}
+apiVersion: extensions.istio.io/v1alpha1
+kind: WasmPlugin
+metadata:
+  name: ivar-edge
+  namespace: {{ .Values.gateway.namespace }}
+spec:
+  selector:
+    matchLabels: {{- toYaml .Values.gateway.selector | nindent 6 }}
+  url: oci://{{ .Values.image.registry }}/edge-filter:{{ .Values.image.tag }}
+  imagePullPolicy: {{ .Values.image.pullPolicy }}
+  phase: AUTHZ
+  # A crashed filter fails open on public routes within the fail open budget
+  # (section 11.2); admin routes fail closed inside the filter.
+  failStrategy: FAIL_OPEN
+  pluginConfig: {{- toYaml $edge | nindent 4 }}
+{{- else }}
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: ivar-edge
+  namespace: {{ .Values.gateway.namespace }}
+spec:
+  workloadSelector:
+    labels: {{- toYaml .Values.gateway.selector | nindent 6 }}
+  configPatches:
+    {{- range $i, $f := (ternary (list "coraza" "ivar") (list "ivar") .Values.gateway.coraza.enabled) }}
+    - applyTo: HTTP_FILTER
+      match:
+        context: GATEWAY
+        listener: { filterChain: { filter: { name: envoy.filters.network.http_connection_manager, subFilter: { name: envoy.filters.http.router } } } }
+      patch:
+        operation: INSERT_BEFORE
+        value:
+          name: {{ $f }}
+          typed_config:
+            "@type": type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
+            config:
+              name: {{ $f }}
+              root_id: {{ $f }}
+              fail_open: true
+              configuration:
+                "@type": type.googleapis.com/google.protobuf.StringValue
+                value: {{ (ternary $coraza $edge (eq $f "coraza")) | toJson | quote }}
+              vm_config:
+                runtime: envoy.wasm.runtime.v8
+                code: { local: { filename: /var/lib/ivar/{{ $f }}.wasm } }
+    {{- end }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,86 @@
+# Rollout phase 1 (observe) defaults: nothing blocks until the signed policy
+# says enforce and the component's own mode allows it.
+image:
+  registry: ghcr.io/ivar
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+
+# Secrets the chart never generates. Create them first (see NOTES.txt):
+#   keys:   evidence.seed, action.seed, redaction.hex, flags-1.seed, cosign.pub, operators.json
+#   tuf:    root1.seed root2.seed targets1.seed targets2.seed snapshot.seed timestamp.seed
+#   policy: policy.bundle (from ivar-control build) and keyring.json
+secrets:
+  keys: ivar-keys
+  tuf: ivar-tuf
+  policy: ivar-policy
+
+core:
+  replicas: 1
+  # Each replica owns one shard of entities and its own evidence chain.
+  storage: { size: 50Gi, storageClass: "" }
+  publicUrl: https://ivar.internal
+  expectedLayers: [edge, app_sdk, host, network, database]
+  resources: { requests: { cpu: 500m, memory: 512Mi }, limits: { memory: 2Gi } }
+  sinks: {}
+
+control:
+  replicas: 2
+  resources: { requests: { cpu: 100m, memory: 128Mi }, limits: { memory: 512Mi } }
+
+agent:
+  enabled: true
+  # native scans /proc; tetragon forwards Tetragon's export and applies the
+  # generated TracingPolicies (kill paired with a denied system call).
+  mode: native
+  sensorMode: observe
+  tetragonExport: /var/run/cilium/tetragon/tetragon.log
+  resources: { requests: { cpu: 50m, memory: 64Mi }, limits: { memory: 256Mi } }
+  tolerations: [{ operator: Exists }]
+
+gateway:
+  # istio: WasmPlugin resources; envoyfilter: EnvoyFilter patches; none.
+  mode: istio
+  sensorMode: observe
+  selector: { istio: ingressgateway }
+  namespace: istio-system
+  failOpenBudgetPct: 0.1
+  adminPrefixes: [/admin]
+  maxBodyBytes: 65536
+  # Required unless mode is none:
+  #   --set-file gateway.keyringJson=policy-keyring.json
+  #   --set-file gateway.policyBundle=policy.bundle
+  #   --set gateway.redactionKeyHex=$(cat redaction.hex)
+  # WasmPlugin configuration is not a Secret, so restrict who may read
+  # WasmPlugin and EnvoyFilter resources in the gateway namespace.
+  keyringJson: ""
+  policyBundle: ""
+  redactionKeyHex: ""
+  coraza:
+    # Coraza with the OWASP Core Rule Set runs ahead of the IVAR filter.
+    enabled: true
+    url: oci://ghcr.io/corazawaf/coraza-proxy-wasm:0.6.0
+    allowedMethods: GET HEAD POST OPTIONS PUT PATCH DELETE
+
+connectors:
+  # One Deployment per enabled connector. env names the Secret keys each reads.
+  cloud: { enabled: false, envFrom: ivar-cloud }
+  okta: { enabled: false, envFrom: ivar-okta }
+  entra: { enabled: false, envFrom: ivar-entra }
+  workspace: { enabled: false, envFrom: ivar-workspace }
+  salesforce: { enabled: false, envFrom: ivar-salesforce }
+  github: { enabled: false, envFrom: ivar-github }
+  telco: { enabled: false, envFrom: ivar-telco }
+  indicators: { enabled: false, envFrom: ivar-indicators }
+
+admission:
+  # Refuses images without a valid deploy intent chain (Sigstore and SLSA).
+  enabled: true
+  mode: observe
+  failurePolicy: Ignore
+  tlsSecret: ivar-admission-tls
+  caBundle: ""
+  protectedNamespaces: [kube-system, ivar]
+  excludeNamespaces: [kube-system]
+
+networkPolicy:
+  enabled: true

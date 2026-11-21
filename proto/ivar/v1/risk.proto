@@ -1,0 +1,22 @@
+// EntityRisk: entity, score, contributing findings, independent sources.
+// Produced by the risk engine, consumed by the policy decision.
+syntax = "proto3";
+
+package ivar.v1;
+
+import "ivar/v1/entity.proto";
+
+// EntityRisk: entity, score, contributing findings, independent sources.
+message EntityRisk {
+  EntityRef entity = 1;
+  double score = 2;           // max over timescales, used for banding
+  double fast_score = 3;      // R^(fast)
+  double slow_score = 4;      // R^(slow)
+  repeated string contributing_findings = 5;
+  uint32 independent_sources = 6;
+  bool has_high_confidence_source = 7;
+  bool deception_hit = 8;
+  bool critical_positive_security = 9;
+  int64 time = 10;
+  bool target_only = 11;      // only targeted: protection raised, never contained
+}

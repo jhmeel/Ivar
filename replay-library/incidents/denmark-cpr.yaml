@@ -1,0 +1,13 @@
+name: denmark_cpr_per_identity_data_budget
+source: Denmark CPR register, September 2026
+description: Lawful lookup access was used for automated queries on about 8.8 million people. Valid access had no data volume limit; a per identity data budget suspends it.
+settings: { detection_mode: enforce }
+steps:
+  - name: Normal lookups
+    repeat: 9
+    every_ms: 60000
+    event: { activity: db.query, sensor: db-1, sensor_type: database, user: { uid: lookup-svc, type: service }, records: 1000, attrs: { table: persons, operation: SELECT } }
+    expect: { decision_in: [allow, record] }
+  - name: Automated bulk lookups exceed the per identity budget
+    event: { activity: db.query, sensor: db-1, sensor_type: database, user: { uid: lookup-svc, type: service }, records: 50000, attrs: { table: persons, operation: SELECT } }
+    expect: { decision_in: [block, contain], findings_include: [invariant_breach, bulk_read_anomaly] }

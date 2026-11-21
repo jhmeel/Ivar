@@ -1,0 +1,10 @@
+name: aws-responder
+version: 1.0.0
+type: responder
+api: ivar.plugin/v1
+permissions:
+  actions: [api_key.suspend, host.isolate]
+  network: ["iam.amazonaws.com:443", "*.amazonaws.com:443"]
+  secrets: [aws_access_key_id, aws_secret_access_key, aws_session_token]
+limits: { memory_mb: 128, cpu_ms_per_call: 50, timeout_ms: 5000 }
+signature: sigstore

@@ -1,0 +1,52 @@
+[workspace]
+resolver = "2"
+exclude = ["third_party"]
+members = [
+  "crates/ivar-contracts",
+  "crates/ivar-core",
+  "crates/ivar-replay",
+  "crates/ivar-api",
+  "crates/ivar-wasm",
+  "crates/ivar-abi",
+  "crates/ivar-edge-filter",
+  "crates/ivar-plugin-host",
+  "crates/ivar-ai",
+  "crates/ivar-server",
+  "crates/ivar-sensor-kit",
+  "sensors/linux-agent",
+  "sensors/windows-agent",
+  "sensors/network",
+  "sensors/database",
+  "sensors/ai-gateway",
+  "sensors/log-collector",
+  "sensors/workstation",
+  "sensors/build-runner",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+
+[workspace.dependencies]
+prost = "0.14"
+prost-build = "0.14"
+protoc-bin-vendored = "3"
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["float_roundtrip"] }
+serde_yaml = "0.9"
+sha2 = "0.10"
+hmac = "0.12"
+hex = "0.4"
+base64 = "0.22"
+ed25519-dalek = { version = "2", features = ["rand_core"] }
+thiserror = "2"
+anyhow = "1"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+
+[patch.crates-io]
+biscuit-auth = { path = "third_party/biscuit-auth" }

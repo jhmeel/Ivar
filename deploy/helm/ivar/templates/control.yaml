@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ivar-control
+  labels: {{- include "ivar.labels" . | nindent 4 }}
+    app.kubernetes.io/name: ivar-control
+spec:
+  replicas: {{ .Values.control.replicas }}
+  selector:
+    matchLabels: { app.kubernetes.io/name: ivar-control }
+  template:
+    metadata:
+      labels: {{- include "ivar.labels" . | nindent 8 }}
+        app.kubernetes.io/name: ivar-control
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: control
+          image: {{ include "ivar.image" (dict "root" . "name" "control") }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args: [serve, --bundle, /etc/ivar/policy/policy.bundle, --tuf-keys, /etc/ivar/tuf, --flags-key, /etc/ivar/keys/flags-1.seed, --operators, /etc/ivar/keys/operators.json, --cosign, /etc/ivar/keys/cosign.pub, --listen, ":8090"]
+          ports: [{ name: http, containerPort: 8090 }]
+          readinessProbe: { httpGet: { path: /healthz, port: http }, periodSeconds: 5 }
+          resources: {{- toYaml .Values.control.resources | nindent 12 }}
+          securityContext: {{- include "ivar.restricted" . | nindent 12 }}
+          volumeMounts:
+            - { name: keys, mountPath: /etc/ivar/keys, readOnly: true }
+            - { name: tuf, mountPath: /etc/ivar/tuf, readOnly: true }
+            - { name: policy, mountPath: /etc/ivar/policy, readOnly: true }
+      volumes:
+        - { name: keys, secret: { secretName: {{ .Values.secrets.keys }}, defaultMode: 0400 } }
+        - { name: tuf, secret: { secretName: {{ .Values.secrets.tuf }}, defaultMode: 0400 } }
+        - { name: policy, secret: { secretName: {{ .Values.secrets.policy }} } }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ivar-control
+  labels: {{- include "ivar.labels" . | nindent 4 }}
+spec:
+  selector: { app.kubernetes.io/name: ivar-control }
+  ports: [{ name: http, port: 8090, targetPort: http }]

@@ -1,0 +1,10 @@
+name: okta-responder
+version: 1.4.0
+type: responder
+api: ivar.plugin/v1
+permissions:
+  actions: [session.revoke, user.suspend]
+  network: ["*.okta.com:443"]
+  secrets: [okta_api_token]
+limits: { memory_mb: 128, cpu_ms_per_call: 50, timeout_ms: 2000 }
+signature: sigstore

@@ -1,0 +1,13 @@
+[package]
+name = "ivar-abi"
+description = "The decision core as a plain C ABI WebAssembly module (wasm32-wasip1) for the Python, Go, Java, .NET and PHP SDKs"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+ivar-api = { path = "../ivar-api" }
+serde_json.workspace = true

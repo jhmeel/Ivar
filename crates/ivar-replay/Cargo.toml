@@ -1,0 +1,17 @@
+[package]
+name = "ivar-replay"
+description = "Incident replay (section 13): evidence bound, re executed, signed ReplayBundles; counterfactual replays; the attack replay library runner"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+ivar-contracts = { path = "../ivar-contracts" }
+ivar-core = { path = "../ivar-core" }
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+serde_yaml.workspace = true
+
+[dev-dependencies]
+anyhow.workspace = true

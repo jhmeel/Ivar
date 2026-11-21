@@ -1,0 +1,132 @@
+// SecurityEvent: an OCSF event with the named IVAR extension (spec section 9).
+// Main content: time, asset, actor, action, outcome, network and process context.
+// Produced by sensors, consumed by the ingest gateway, carried as OCSF over gRPC.
+syntax = "proto3";
+
+package ivar.v1;
+
+message OcsfExtension {
+  string name = 1;     // "ivar"
+  string uid = 2;      // extension uid registered for the IVAR extension
+  string version = 3;  // extension schema version
+}
+
+message OcsfProduct {
+  string name = 1;
+  string vendor_name = 2;
+  string version = 3;
+}
+
+message OcsfMetadata {
+  string version = 1;                   // OCSF schema version, e.g. "1.3.0"
+  OcsfProduct product = 2;
+  repeated string profiles = 3;
+  repeated OcsfExtension extensions = 4;
+  string uid = 5;                       // event uid
+  string correlation_uid = 6;
+}
+
+message OcsfUser {
+  string uid = 1;        // keyed hash by default (§9 data handling rules)
+  string name = 2;       // keyed hash by default
+  string type = 3;       // human, service, agent, token
+  string org_uid = 4;    // tenant
+}
+
+message OcsfSession {
+  string uid = 1;
+  bool is_new = 2;
+  string issuer = 3;
+}
+
+message OcsfActor {
+  OcsfUser user = 1;
+  OcsfSession session = 2;
+  string app_name = 3;
+  string authorizations = 4;
+  string invoked_by = 5;   // who/what this actor acts on behalf of (delegation)
+}
+
+message OcsfDevice {
+  string uid = 1;
+  string hostname = 2;
+  string type = 3;   // server, vm, pod, laptop, appliance
+  string region = 4;
+}
+
+message OcsfEndpoint {
+  string ip = 1;
+  uint32 port = 2;
+  string hostname = 3;
+  string uid = 4;
+  string svc_name = 5;
+}
+
+message OcsfProcess {
+  uint32 pid = 1;
+  string name = 2;
+  string cmd_line = 3;  // redacted at the sensor
+  string file_path = 4;
+  uint32 parent_pid = 5;
+  string parent_name = 6;
+  string user = 7;
+}
+
+message OcsfHttpRequest {
+  string http_method = 1;
+  string url_path = 2;
+  string user_agent = 3;
+  repeated string body_keys = 4;   // field names only, never the raw body (§9)
+}
+
+message OcsfHttpResponse {
+  uint32 code = 1;
+  uint32 latency_ms = 2;
+}
+
+// The named IVAR extension. Everything the core needs beyond plain OCSF.
+message IvarExtension {
+  string sensor_id = 1;
+  string sensor_type = 2;          // edge, app_sdk, host, network, database, cloud, ai_gateway, log, falco, tetragon, suricata
+  string observation_point = 3;    // independence key for the two source rule
+  uint64 sensor_seq = 4;           // each sensor's monotonic sequence (§13.2 Ordered clock)
+  string evidence_id = 5;          // set by the ingest gateway
+  string request_id = 6;           // the same request seen by edge and SDK counts once
+  string business_action = 7;      // payout, role_grant, signing, deploy, export, agent_tool_call, login, signup ...
+  string intent_token = 8;         // presented intent token (base64), verified by the SDK
+  string target_entity = 9;        // entity that was only targeted (role attribution)
+  map<string, string> attributes = 10;  // redacted, string valued attributes
+  double value_moved = 11;         // consequence invariant input
+  uint64 records_read = 12;        // consequence invariant input
+  bool destructive = 13;           // consequence invariant input
+  string tenant = 14;
+  repeated string engine_alerts = 15;   // rule ids from Falco, Suricata, Sigma, YARA, CRS
+  double engine_alert_confidence = 16;
+  string declared_route = 17;           // route template matched from OpenAPI, empty if undeclared
+  bool decoy_touched = 18;
+  string decoy_id = 19;
+  string egress_destination = 20;
+}
+
+message SecurityEvent {
+  // OCSF base attributes
+  uint32 class_uid = 1;
+  uint32 category_uid = 2;
+  uint32 activity_id = 3;
+  uint64 type_uid = 4;
+  int64 time = 5;          // epoch ms, sensor clock
+  uint32 severity_id = 6;
+  uint32 status_id = 7;    // outcome: 1 success, 2 failure
+  string status = 8;
+  string message = 9;
+  OcsfMetadata metadata = 10;
+  OcsfActor actor = 11;
+  OcsfDevice device = 12;  // asset
+  OcsfEndpoint src_endpoint = 13;
+  OcsfEndpoint dst_endpoint = 14;
+  OcsfProcess process = 15;
+  OcsfHttpRequest http_request = 16;
+  OcsfHttpResponse http_response = 17;
+  string activity_name = 18;  // action
+  IvarExtension ivar = 100;
+}

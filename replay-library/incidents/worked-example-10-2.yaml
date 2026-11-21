@@ -1,0 +1,36 @@
+name: worked_example_account_takeover_to_privilege_escalation
+source: Design specification section 10.2
+description: Each step is unremarkable to a per IP counter. Linked together they show an account takeover turning into privilege escalation.
+settings: { detection_mode: enforce }
+openapi: |
+  openapi: 3.0.3
+  paths:
+    /login: { post: { x-ivar-action: login } }
+    /users/{id}:
+      patch:
+        x-ivar-roles: [self, admin]
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name: { type: string }
+                  role: { type: string, readOnly: true }
+steps:
+  - name: IP scans 40 missing routes in five minutes
+    repeat: 40
+    every_ms: 7000
+    event: { activity: http.request, sensor: edge-1, sensor_type: edge, src_ip: 198.51.100.23, http: { method: GET, path: "/wp-admin/{i}.php", status: 404 } }
+    expect: { decision: throttle, min_risk: 0.30, max_risk: 0.59 }
+  - name: Same source sprays logins across many accounts
+    repeat: 12
+    every_ms: 2000
+    event: { activity: auth.login, sensor: sdk-1, sensor_type: app_sdk, src_ip: 198.51.100.23, target: "user:acct{i}", success: false }
+    expect: { decision: challenge, min_risk: 0.60, max_risk: 0.84 }
+  - name: One account logs in after repeated failures
+    event: { activity: auth.login, sensor: sdk-1, sensor_type: app_sdk, src_ip: 198.51.100.23, user: { uid: acct3, type: human }, session: ses_7f3a, target: "user:acct3", success: true, attrs: { account_age_days: "400" } }
+    expect: { decision: challenge, min_risk: 0.60, max_risk: 0.84 }
+  - name: That session tries to write its own role
+    event: { activity: http.request, sensor: sdk-1, sensor_type: app_sdk, src_ip: 198.51.100.23, user: { uid: acct3, type: human }, session: ses_7f3a, request_id: req-role-1, http: { method: PATCH, path: /users/acct3, body_keys: [role] }, attrs: { account_age_days: "400" } }
+    expect: { decision: contain, min_risk: 0.85, actions_include: [session.revoke, user.lock], incident: true }

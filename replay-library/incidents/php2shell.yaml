@@ -1,0 +1,11 @@
+name: php2shell_web_process_starts_shell
+source: PHP2Shell, 21 October 2026 (CVE 2026 109618, 109619, 115560)
+description: Secure application code still ran on a vulnerable engine. Blocking web processes from starting shells carries the risk until a fix ships.
+settings: { detection_mode: enforce }
+steps:
+  - name: Exploit payload seen by the edge filter (virtual patch)
+    event: { activity: http.request, sensor: edge-1, sensor_type: edge, src_ip: 203.0.113.50, http: { method: POST, path: /index.php, status: 200 }, alerts: [crs-933100-php-injection], alert_confidence: 0.9 }
+    expect: { decision_in: [challenge, block], findings_include: [engine_alert] }
+  - name: php-fpm starts a shell on the host
+    event: { activity: process.start, sensor: host-1, sensor_type: host, device: { uid: vm-7, host: web-7, type: vm }, process: { pid: 4242, name: sh, parent: php-fpm, path: /bin/sh } }
+    expect: { decision_in: [block, contain], findings_include: [web_process_shell], incident: true }

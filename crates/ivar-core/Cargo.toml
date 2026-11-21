@@ -1,0 +1,25 @@
+[package]
+name = "ivar-core"
+description = "Deterministic decision core: trust fabric, declaration compiler, detection, risk scoring, policy decision, graduated response, safeguards, intent binding, consequence invariants, time locks, evidence chain"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+ivar-contracts = { path = "../ivar-contracts" }
+serde.workspace = true
+serde_json.workspace = true
+serde_yaml.workspace = true
+sha2.workspace = true
+hmac.workspace = true
+hex.workspace = true
+base64.workspace = true
+thiserror.workspace = true
+ed25519-dalek.workspace = true
+biscuit-auth = { version = "6", default-features = false, features = ["datalog-macro"] }
+cedar-policy = { version = "4", default-features = false, features = ["decimal", "ipaddr"] }
+regex = "1"
+ipnet = "2"
+
+[dev-dependencies]
+pretty_assertions = "1"

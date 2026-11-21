@@ -1,0 +1,101 @@
+{{- if .Values.agent.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ivar-agent
+  labels: {{- include "ivar.labels" . | nindent 4 }}
+data:
+  agent.yaml: |
+    sensor_type: host
+    mode: {{ .Values.agent.sensorMode }}
+    core_url: {{ include "ivar.coreUrl" . }}
+    control_url: {{ include "ivar.controlUrl" . }}
+    keyring_file: /etc/ivar/policy/keyring.json
+    state_dir: /var/lib/ivar-agent
+---
+{{- if eq .Values.agent.mode "tetragon" }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ivar-agent
+---
+# The agent applies its generated TracingPolicies (kill paired with a denied
+# system call) and nothing else.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ivar-agent
+rules:
+  - apiGroups: [cilium.io]
+    resources: [tracingpolicies]
+    verbs: [get, list, create, update, patch]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: ivar-agent
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: ivar-agent }
+subjects: [{ kind: ServiceAccount, name: ivar-agent, namespace: {{ .Release.Namespace }} }]
+---
+{{- end }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: ivar-agent
+  labels: {{- include "ivar.labels" . | nindent 4 }}
+    app.kubernetes.io/name: ivar-agent
+spec:
+  selector:
+    matchLabels: { app.kubernetes.io/name: ivar-agent }
+  updateStrategy: { type: RollingUpdate, rollingUpdate: { maxUnavailable: 10% } }
+  template:
+    metadata:
+      labels: {{- include "ivar.labels" . | nindent 8 }}
+        app.kubernetes.io/name: ivar-agent
+    spec:
+      {{- if eq .Values.agent.mode "tetragon" }}
+      serviceAccountName: ivar-agent
+      {{- else }}
+      automountServiceAccountToken: false
+      {{- end }}
+      hostPID: true
+      priorityClassName: system-node-critical
+      tolerations: {{- toYaml .Values.agent.tolerations | nindent 8 }}
+      containers:
+        - name: agent
+          image: {{ include "ivar.image" (dict "root" . "name" "sensors") }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: [/usr/local/bin/ivar-linux-agent]
+          args: [--config, /etc/ivar/agent.yaml, --mode, {{ .Values.agent.mode }}{{ if eq .Values.agent.mode "tetragon" }}, --tetragon-export, {{ .Values.agent.tetragonExport }}{{ end }}]
+          env:
+            - name: IVAR_SENSOR_ID
+              valueFrom: { fieldRef: { fieldPath: spec.nodeName } }
+            - { name: IVAR_REDACTION_KEY_FILE, value: /etc/ivar/keys/redaction.hex }
+          resources: {{- toYaml .Values.agent.resources | nindent 12 }}
+          securityContext:
+            # Reads every process in /proc and, in enforce mode, kills
+            # processes and adds nftables drops: nothing broader.
+            privileged: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: [ALL], add: [SYS_PTRACE, DAC_READ_SEARCH, KILL, NET_ADMIN] }
+          volumeMounts:
+            - { name: config, mountPath: /etc/ivar/agent.yaml, subPath: agent.yaml }
+            - { name: keys, mountPath: /etc/ivar/keys, readOnly: true }
+            - { name: policy, mountPath: /etc/ivar/policy, readOnly: true }
+            - { name: state, mountPath: /var/lib/ivar-agent }
+            {{- if eq .Values.agent.mode "tetragon" }}
+            - { name: tetragon, mountPath: /var/run/cilium/tetragon, readOnly: true }
+            {{- end }}
+      volumes:
+        - { name: config, configMap: { name: ivar-agent } }
+        - name: keys
+          secret: { secretName: {{ .Values.secrets.keys }}, items: [{ key: redaction.hex, path: redaction.hex }], defaultMode: 0400 }
+        - name: policy
+          secret: { secretName: {{ .Values.secrets.policy }}, items: [{ key: keyring.json, path: keyring.json }] }
+        # The last verified policy survives restarts, so a node that restarts
+        # while the control plane is down keeps enforcing it.
+        - { name: state, hostPath: { path: /var/lib/ivar-agent, type: DirectoryOrCreate } }
+        {{- if eq .Values.agent.mode "tetragon" }}
+        - { name: tetragon, hostPath: { path: /var/run/cilium/tetragon, type: Directory } }
+        {{- end }}
+{{- end }}

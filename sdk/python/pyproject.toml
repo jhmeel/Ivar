@@ -1,0 +1,14 @@
+[project]
+name = "ivar"
+version = "0.1.0"
+description = "IVAR application SDK for Python: ASGI (FastAPI, Starlette) and WSGI (Flask, Django) middleware over the verified WebAssembly decision core"
+requires-python = ">=3.9"
+license = { text = "Apache-2.0" }
+dependencies = ["wasmtime>=36"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.package-data]
+ivar = ["_wasm/ivar_core.wasm"]

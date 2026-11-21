@@ -1,0 +1,13 @@
+name: budget_exhaustion
+source: Section 16.1
+description: Throwaway accounts are made to trip containment until the budget stops automation, then the real attack runs. The budget counts established accounts and is split by confidence class.
+settings: { detection_mode: enforce }
+steps:
+  - name: Throwaway accounts touch a decoy route
+    repeat: 50
+    every_ms: 100
+    event: { activity: http.request, sensor: sdk-1, sensor_type: app_sdk, user: { uid: "throwaway{i}", type: human }, http: { method: GET, path: /.env.backup, status: 404 } }
+    expect: { decision: contain }
+  - name: The real attack on an established account is still contained
+    event: { activity: ai.tool_call, sensor: aigw-1, sensor_type: ai_gateway, user: { uid: finance-bot, type: agent }, attrs: { tool: export_all_customers, established: "true" } }
+    expect: { decision: contain, actions_include: [agent.suspend] }

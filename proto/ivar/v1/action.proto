@@ -1,0 +1,44 @@
+// ActionRequest (signed): target, action, expiry, approval, reversal method.
+// ActionReceipt (signed): result, time taken, verification, reversal status.
+// Requests go from the orchestrator to a responder plugin; receipts go to the evidence store.
+syntax = "proto3";
+
+package ivar.v1;
+
+import "ivar/v1/entity.proto";
+
+// ActionRequest (signed): target, action, expiry, approval, reversal method.
+// ActionReceipt (signed): result, time taken, verification, reversal status.
+message Approval {
+  string approved_by = 1;      // "policy:<id>", "playbook:<id>" or a person
+  repeated string approvers = 2;
+  int64 approved_at = 3;
+}
+
+message ActionRequest {
+  string action_request_id = 1;
+  EntityRef target = 2;
+  string action = 3;           // e.g. session.revoke, user.suspend, ip.ban, process.kill
+  uint32 ladder_level = 4;
+  int64 expiry = 5;
+  Approval approval = 6;
+  string reversal_method = 7;
+  repeated string evidence_ids = 8;
+  string verdict_id = 9;
+  string confidence_class = 10;
+  bool evidence_captured_first = 11;
+  int64 time = 12;
+  string responder = 13;
+  string mode = 14;
+}
+
+message ActionReceipt {
+  string action_receipt_id = 1;
+  string action_request_id = 2;
+  string result = 3;             // done, failed, refused, skipped_observe
+  uint64 time_taken_ms = 4;
+  string verification = 5;
+  string reversal_status = 6;    // reversible, reversed, expired
+  int64 time = 7;
+  string responder = 8;
+}

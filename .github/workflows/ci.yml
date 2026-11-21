@@ -1,0 +1,79 @@
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  rust:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with: { targets: "wasm32-wasip1,wasm32-unknown-unknown", components: "clippy,rustfmt" }
+      - run: cargo test --workspace --locked
+      - run: cargo build --locked -p ivar-edge-filter --target wasm32-wasip1 --release
+      - run: cargo run --locked -p ivar-server --bin ivar-replay-library -- replay-library
+  wasm:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with: { targets: "wasm32-wasip1,wasm32-unknown-unknown" }
+      - run: cargo install wasm-bindgen-cli --version 0.2.130 --locked
+      - run: scripts/build-wasm.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wasm
+          path: |
+            sdk/node/core-wasm
+            replay-viewer/pkg
+            sdk/python/ivar/_wasm/ivar_core.wasm
+            sdk/go/wasm/ivar_core.wasm
+            sdk/php/wasm/ivar_core.wasm
+            sdk/java/src/main/resources/ivar_core.wasm
+            sdk/dotnet/Ivar/wasm/ivar_core.wasm
+  sdks:
+    needs: wasm
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { name: wasm }
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - uses: actions/setup-go@v5
+        with: { go-version: "1.24.7" }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "21" }
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: "8.0.x" }
+      - run: cd sdk/node/express && npm ci && npm test
+      - run: cd config && npm ci && npm test
+      - run: pip install wasmtime && cd sdk/python && python -m unittest discover -s tests
+      - run: cd sdk/go && go test ./...
+      - run: cd go && go vet ./... && go test ./...
+      - run: cd deploy/helm/chartcheck && go test ./...
+      - run: cd sdk/java && mvn -q -B verify
+      - run: cd sdk/dotnet && dotnet test Ivar.Tests
+      - run: pip install wasmtime && cd sdk/php && IVAR_WASMTIME_LIB=$(python -c 'import wasmtime,os;print(os.path.join(os.path.dirname(wasmtime.__file__),"linux-x86_64","_libwasmtime.so"))') php -d ffi.enable=1 tests/run.php
+  e2e:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with: { targets: "wasm32-wasip1,wasm32-unknown-unknown" }
+      - uses: actions/setup-go@v5
+        with: { go-version: "1.24.7" }
+      - run: cargo install wasm-bindgen-cli --version 0.2.130 --locked && scripts/build-wasm.sh
+      - name: Real Envoy with Coraza and the CRS ahead of the IVAR filter
+        run: |
+          curl -sSL -o coraza.zip https://github.com/corazawaf/coraza-proxy-wasm/releases/download/0.6.0/coraza-proxy-wasm-0.6.0.zip
+          unzip -q coraza.zip
+          CORAZA_WASM=$PWD/coraza-proxy-wasm.wasm deploy/local/up.sh
+          python3 deploy/local/smoke_test.py
+      - if: always()
+        run: deploy/local/up.sh down

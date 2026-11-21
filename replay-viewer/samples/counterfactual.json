@@ -1,0 +1,4160 @@
+{
+  "contract": "ivar.v1",
+  "bundle_version": 1,
+  "incident_id": "inc_sample",
+  "engine_version": "ivar-core/0.1.0",
+  "policy_version": "default-1",
+  "plugin_versions": {},
+  "counterfactual": true,
+  "counterfactual_policy": "default-1",
+  "evidence_chain_head": "927ab2f531e94016a1f416985d077ec3c4e29aeb5000ea22061930ebe1694f74",
+  "frames": [
+    {
+      "index": 0,
+      "time": 1400,
+      "sensor_time": 1280,
+      "clock_skew_ms": 120,
+      "sensor_id": "app-sdk-1",
+      "sensor_seq": 1,
+      "kind": "event",
+      "evidence_ids": [
+        "evd_NAD5Z4SDA7"
+      ],
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 1280,
+        "severity_id": 1,
+        "status_id": 2,
+        "status": "Failure",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_5640912cef154d9f305573aa",
+            "name": "",
+            "type": "user",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "auth.login",
+        "ivar": {
+          "sensor_id": "app-sdk-1",
+          "sensor_type": "app_sdk",
+          "observation_point": "app_sdk",
+          "sensor_seq": 1,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "271",
+            "hop_decide_us": "92",
+            "hop_enforce_us": "1240",
+            "hop_ingest_us": "187",
+            "hop_sensor_us": "43"
+          },
+          "value_moved": 0.0,
+          "records_read": 0,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "counterfactual": true,
+      "hops_us": {
+        "core": 271,
+        "decide": 92,
+        "enforce": 1240,
+        "ingest": 187,
+        "sensor": 43
+      },
+      "elapsed_ms": 0
+    },
+    {
+      "index": 1,
+      "time": 1800,
+      "sensor_time": 1680,
+      "clock_skew_ms": 120,
+      "sensor_id": "app-sdk-1",
+      "sensor_seq": 2,
+      "kind": "event",
+      "evidence_ids": [
+        "evd_X18FA028D8"
+      ],
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 1680,
+        "severity_id": 1,
+        "status_id": 2,
+        "status": "Failure",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_f4855d2aece40ad80b4cb1d9",
+            "name": "",
+            "type": "user",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "auth.login",
+        "ivar": {
+          "sensor_id": "app-sdk-1",
+          "sensor_type": "app_sdk",
+          "observation_point": "app_sdk",
+          "sensor_seq": 2,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "282",
+            "hop_decide_us": "94",
+            "hop_enforce_us": "1280",
+            "hop_ingest_us": "194",
+            "hop_sensor_us": "46"
+          },
+          "value_moved": 0.0,
+          "records_read": 0,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "counterfactual": true,
+      "hops_us": {
+        "core": 282,
+        "decide": 94,
+        "enforce": 1280,
+        "ingest": 194,
+        "sensor": 46
+      },
+      "elapsed_ms": 400
+    },
+    {
+      "index": 2,
+      "time": 2200,
+      "sensor_time": 2080,
+      "clock_skew_ms": 120,
+      "sensor_id": "app-sdk-1",
+      "sensor_seq": 3,
+      "kind": "event",
+      "evidence_ids": [
+        "evd_8Z13AMWAMC"
+      ],
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 2080,
+        "severity_id": 1,
+        "status_id": 2,
+        "status": "Failure",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_16a8f2c67b976d9c6bf89267",
+            "name": "",
+            "type": "user",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "auth.login",
+        "ivar": {
+          "sensor_id": "app-sdk-1",
+          "sensor_type": "app_sdk",
+          "observation_point": "app_sdk",
+          "sensor_seq": 3,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "293",
+            "hop_decide_us": "96",
+            "hop_enforce_us": "1320",
+            "hop_ingest_us": "201",
+            "hop_sensor_us": "49"
+          },
+          "value_moved": 0.0,
+          "records_read": 0,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "counterfactual": true,
+      "hops_us": {
+        "core": 293,
+        "decide": 96,
+        "enforce": 1320,
+        "ingest": 201,
+        "sensor": 49
+      },
+      "elapsed_ms": 800
+    },
+    {
+      "index": 3,
+      "time": 2600,
+      "sensor_time": 2480,
+      "clock_skew_ms": 120,
+      "sensor_id": "app-sdk-1",
+      "sensor_seq": 4,
+      "kind": "event",
+      "evidence_ids": [
+        "evd_HR95P8NR5G"
+      ],
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 2480,
+        "severity_id": 1,
+        "status_id": 2,
+        "status": "Failure",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_516d6ccda80a79c79a5bc15f",
+            "name": "",
+            "type": "user",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "auth.login",
+        "ivar": {
+          "sensor_id": "app-sdk-1",
+          "sensor_type": "app_sdk",
+          "observation_point": "app_sdk",
+          "sensor_seq": 4,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "304",
+            "hop_decide_us": "98",
+            "hop_enforce_us": "1360",
+            "hop_ingest_us": "208",
+            "hop_sensor_us": "52"
+          },
+          "value_moved": 0.0,
+          "records_read": 0,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "counterfactual": true,
+      "hops_us": {
+        "core": 304,
+        "decide": 98,
+        "enforce": 1360,
+        "ingest": 208,
+        "sensor": 52
+      },
+      "elapsed_ms": 1200
+    },
+    {
+      "index": 4,
+      "time": 3000,
+      "sensor_time": 2880,
+      "clock_skew_ms": 120,
+      "sensor_id": "app-sdk-1",
+      "sensor_seq": 5,
+      "kind": "event",
+      "evidence_ids": [
+        "evd_P7NVFT8F6Z"
+      ],
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 2880,
+        "severity_id": 1,
+        "status_id": 2,
+        "status": "Failure",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_47fd552199f362860a975955",
+            "name": "",
+            "type": "user",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "auth.login",
+        "ivar": {
+          "sensor_id": "app-sdk-1",
+          "sensor_type": "app_sdk",
+          "observation_point": "app_sdk",
+          "sensor_seq": 5,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "315",
+            "hop_decide_us": "100",
+            "hop_enforce_us": "1400",
+            "hop_ingest_us": "215",
+            "hop_sensor_us": "55"
+          },
+          "value_moved": 0.0,
+          "records_read": 0,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "counterfactual": true,
+      "hops_us": {
+        "core": 315,
+        "decide": 100,
+        "enforce": 1400,
+        "ingest": 215,
+        "sensor": 55
+      },
+      "elapsed_ms": 1600
+    },
+    {
+      "index": 5,
+      "time": 3400,
+      "sensor_time": 3280,
+      "clock_skew_ms": 120,
+      "sensor_id": "app-sdk-1",
+      "sensor_seq": 6,
+      "kind": "event",
+      "evidence_ids": [
+        "evd_ST1TNETMCX"
+      ],
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 3280,
+        "severity_id": 1,
+        "status_id": 2,
+        "status": "Failure",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_4bccf89fd73fbdbbb855b45a",
+            "name": "",
+            "type": "user",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "auth.login",
+        "ivar": {
+          "sensor_id": "app-sdk-1",
+          "sensor_type": "app_sdk",
+          "observation_point": "app_sdk",
+          "sensor_seq": 6,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "326",
+            "hop_decide_us": "102",
+            "hop_enforce_us": "1440",
+            "hop_ingest_us": "222",
+            "hop_sensor_us": "58"
+          },
+          "value_moved": 0.0,
+          "records_read": 0,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "counterfactual": true,
+      "hops_us": {
+        "core": 326,
+        "decide": 102,
+        "enforce": 1440,
+        "ingest": 222,
+        "sensor": 58
+      },
+      "elapsed_ms": 2000
+    },
+    {
+      "index": 6,
+      "time": 4300,
+      "sensor_time": 4180,
+      "clock_skew_ms": 120,
+      "sensor_id": "app-sdk-1",
+      "sensor_seq": 7,
+      "kind": "event",
+      "evidence_ids": [
+        "evd_3G6H2ZJPMP"
+      ],
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 4180,
+        "severity_id": 1,
+        "status_id": 1,
+        "status": "Success",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_4bccf89fd73fbdbbb855b45a",
+            "name": "",
+            "type": "user",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "auth.login",
+        "ivar": {
+          "sensor_id": "app-sdk-1",
+          "sensor_type": "app_sdk",
+          "observation_point": "app_sdk",
+          "sensor_seq": 7,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "337",
+            "hop_decide_us": "104",
+            "hop_enforce_us": "1480",
+            "hop_ingest_us": "229",
+            "hop_sensor_us": "61"
+          },
+          "value_moved": 0.0,
+          "records_read": 0,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "counterfactual": true,
+      "hops_us": {
+        "core": 337,
+        "decide": 104,
+        "enforce": 1480,
+        "ingest": 229,
+        "sensor": 61
+      },
+      "elapsed_ms": 2900
+    },
+    {
+      "index": 7,
+      "time": 5300,
+      "sensor_time": 5050,
+      "clock_skew_ms": 250,
+      "sensor_id": "db-1",
+      "sensor_seq": 8,
+      "kind": "event",
+      "evidence_ids": [
+        "evd_C2N08Z9DQ4"
+      ],
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 5050,
+        "severity_id": 1,
+        "status_id": 1,
+        "status": "",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_9431ec20e893f6f4590d6fc2",
+            "name": "",
+            "type": "service",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "db.query",
+        "ivar": {
+          "sensor_id": "db-1",
+          "sensor_type": "database",
+          "observation_point": "database",
+          "sensor_seq": 8,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "348",
+            "hop_decide_us": "106",
+            "hop_enforce_us": "1520",
+            "hop_ingest_us": "236",
+            "hop_sensor_us": "64",
+            "operation": "SELECT",
+            "table": "persons"
+          },
+          "value_moved": 0.0,
+          "records_read": 100,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "counterfactual": true,
+      "hops_us": {
+        "core": 348,
+        "decide": 106,
+        "enforce": 1520,
+        "ingest": 236,
+        "sensor": 64
+      },
+      "elapsed_ms": 3900
+    },
+    {
+      "index": 8,
+      "time": 5300,
+      "sensor_time": 5050,
+      "clock_skew_ms": 250,
+      "sensor_id": "db-1",
+      "sensor_seq": 8,
+      "kind": "risk",
+      "evidence_ids": [
+        "evd_C2N08Z9DQ4"
+      ],
+      "payload": {
+        "entity": {
+          "type": "ip",
+          "id": "198.51.100.7",
+          "role": 0
+        },
+        "score": 0.15000000000000002,
+        "fast_score": 0.15000000000000002,
+        "slow_score": 0.15000000000000002,
+        "contributing_findings": [
+          "fnd_0526FB6Y59"
+        ],
+        "independent_sources": 1,
+        "has_high_confidence_source": false,
+        "deception_hit": false,
+        "critical_positive_security": false,
+        "time": 5300,
+        "target_only": false
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 3900
+    },
+    {
+      "index": 9,
+      "time": 5300,
+      "sensor_time": 5050,
+      "clock_skew_ms": 250,
+      "sensor_id": "db-1",
+      "sensor_seq": 8,
+      "kind": "risk",
+      "evidence_ids": [
+        "evd_C2N08Z9DQ4"
+      ],
+      "payload": {
+        "entity": {
+          "type": "service",
+          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "role": 0
+        },
+        "score": 0.15000000000000002,
+        "fast_score": 0.15000000000000002,
+        "slow_score": 0.15000000000000002,
+        "contributing_findings": [
+          "fnd_0526FB6Y59"
+        ],
+        "independent_sources": 1,
+        "has_high_confidence_source": false,
+        "deception_hit": false,
+        "critical_positive_security": false,
+        "time": 5300,
+        "target_only": false
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 3900
+    },
+    {
+      "index": 10,
+      "time": 5300,
+      "sensor_time": 5300,
+      "clock_skew_ms": 0,
+      "sensor_id": "db-1",
+      "sensor_seq": 8,
+      "kind": "finding",
+      "evidence_ids": [
+        "evd_T1HTWYR8C1",
+        "evd_C2N08Z9DQ4"
+      ],
+      "payload": {
+        "finding_id": "fnd_0526FB6Y59",
+        "rule": "undeclared_edge",
+        "rule_family": "drift.edge",
+        "technique": "T1078",
+        "method": 7,
+        "confidence": 0.3,
+        "severity": 2,
+        "evidence_ids": [
+          "evd_C2N08Z9DQ4"
+        ],
+        "entities": [
+          {
+            "type": "ip",
+            "id": "198.51.100.7",
+            "role": 1
+          },
+          {
+            "type": "service",
+            "id": "kh_9431ec20e893f6f4590d6fc2",
+            "role": 1
+          }
+        ],
+        "observation_point": "database",
+        "time": 5300,
+        "critical_positive_security": false,
+        "deception_hit": false,
+        "attack_stage": "privilege_escalation",
+        "explanation": "trust edge edg_K8RE2YPHBZ is used but never declared",
+        "source_event": "evd_C2N08Z9DQ4"
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 3900
+    },
+    {
+      "index": 11,
+      "time": 5300,
+      "sensor_time": 5300,
+      "clock_skew_ms": 0,
+      "sensor_id": "db-1",
+      "sensor_seq": 8,
+      "kind": "verdict",
+      "evidence_ids": [
+        "evd_JPZBXEV2G5",
+        "evd_C2N08Z9DQ4",
+        "evd_T1HTWYR8C1"
+      ],
+      "payload": {
+        "verdict_id": "vrd_T5XJBHPWR1",
+        "decision": "record",
+        "entity": {
+          "type": "ip",
+          "id": "198.51.100.7",
+          "role": 0
+        },
+        "risk": 0.15,
+        "reasons": [
+          "drift.edge"
+        ],
+        "sources": [
+          "database"
+        ],
+        "policy_version": "default-1",
+        "expires_at": 0,
+        "mode": "observe",
+        "evidence_ids": [
+          "evd_C2N08Z9DQ4",
+          "evd_T1HTWYR8C1"
+        ],
+        "time": 5300,
+        "ladder_level": 0
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 3900
+    },
+    {
+      "index": 12,
+      "time": 5300,
+      "sensor_time": 5300,
+      "clock_skew_ms": 0,
+      "sensor_id": "db-1",
+      "sensor_seq": 8,
+      "kind": "verdict",
+      "evidence_ids": [
+        "evd_E6YP66YEZT",
+        "evd_C2N08Z9DQ4",
+        "evd_T1HTWYR8C1"
+      ],
+      "payload": {
+        "verdict_id": "vrd_7R3RJ7EYG8",
+        "decision": "record",
+        "entity": {
+          "type": "service",
+          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "role": 0
+        },
+        "risk": 0.15,
+        "reasons": [
+          "drift.edge"
+        ],
+        "sources": [
+          "database"
+        ],
+        "policy_version": "default-1",
+        "expires_at": 0,
+        "mode": "observe",
+        "evidence_ids": [
+          "evd_C2N08Z9DQ4",
+          "evd_T1HTWYR8C1"
+        ],
+        "time": 5300,
+        "ladder_level": 0
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 3900
+    },
+    {
+      "index": 13,
+      "time": 6300,
+      "sensor_time": 6050,
+      "clock_skew_ms": 250,
+      "sensor_id": "db-1",
+      "sensor_seq": 9,
+      "kind": "event",
+      "evidence_ids": [
+        "evd_P6X3QKBBPH"
+      ],
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 6050,
+        "severity_id": 1,
+        "status_id": 1,
+        "status": "",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_9431ec20e893f6f4590d6fc2",
+            "name": "",
+            "type": "service",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "db.query",
+        "ivar": {
+          "sensor_id": "db-1",
+          "sensor_type": "database",
+          "observation_point": "database",
+          "sensor_seq": 9,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "359",
+            "hop_decide_us": "108",
+            "hop_enforce_us": "1560",
+            "hop_ingest_us": "243",
+            "hop_sensor_us": "67",
+            "operation": "SELECT",
+            "table": "persons"
+          },
+          "value_moved": 0.0,
+          "records_read": 100,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "counterfactual": true,
+      "hops_us": {
+        "core": 359,
+        "decide": 108,
+        "enforce": 1560,
+        "ingest": 243,
+        "sensor": 67
+      },
+      "elapsed_ms": 4900
+    },
+    {
+      "index": 14,
+      "time": 6300,
+      "sensor_time": 6050,
+      "clock_skew_ms": 250,
+      "sensor_id": "db-1",
+      "sensor_seq": 9,
+      "kind": "risk",
+      "evidence_ids": [
+        "evd_P6X3QKBBPH"
+      ],
+      "payload": {
+        "entity": {
+          "type": "ip",
+          "id": "198.51.100.7",
+          "role": 0
+        },
+        "score": 0.14999982808859547,
+        "fast_score": 0.14994224885512342,
+        "slow_score": 0.14999982808859547,
+        "contributing_findings": [
+          "fnd_0526FB6Y59"
+        ],
+        "independent_sources": 1,
+        "has_high_confidence_source": false,
+        "deception_hit": false,
+        "critical_positive_security": false,
+        "time": 6300,
+        "target_only": false
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 4900
+    },
+    {
+      "index": 15,
+      "time": 6300,
+      "sensor_time": 6050,
+      "clock_skew_ms": 250,
+      "sensor_id": "db-1",
+      "sensor_seq": 9,
+      "kind": "risk",
+      "evidence_ids": [
+        "evd_P6X3QKBBPH"
+      ],
+      "payload": {
+        "entity": {
+          "type": "service",
+          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "role": 0
+        },
+        "score": 0.14999982808859547,
+        "fast_score": 0.14994224885512342,
+        "slow_score": 0.14999982808859547,
+        "contributing_findings": [
+          "fnd_0526FB6Y59"
+        ],
+        "independent_sources": 1,
+        "has_high_confidence_source": false,
+        "deception_hit": false,
+        "critical_positive_security": false,
+        "time": 6300,
+        "target_only": false
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 4900
+    },
+    {
+      "index": 16,
+      "time": 6300,
+      "sensor_time": 6300,
+      "clock_skew_ms": 0,
+      "sensor_id": "db-1",
+      "sensor_seq": 9,
+      "kind": "verdict",
+      "evidence_ids": [
+        "evd_GA6NR9N4JS",
+        "evd_P6X3QKBBPH"
+      ],
+      "payload": {
+        "verdict_id": "vrd_GM44VHNB50",
+        "decision": "record",
+        "entity": {
+          "type": "ip",
+          "id": "198.51.100.7",
+          "role": 0
+        },
+        "risk": 0.15,
+        "reasons": [
+          "drift.edge"
+        ],
+        "sources": [],
+        "policy_version": "default-1",
+        "expires_at": 0,
+        "mode": "observe",
+        "evidence_ids": [
+          "evd_P6X3QKBBPH"
+        ],
+        "time": 6300,
+        "ladder_level": 0
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 4900
+    },
+    {
+      "index": 17,
+      "time": 6300,
+      "sensor_time": 6300,
+      "clock_skew_ms": 0,
+      "sensor_id": "db-1",
+      "sensor_seq": 9,
+      "kind": "verdict",
+      "evidence_ids": [
+        "evd_7KKAV7EHDQ",
+        "evd_P6X3QKBBPH"
+      ],
+      "payload": {
+        "verdict_id": "vrd_N4KSB29TRB",
+        "decision": "record",
+        "entity": {
+          "type": "service",
+          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "role": 0
+        },
+        "risk": 0.15,
+        "reasons": [
+          "drift.edge"
+        ],
+        "sources": [],
+        "policy_version": "default-1",
+        "expires_at": 0,
+        "mode": "observe",
+        "evidence_ids": [
+          "evd_P6X3QKBBPH"
+        ],
+        "time": 6300,
+        "ladder_level": 0
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 4900
+    },
+    {
+      "index": 18,
+      "time": 7300,
+      "sensor_time": 7050,
+      "clock_skew_ms": 250,
+      "sensor_id": "db-1",
+      "sensor_seq": 10,
+      "kind": "event",
+      "evidence_ids": [
+        "evd_WRTXYWZ3N9"
+      ],
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 7050,
+        "severity_id": 1,
+        "status_id": 1,
+        "status": "",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_9431ec20e893f6f4590d6fc2",
+            "name": "",
+            "type": "service",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "db.query",
+        "ivar": {
+          "sensor_id": "db-1",
+          "sensor_type": "database",
+          "observation_point": "database",
+          "sensor_seq": 10,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "370",
+            "hop_decide_us": "110",
+            "hop_enforce_us": "1600",
+            "hop_ingest_us": "250",
+            "hop_sensor_us": "70",
+            "operation": "SELECT",
+            "table": "persons"
+          },
+          "value_moved": 0.0,
+          "records_read": 100,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "counterfactual": true,
+      "hops_us": {
+        "core": 370,
+        "decide": 110,
+        "enforce": 1600,
+        "ingest": 250,
+        "sensor": 70
+      },
+      "elapsed_ms": 5900
+    },
+    {
+      "index": 19,
+      "time": 7300,
+      "sensor_time": 7050,
+      "clock_skew_ms": 250,
+      "sensor_id": "db-1",
+      "sensor_seq": 10,
+      "kind": "risk",
+      "evidence_ids": [
+        "evd_WRTXYWZ3N9"
+      ],
+      "payload": {
+        "entity": {
+          "type": "ip",
+          "id": "198.51.100.7",
+          "role": 0
+        },
+        "score": 0.14999965617738775,
+        "fast_score": 0.1498845199448784,
+        "slow_score": 0.14999965617738775,
+        "contributing_findings": [
+          "fnd_0526FB6Y59"
+        ],
+        "independent_sources": 1,
+        "has_high_confidence_source": false,
+        "deception_hit": false,
+        "critical_positive_security": false,
+        "time": 7300,
+        "target_only": false
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 5900
+    },
+    {
+      "index": 20,
+      "time": 7300,
+      "sensor_time": 7050,
+      "clock_skew_ms": 250,
+      "sensor_id": "db-1",
+      "sensor_seq": 10,
+      "kind": "risk",
+      "evidence_ids": [
+        "evd_WRTXYWZ3N9"
+      ],
+      "payload": {
+        "entity": {
+          "type": "service",
+          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "role": 0
+        },
+        "score": 0.14999965617738775,
+        "fast_score": 0.1498845199448784,
+        "slow_score": 0.14999965617738775,
+        "contributing_findings": [
+          "fnd_0526FB6Y59"
+        ],
+        "independent_sources": 1,
+        "has_high_confidence_source": false,
+        "deception_hit": false,
+        "critical_positive_security": false,
+        "time": 7300,
+        "target_only": false
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 5900
+    },
+    {
+      "index": 21,
+      "time": 7300,
+      "sensor_time": 7300,
+      "clock_skew_ms": 0,
+      "sensor_id": "db-1",
+      "sensor_seq": 10,
+      "kind": "verdict",
+      "evidence_ids": [
+        "evd_4D87XBCPRY",
+        "evd_WRTXYWZ3N9"
+      ],
+      "payload": {
+        "verdict_id": "vrd_07FNBRMDHB",
+        "decision": "record",
+        "entity": {
+          "type": "ip",
+          "id": "198.51.100.7",
+          "role": 0
+        },
+        "risk": 0.15,
+        "reasons": [
+          "drift.edge"
+        ],
+        "sources": [],
+        "policy_version": "default-1",
+        "expires_at": 0,
+        "mode": "observe",
+        "evidence_ids": [
+          "evd_WRTXYWZ3N9"
+        ],
+        "time": 7300,
+        "ladder_level": 0
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 5900
+    },
+    {
+      "index": 22,
+      "time": 7300,
+      "sensor_time": 7300,
+      "clock_skew_ms": 0,
+      "sensor_id": "db-1",
+      "sensor_seq": 10,
+      "kind": "verdict",
+      "evidence_ids": [
+        "evd_ZRJ0B6FVGC",
+        "evd_WRTXYWZ3N9"
+      ],
+      "payload": {
+        "verdict_id": "vrd_98CF4HZYM8",
+        "decision": "record",
+        "entity": {
+          "type": "service",
+          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "role": 0
+        },
+        "risk": 0.15,
+        "reasons": [
+          "drift.edge"
+        ],
+        "sources": [],
+        "policy_version": "default-1",
+        "expires_at": 0,
+        "mode": "observe",
+        "evidence_ids": [
+          "evd_WRTXYWZ3N9"
+        ],
+        "time": 7300,
+        "ladder_level": 0
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 5900
+    },
+    {
+      "index": 23,
+      "time": 8300,
+      "sensor_time": 8050,
+      "clock_skew_ms": 250,
+      "sensor_id": "db-1",
+      "sensor_seq": 11,
+      "kind": "event",
+      "evidence_ids": [
+        "evd_YHTBVASAHT"
+      ],
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 8050,
+        "severity_id": 1,
+        "status_id": 1,
+        "status": "",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_9431ec20e893f6f4590d6fc2",
+            "name": "",
+            "type": "service",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "db.query",
+        "ivar": {
+          "sensor_id": "db-1",
+          "sensor_type": "database",
+          "observation_point": "database",
+          "sensor_seq": 11,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "381",
+            "hop_decide_us": "112",
+            "hop_enforce_us": "1640",
+            "hop_ingest_us": "257",
+            "hop_sensor_us": "73",
+            "operation": "SELECT",
+            "table": "persons"
+          },
+          "value_moved": 0.0,
+          "records_read": 100,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "counterfactual": true,
+      "hops_us": {
+        "core": 381,
+        "decide": 112,
+        "enforce": 1640,
+        "ingest": 257,
+        "sensor": 73
+      },
+      "elapsed_ms": 6900
+    },
+    {
+      "index": 24,
+      "time": 8300,
+      "sensor_time": 8050,
+      "clock_skew_ms": 250,
+      "sensor_id": "db-1",
+      "sensor_seq": 11,
+      "kind": "risk",
+      "evidence_ids": [
+        "evd_YHTBVASAHT"
+      ],
+      "payload": {
+        "entity": {
+          "type": "ip",
+          "id": "198.51.100.7",
+          "role": 0
+        },
+        "score": 0.14999948426637721,
+        "fast_score": 0.14982681326070457,
+        "slow_score": 0.14999948426637721,
+        "contributing_findings": [
+          "fnd_0526FB6Y59"
+        ],
+        "independent_sources": 1,
+        "has_high_confidence_source": false,
+        "deception_hit": false,
+        "critical_positive_security": false,
+        "time": 8300,
+        "target_only": false
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 6900
+    },
+    {
+      "index": 25,
+      "time": 8300,
+      "sensor_time": 8050,
+      "clock_skew_ms": 250,
+      "sensor_id": "db-1",
+      "sensor_seq": 11,
+      "kind": "risk",
+      "evidence_ids": [
+        "evd_YHTBVASAHT"
+      ],
+      "payload": {
+        "entity": {
+          "type": "service",
+          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "role": 0
+        },
+        "score": 0.14999948426637721,
+        "fast_score": 0.14982681326070457,
+        "slow_score": 0.14999948426637721,
+        "contributing_findings": [
+          "fnd_0526FB6Y59"
+        ],
+        "independent_sources": 1,
+        "has_high_confidence_source": false,
+        "deception_hit": false,
+        "critical_positive_security": false,
+        "time": 8300,
+        "target_only": false
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 6900
+    },
+    {
+      "index": 26,
+      "time": 8300,
+      "sensor_time": 8300,
+      "clock_skew_ms": 0,
+      "sensor_id": "db-1",
+      "sensor_seq": 11,
+      "kind": "verdict",
+      "evidence_ids": [
+        "evd_JSKP0WRQ3A",
+        "evd_YHTBVASAHT"
+      ],
+      "payload": {
+        "verdict_id": "vrd_5JJ1BGRSRP",
+        "decision": "record",
+        "entity": {
+          "type": "ip",
+          "id": "198.51.100.7",
+          "role": 0
+        },
+        "risk": 0.15,
+        "reasons": [
+          "drift.edge"
+        ],
+        "sources": [],
+        "policy_version": "default-1",
+        "expires_at": 0,
+        "mode": "observe",
+        "evidence_ids": [
+          "evd_YHTBVASAHT"
+        ],
+        "time": 8300,
+        "ladder_level": 0
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 6900
+    },
+    {
+      "index": 27,
+      "time": 8300,
+      "sensor_time": 8300,
+      "clock_skew_ms": 0,
+      "sensor_id": "db-1",
+      "sensor_seq": 11,
+      "kind": "verdict",
+      "evidence_ids": [
+        "evd_DSZBK0X9YA",
+        "evd_YHTBVASAHT"
+      ],
+      "payload": {
+        "verdict_id": "vrd_6CF42940FG",
+        "decision": "record",
+        "entity": {
+          "type": "service",
+          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "role": 0
+        },
+        "risk": 0.15,
+        "reasons": [
+          "drift.edge"
+        ],
+        "sources": [],
+        "policy_version": "default-1",
+        "expires_at": 0,
+        "mode": "observe",
+        "evidence_ids": [
+          "evd_YHTBVASAHT"
+        ],
+        "time": 8300,
+        "ladder_level": 0
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 6900
+    },
+    {
+      "index": 28,
+      "time": 9300,
+      "sensor_time": 9050,
+      "clock_skew_ms": 250,
+      "sensor_id": "db-1",
+      "sensor_seq": 12,
+      "kind": "event",
+      "evidence_ids": [
+        "evd_RXRMJM32KC"
+      ],
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 9050,
+        "severity_id": 1,
+        "status_id": 1,
+        "status": "",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_9431ec20e893f6f4590d6fc2",
+            "name": "",
+            "type": "service",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "db.query",
+        "ivar": {
+          "sensor_id": "db-1",
+          "sensor_type": "database",
+          "observation_point": "database",
+          "sensor_seq": 12,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "392",
+            "hop_decide_us": "114",
+            "hop_enforce_us": "1680",
+            "hop_ingest_us": "264",
+            "hop_sensor_us": "76",
+            "operation": "SELECT",
+            "table": "persons"
+          },
+          "value_moved": 0.0,
+          "records_read": 60000,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "counterfactual": true,
+      "hops_us": {
+        "core": 392,
+        "decide": 114,
+        "enforce": 1680,
+        "ingest": 264,
+        "sensor": 76
+      },
+      "elapsed_ms": 7900
+    },
+    {
+      "index": 29,
+      "time": 9300,
+      "sensor_time": 9050,
+      "clock_skew_ms": 250,
+      "sensor_id": "db-1",
+      "sensor_seq": 12,
+      "kind": "risk",
+      "evidence_ids": [
+        "evd_RXRMJM32KC"
+      ],
+      "payload": {
+        "entity": {
+          "type": "ip",
+          "id": "198.51.100.7",
+          "role": 0
+        },
+        "score": 1.0,
+        "fast_score": 1.0,
+        "slow_score": 1.0,
+        "contributing_findings": [
+          "fnd_0526FB6Y59",
+          "fnd_5ATTEVEWE0",
+          "fnd_9NBDBHJH05"
+        ],
+        "independent_sources": 2,
+        "has_high_confidence_source": true,
+        "deception_hit": false,
+        "critical_positive_security": true,
+        "time": 9300,
+        "target_only": false
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 7900
+    },
+    {
+      "index": 30,
+      "time": 9300,
+      "sensor_time": 9050,
+      "clock_skew_ms": 250,
+      "sensor_id": "db-1",
+      "sensor_seq": 12,
+      "kind": "risk",
+      "evidence_ids": [
+        "evd_RXRMJM32KC"
+      ],
+      "payload": {
+        "entity": {
+          "type": "service",
+          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "role": 0
+        },
+        "score": 1.0,
+        "fast_score": 1.0,
+        "slow_score": 1.0,
+        "contributing_findings": [
+          "fnd_0526FB6Y59",
+          "fnd_5ATTEVEWE0",
+          "fnd_9NBDBHJH05"
+        ],
+        "independent_sources": 2,
+        "has_high_confidence_source": true,
+        "deception_hit": false,
+        "critical_positive_security": true,
+        "time": 9300,
+        "target_only": false
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 7900
+    },
+    {
+      "index": 31,
+      "time": 9300,
+      "sensor_time": 9300,
+      "clock_skew_ms": 0,
+      "sensor_id": "db-1",
+      "sensor_seq": 12,
+      "kind": "finding",
+      "evidence_ids": [
+        "evd_6NCMBXFSDC",
+        "evd_RXRMJM32KC"
+      ],
+      "payload": {
+        "finding_id": "fnd_9NBDBHJH05",
+        "rule": "bulk_read_anomaly",
+        "rule_family": "exfil.bulk_read",
+        "technique": "T1530",
+        "method": 3,
+        "confidence": 0.7,
+        "severity": 4,
+        "evidence_ids": [
+          "evd_RXRMJM32KC"
+        ],
+        "entities": [
+          {
+            "type": "ip",
+            "id": "198.51.100.7",
+            "role": 1
+          },
+          {
+            "type": "service",
+            "id": "kh_9431ec20e893f6f4590d6fc2",
+            "role": 1
+          }
+        ],
+        "observation_point": "database",
+        "time": 9300,
+        "critical_positive_security": false,
+        "deception_hit": false,
+        "attack_stage": "data_theft",
+        "explanation": "bulk read far above the usage profile of edg_K8RE2YPHBZ",
+        "source_event": "evd_RXRMJM32KC"
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 7900
+    },
+    {
+      "index": 32,
+      "time": 9300,
+      "sensor_time": 9300,
+      "clock_skew_ms": 0,
+      "sensor_id": "db-1",
+      "sensor_seq": 12,
+      "kind": "finding",
+      "evidence_ids": [
+        "evd_1DCTTDRHE8",
+        "evd_RXRMJM32KC"
+      ],
+      "payload": {
+        "finding_id": "fnd_5ATTEVEWE0",
+        "rule": "invariant_breach",
+        "rule_family": "consequence.per_identity_records",
+        "technique": "T1657",
+        "method": 8,
+        "confidence": 1.0,
+        "severity": 5,
+        "evidence_ids": [
+          "evd_RXRMJM32KC"
+        ],
+        "entities": [
+          {
+            "type": "ip",
+            "id": "198.51.100.7",
+            "role": 1
+          },
+          {
+            "type": "service",
+            "id": "kh_9431ec20e893f6f4590d6fc2",
+            "role": 1
+          }
+        ],
+        "observation_point": "database",
+        "time": 9300,
+        "critical_positive_security": true,
+        "deception_hit": false,
+        "attack_stage": "impact",
+        "explanation": "consequence invariant breached (per_identity_records: 60400 of 10000)",
+        "source_event": "evd_RXRMJM32KC"
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 7900
+    },
+    {
+      "index": 33,
+      "time": 9300,
+      "sensor_time": 9300,
+      "clock_skew_ms": 0,
+      "sensor_id": "db-1",
+      "sensor_seq": 12,
+      "kind": "action_request",
+      "evidence_ids": [
+        "evd_9EK4T0X0DX"
+      ],
+      "payload": {
+        "request": {
+          "action_request_id": "act_MZXXAMPNTH",
+          "target": {
+            "type": "ip",
+            "id": "198.51.100.7",
+            "role": 1
+          },
+          "action": "ip.ban",
+          "ladder_level": 4,
+          "expiry": 3609300,
+          "approval": {
+            "approved_by": "policy:auto",
+            "approvers": [],
+            "approved_at": 9300
+          },
+          "reversal_method": "ip.unban",
+          "evidence_ids": [
+            "evd_RXRMJM32KC",
+            "evd_6NCMBXFSDC",
+            "evd_1DCTTDRHE8"
+          ],
+          "verdict_id": "vrd_ZYCR9HYARP",
+          "confidence_class": "two_source_high",
+          "evidence_captured_first": false,
+          "time": 9300,
+          "responder": "",
+          "mode": "observe"
+        },
+        "review": "Allowed",
+        "needs_approval": false
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 7900
+    },
+    {
+      "index": 34,
+      "time": 9300,
+      "sensor_time": 9300,
+      "clock_skew_ms": 0,
+      "sensor_id": "db-1",
+      "sensor_seq": 12,
+      "kind": "verdict",
+      "evidence_ids": [
+        "evd_95B9RZRJ5J",
+        "evd_RXRMJM32KC",
+        "evd_6NCMBXFSDC",
+        "evd_1DCTTDRHE8"
+      ],
+      "payload": {
+        "verdict_id": "vrd_ZYCR9HYARP",
+        "decision": "contain",
+        "entity": {
+          "type": "ip",
+          "id": "198.51.100.7",
+          "role": 0
+        },
+        "risk": 1.0,
+        "reasons": [
+          "drift.edge",
+          "exfil.bulk_read",
+          "consequence.per_identity_records"
+        ],
+        "sources": [
+          "database"
+        ],
+        "policy_version": "default-1",
+        "expires_at": 3609300,
+        "mode": "observe",
+        "evidence_ids": [
+          "evd_RXRMJM32KC",
+          "evd_6NCMBXFSDC",
+          "evd_1DCTTDRHE8"
+        ],
+        "time": 9300,
+        "ladder_level": 4
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 7900
+    },
+    {
+      "index": 35,
+      "time": 9300,
+      "sensor_time": 9300,
+      "clock_skew_ms": 0,
+      "sensor_id": "db-1",
+      "sensor_seq": 12,
+      "kind": "action_request",
+      "evidence_ids": [
+        "evd_88H02XR4V1"
+      ],
+      "payload": {
+        "request": {
+          "action_request_id": "act_6M8AEYY7KV",
+          "target": {
+            "type": "service",
+            "id": "kh_9431ec20e893f6f4590d6fc2",
+            "role": 1
+          },
+          "action": "trust_edge.narrow",
+          "ladder_level": 4,
+          "expiry": 3609300,
+          "approval": {
+            "approved_by": "policy:auto",
+            "approvers": [],
+            "approved_at": 9300
+          },
+          "reversal_method": "trust_edge.restore",
+          "evidence_ids": [
+            "evd_RXRMJM32KC",
+            "evd_6NCMBXFSDC",
+            "evd_1DCTTDRHE8"
+          ],
+          "verdict_id": "vrd_D5A99P8JB1",
+          "confidence_class": "two_source_high",
+          "evidence_captured_first": false,
+          "time": 9300,
+          "responder": "",
+          "mode": "observe"
+        },
+        "review": "Allowed",
+        "needs_approval": false
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 7900
+    },
+    {
+      "index": 36,
+      "time": 9300,
+      "sensor_time": 9300,
+      "clock_skew_ms": 0,
+      "sensor_id": "db-1",
+      "sensor_seq": 12,
+      "kind": "verdict",
+      "evidence_ids": [
+        "evd_8CY2ZDNZB9",
+        "evd_RXRMJM32KC",
+        "evd_6NCMBXFSDC",
+        "evd_1DCTTDRHE8"
+      ],
+      "payload": {
+        "verdict_id": "vrd_D5A99P8JB1",
+        "decision": "contain",
+        "entity": {
+          "type": "service",
+          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "role": 0
+        },
+        "risk": 1.0,
+        "reasons": [
+          "drift.edge",
+          "exfil.bulk_read",
+          "consequence.per_identity_records"
+        ],
+        "sources": [
+          "database"
+        ],
+        "policy_version": "default-1",
+        "expires_at": 3609300,
+        "mode": "observe",
+        "evidence_ids": [
+          "evd_RXRMJM32KC",
+          "evd_6NCMBXFSDC",
+          "evd_1DCTTDRHE8"
+        ],
+        "time": 9300,
+        "ladder_level": 4
+      },
+      "counterfactual": true,
+      "hops_us": {},
+      "elapsed_ms": 7900
+    }
+  ],
+  "re_execution": {
+    "matched": true,
+    "recorded_verdicts": 10,
+    "replayed_verdicts": 10,
+    "mismatches": []
+  },
+  "unobserved_layers": [
+    "edge",
+    "host",
+    "network",
+    "identity"
+  ],
+  "evidence": [
+    {
+      "seq": 1,
+      "evidence_id": "evd_NAD5Z4SDA7",
+      "time": 1400,
+      "kind": "event",
+      "incident_hint": "",
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 1280,
+        "severity_id": 1,
+        "status_id": 2,
+        "status": "Failure",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_5640912cef154d9f305573aa",
+            "name": "",
+            "type": "user",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "auth.login",
+        "ivar": {
+          "sensor_id": "app-sdk-1",
+          "sensor_type": "app_sdk",
+          "observation_point": "app_sdk",
+          "sensor_seq": 1,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "271",
+            "hop_decide_us": "92",
+            "hop_enforce_us": "1240",
+            "hop_ingest_us": "187",
+            "hop_sensor_us": "43"
+          },
+          "value_moved": 0.0,
+          "records_read": 0,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "hash": "ef573faee92deb1706f18ccd7ade87a1b78dce0f25307fd82b2dbbc77ee0f871",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "T18t0QFcCrAdy8N5nXbxIOfj57SGMmqrJNURn61utEgyTohohzuE0MDsDGShB8WHGL18mCRkBMWXVUiNHVluDw=="
+      }
+    },
+    {
+      "seq": 2,
+      "evidence_id": "evd_X18FA028D8",
+      "time": 1800,
+      "kind": "event",
+      "incident_hint": "",
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 1680,
+        "severity_id": 1,
+        "status_id": 2,
+        "status": "Failure",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_f4855d2aece40ad80b4cb1d9",
+            "name": "",
+            "type": "user",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "auth.login",
+        "ivar": {
+          "sensor_id": "app-sdk-1",
+          "sensor_type": "app_sdk",
+          "observation_point": "app_sdk",
+          "sensor_seq": 2,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "282",
+            "hop_decide_us": "94",
+            "hop_enforce_us": "1280",
+            "hop_ingest_us": "194",
+            "hop_sensor_us": "46"
+          },
+          "value_moved": 0.0,
+          "records_read": 0,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "prev_hash": "ef573faee92deb1706f18ccd7ade87a1b78dce0f25307fd82b2dbbc77ee0f871",
+      "hash": "a199cb0b4dd2706a302d4b9dda53c6627e7ac14286e64c4d5a66b0c4b757562e",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "aWApRkkEXdyMCQQ1G21UDVHPDpfoES3Zp+pneRZLFDb7zeOjtQQaD8kht2xTryozVy7tnc334H93vqwMQ50wBQ=="
+      }
+    },
+    {
+      "seq": 3,
+      "evidence_id": "evd_8Z13AMWAMC",
+      "time": 2200,
+      "kind": "event",
+      "incident_hint": "",
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 2080,
+        "severity_id": 1,
+        "status_id": 2,
+        "status": "Failure",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_16a8f2c67b976d9c6bf89267",
+            "name": "",
+            "type": "user",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "auth.login",
+        "ivar": {
+          "sensor_id": "app-sdk-1",
+          "sensor_type": "app_sdk",
+          "observation_point": "app_sdk",
+          "sensor_seq": 3,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "293",
+            "hop_decide_us": "96",
+            "hop_enforce_us": "1320",
+            "hop_ingest_us": "201",
+            "hop_sensor_us": "49"
+          },
+          "value_moved": 0.0,
+          "records_read": 0,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "prev_hash": "a199cb0b4dd2706a302d4b9dda53c6627e7ac14286e64c4d5a66b0c4b757562e",
+      "hash": "4947ec462ddd3979ba683d34c08c56eda9a21dbf815367e648f19c314611f3bb",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "6zMBIYSJF1R8X/e+Eo0uw6sEvDpYOkZ2ZGW77yK5TIMxZZbshlvJkgD47lw1V0VKC+P3rnEtnwIUSnOfSDeIDA=="
+      }
+    },
+    {
+      "seq": 4,
+      "evidence_id": "evd_HR95P8NR5G",
+      "time": 2600,
+      "kind": "event",
+      "incident_hint": "",
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 2480,
+        "severity_id": 1,
+        "status_id": 2,
+        "status": "Failure",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_516d6ccda80a79c79a5bc15f",
+            "name": "",
+            "type": "user",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "auth.login",
+        "ivar": {
+          "sensor_id": "app-sdk-1",
+          "sensor_type": "app_sdk",
+          "observation_point": "app_sdk",
+          "sensor_seq": 4,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "304",
+            "hop_decide_us": "98",
+            "hop_enforce_us": "1360",
+            "hop_ingest_us": "208",
+            "hop_sensor_us": "52"
+          },
+          "value_moved": 0.0,
+          "records_read": 0,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "prev_hash": "4947ec462ddd3979ba683d34c08c56eda9a21dbf815367e648f19c314611f3bb",
+      "hash": "397a6b3f93cd0e6e7c6e4b4c478b16c3284612696b3bee7c464850608d458795",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "x8JG9obMOdCpvx+IsHh8lzi9iU8OJerfBGhxumb/7rgKj6ddyQdRWO+Hxp0QpNMyCirC75lxsVyIyhWB8GHbAg=="
+      }
+    },
+    {
+      "seq": 5,
+      "evidence_id": "evd_P7NVFT8F6Z",
+      "time": 3000,
+      "kind": "event",
+      "incident_hint": "",
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 2880,
+        "severity_id": 1,
+        "status_id": 2,
+        "status": "Failure",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_47fd552199f362860a975955",
+            "name": "",
+            "type": "user",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "auth.login",
+        "ivar": {
+          "sensor_id": "app-sdk-1",
+          "sensor_type": "app_sdk",
+          "observation_point": "app_sdk",
+          "sensor_seq": 5,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "315",
+            "hop_decide_us": "100",
+            "hop_enforce_us": "1400",
+            "hop_ingest_us": "215",
+            "hop_sensor_us": "55"
+          },
+          "value_moved": 0.0,
+          "records_read": 0,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "prev_hash": "397a6b3f93cd0e6e7c6e4b4c478b16c3284612696b3bee7c464850608d458795",
+      "hash": "b1b022a70332a350dd34904677333a0713dc3dd5f2b62db5f2346c23090464b2",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "bbVNYvcqW6xtJP3YBGXSB4UMPIcXV0MNCASf1WXS+JT7foHEdn8poYA01xhaW/DImp/GwNYOn4mhVw7ENdilAQ=="
+      }
+    },
+    {
+      "seq": 6,
+      "evidence_id": "evd_ST1TNETMCX",
+      "time": 3400,
+      "kind": "event",
+      "incident_hint": "",
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 3280,
+        "severity_id": 1,
+        "status_id": 2,
+        "status": "Failure",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_4bccf89fd73fbdbbb855b45a",
+            "name": "",
+            "type": "user",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "auth.login",
+        "ivar": {
+          "sensor_id": "app-sdk-1",
+          "sensor_type": "app_sdk",
+          "observation_point": "app_sdk",
+          "sensor_seq": 6,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "326",
+            "hop_decide_us": "102",
+            "hop_enforce_us": "1440",
+            "hop_ingest_us": "222",
+            "hop_sensor_us": "58"
+          },
+          "value_moved": 0.0,
+          "records_read": 0,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "prev_hash": "b1b022a70332a350dd34904677333a0713dc3dd5f2b62db5f2346c23090464b2",
+      "hash": "45df8a53e952fce60d076ae07154acb228d3a3df96eb35a01454cc73a41029eb",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "IWnGWiLJLO85/hQ09UlM7xfIjXuA8ZLpqLpyAaXHCFI1ihTgH+f6qepKkSvhzvImfZ/7y02v5iEQ5H1ueu2GDQ=="
+      }
+    },
+    {
+      "seq": 7,
+      "evidence_id": "evd_3G6H2ZJPMP",
+      "time": 4300,
+      "kind": "event",
+      "incident_hint": "",
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 4180,
+        "severity_id": 1,
+        "status_id": 1,
+        "status": "Success",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_4bccf89fd73fbdbbb855b45a",
+            "name": "",
+            "type": "user",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "auth.login",
+        "ivar": {
+          "sensor_id": "app-sdk-1",
+          "sensor_type": "app_sdk",
+          "observation_point": "app_sdk",
+          "sensor_seq": 7,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "337",
+            "hop_decide_us": "104",
+            "hop_enforce_us": "1480",
+            "hop_ingest_us": "229",
+            "hop_sensor_us": "61"
+          },
+          "value_moved": 0.0,
+          "records_read": 0,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "prev_hash": "45df8a53e952fce60d076ae07154acb228d3a3df96eb35a01454cc73a41029eb",
+      "hash": "1706eba70bc720e23e9020166f2a8123d57df6bfd7d885c64a1bf20b381cba27",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "WNSKatRpVjHmgoqNXwpVmeYte5H5wwo1k3WkroFcOBev0IE3SILrjeDqRo205iFo16K3pRpjipSJmIj86bphCg=="
+      }
+    },
+    {
+      "seq": 8,
+      "evidence_id": "evd_C2N08Z9DQ4",
+      "time": 5300,
+      "kind": "event",
+      "incident_hint": "",
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 5050,
+        "severity_id": 1,
+        "status_id": 1,
+        "status": "",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_9431ec20e893f6f4590d6fc2",
+            "name": "",
+            "type": "service",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "db.query",
+        "ivar": {
+          "sensor_id": "db-1",
+          "sensor_type": "database",
+          "observation_point": "database",
+          "sensor_seq": 8,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "348",
+            "hop_decide_us": "106",
+            "hop_enforce_us": "1520",
+            "hop_ingest_us": "236",
+            "hop_sensor_us": "64",
+            "operation": "SELECT",
+            "table": "persons"
+          },
+          "value_moved": 0.0,
+          "records_read": 100,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "prev_hash": "1706eba70bc720e23e9020166f2a8123d57df6bfd7d885c64a1bf20b381cba27",
+      "hash": "674594375477d3c68fc602e14306e32fd7461caaad75aed85797545ad089795a",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "uMzyMv1HULH7s8vsmiCaa4FCOUAbnUMKc7S1y1LfzujEFR/8WxmqHK9WEewt5xpy/XQnAFSVFu7y45bLRubkAQ=="
+      }
+    },
+    {
+      "seq": 9,
+      "evidence_id": "evd_T1HTWYR8C1",
+      "time": 5300,
+      "kind": "finding",
+      "incident_hint": "",
+      "payload": {
+        "finding_id": "fnd_0526FB6Y59",
+        "rule": "undeclared_edge",
+        "rule_family": "drift.edge",
+        "technique": "T1078",
+        "method": 7,
+        "confidence": 0.3,
+        "severity": 2,
+        "evidence_ids": [
+          "evd_C2N08Z9DQ4"
+        ],
+        "entities": [
+          {
+            "type": "ip",
+            "id": "198.51.100.7",
+            "role": 1
+          },
+          {
+            "type": "service",
+            "id": "kh_9431ec20e893f6f4590d6fc2",
+            "role": 1
+          }
+        ],
+        "observation_point": "database",
+        "time": 5300,
+        "critical_positive_security": false,
+        "deception_hit": false,
+        "attack_stage": "privilege_escalation",
+        "explanation": "trust edge edg_K8RE2YPHBZ is used but never declared",
+        "source_event": "evd_C2N08Z9DQ4"
+      },
+      "prev_hash": "674594375477d3c68fc602e14306e32fd7461caaad75aed85797545ad089795a",
+      "hash": "dc059d18ee455c78cba0725f408ce7e8414ab77026a17f3e167821270b694f41",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "5odis/ImkX83OUZF4zAP+TcpBst7GNO1Fi3GLll19H/bzOTM1twbSacgp3UwGmceBgoD0K4xRJMAay959is3Bw=="
+      }
+    },
+    {
+      "seq": 10,
+      "evidence_id": "evd_NJQD7KKB9K",
+      "time": 5300,
+      "kind": "verdict",
+      "incident_hint": "",
+      "payload": {
+        "verdict_id": "vrd_T5XJBHPWR1",
+        "decision": "record",
+        "entity": {
+          "type": "ip",
+          "id": "198.51.100.7",
+          "role": 0
+        },
+        "risk": 0.15,
+        "reasons": [
+          "drift.edge"
+        ],
+        "sources": [
+          "database"
+        ],
+        "policy_version": "default-1",
+        "expires_at": 0,
+        "mode": "enforce",
+        "evidence_ids": [
+          "evd_C2N08Z9DQ4",
+          "evd_T1HTWYR8C1"
+        ],
+        "time": 5300,
+        "ladder_level": 0
+      },
+      "prev_hash": "dc059d18ee455c78cba0725f408ce7e8414ab77026a17f3e167821270b694f41",
+      "hash": "218d30255e833ad26315c80cb45f1b2d63850d03e699032492981d8c21b4bd78",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "6FqXQXnT5sV9UU7T4HlTUXGtLthSP2BPo+jiioEFQ3+iArcKzJru4HXtYY2K30ETY3VwBSuhH2gwPb0tj8+IDQ=="
+      }
+    },
+    {
+      "seq": 11,
+      "evidence_id": "evd_4P21M5SEGS",
+      "time": 5300,
+      "kind": "verdict",
+      "incident_hint": "",
+      "payload": {
+        "verdict_id": "vrd_7R3RJ7EYG8",
+        "decision": "record",
+        "entity": {
+          "type": "service",
+          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "role": 0
+        },
+        "risk": 0.15,
+        "reasons": [
+          "drift.edge"
+        ],
+        "sources": [
+          "database"
+        ],
+        "policy_version": "default-1",
+        "expires_at": 0,
+        "mode": "enforce",
+        "evidence_ids": [
+          "evd_C2N08Z9DQ4",
+          "evd_T1HTWYR8C1"
+        ],
+        "time": 5300,
+        "ladder_level": 0
+      },
+      "prev_hash": "218d30255e833ad26315c80cb45f1b2d63850d03e699032492981d8c21b4bd78",
+      "hash": "e834d05df1ba847f1ecefa026625c4c0973b8e337aad8aedde03fae3d3ac2bf1",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "jO+9QcTv/LhO09E93OBoy6QkMahcJ6h3hFNU9IjDJn77LgmkbEcV4lvidWAUxZL3LSF8weXaIFwtyelKTNEZDg=="
+      }
+    },
+    {
+      "seq": 12,
+      "evidence_id": "evd_FGKEJ8VY6A",
+      "time": 6300,
+      "kind": "event",
+      "incident_hint": "",
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 6050,
+        "severity_id": 1,
+        "status_id": 1,
+        "status": "",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_9431ec20e893f6f4590d6fc2",
+            "name": "",
+            "type": "service",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "db.query",
+        "ivar": {
+          "sensor_id": "db-1",
+          "sensor_type": "database",
+          "observation_point": "database",
+          "sensor_seq": 9,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "359",
+            "hop_decide_us": "108",
+            "hop_enforce_us": "1560",
+            "hop_ingest_us": "243",
+            "hop_sensor_us": "67",
+            "operation": "SELECT",
+            "table": "persons"
+          },
+          "value_moved": 0.0,
+          "records_read": 100,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "prev_hash": "e834d05df1ba847f1ecefa026625c4c0973b8e337aad8aedde03fae3d3ac2bf1",
+      "hash": "a2f994c1eb3697343c4670c54d5404f82655d8f6fa81e392bdd76d4bbf754b05",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "VMBtHOiblI/KJHhJQByO1mswrgoBaw7fN0mxHqeg0FSpqKgzVpBySJ+XVFLuWytYR2KEKAB67jmD75cgf1o3CQ=="
+      }
+    },
+    {
+      "seq": 13,
+      "evidence_id": "evd_ARV6C85XAK",
+      "time": 6300,
+      "kind": "verdict",
+      "incident_hint": "",
+      "payload": {
+        "verdict_id": "vrd_07854MBXBV",
+        "decision": "record",
+        "entity": {
+          "type": "ip",
+          "id": "198.51.100.7",
+          "role": 0
+        },
+        "risk": 0.15,
+        "reasons": [
+          "drift.edge"
+        ],
+        "sources": [],
+        "policy_version": "default-1",
+        "expires_at": 0,
+        "mode": "enforce",
+        "evidence_ids": [
+          "evd_FGKEJ8VY6A"
+        ],
+        "time": 6300,
+        "ladder_level": 0
+      },
+      "prev_hash": "a2f994c1eb3697343c4670c54d5404f82655d8f6fa81e392bdd76d4bbf754b05",
+      "hash": "2dc8633528afcbdd294f0debf8837383bcdcdba577248eed416fa3a158092c6c",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "S9WytGswjrpXOeU0NpcTmINwYLzhjfwyKPEmA5MHcbr7hm/fzYMIyhxt79VEx/EthlxF1o27+LZH0pac3abjDg=="
+      }
+    },
+    {
+      "seq": 14,
+      "evidence_id": "evd_QV9EQ3YZS6",
+      "time": 6300,
+      "kind": "verdict",
+      "incident_hint": "",
+      "payload": {
+        "verdict_id": "vrd_BNVC46ND5K",
+        "decision": "record",
+        "entity": {
+          "type": "service",
+          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "role": 0
+        },
+        "risk": 0.15,
+        "reasons": [
+          "drift.edge"
+        ],
+        "sources": [],
+        "policy_version": "default-1",
+        "expires_at": 0,
+        "mode": "enforce",
+        "evidence_ids": [
+          "evd_FGKEJ8VY6A"
+        ],
+        "time": 6300,
+        "ladder_level": 0
+      },
+      "prev_hash": "2dc8633528afcbdd294f0debf8837383bcdcdba577248eed416fa3a158092c6c",
+      "hash": "dd6beea507ffc0d5ed8cae545f96697dbca926f15a6c1920695a4306972ad3a9",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "I4qDlVwfIvrrMc1rl+hxUaVLT3aGCTeIvjkWzvevpHX6wF3YDzL/tlLw4c7nh1ECV+BZpe1AHtS8kT16ZcoNDQ=="
+      }
+    },
+    {
+      "seq": 15,
+      "evidence_id": "evd_AE7JKVGW13",
+      "time": 7300,
+      "kind": "event",
+      "incident_hint": "",
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 7050,
+        "severity_id": 1,
+        "status_id": 1,
+        "status": "",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_9431ec20e893f6f4590d6fc2",
+            "name": "",
+            "type": "service",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "db.query",
+        "ivar": {
+          "sensor_id": "db-1",
+          "sensor_type": "database",
+          "observation_point": "database",
+          "sensor_seq": 10,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "370",
+            "hop_decide_us": "110",
+            "hop_enforce_us": "1600",
+            "hop_ingest_us": "250",
+            "hop_sensor_us": "70",
+            "operation": "SELECT",
+            "table": "persons"
+          },
+          "value_moved": 0.0,
+          "records_read": 100,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "prev_hash": "dd6beea507ffc0d5ed8cae545f96697dbca926f15a6c1920695a4306972ad3a9",
+      "hash": "0dca9f4e95557525cf27d77c151f76e7997cb3d58c4715e531e0b1a71d33f7fa",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "fJbcsZHikQQ/9zFLOiRtm/drqrA9NsTWI3iyEJCJUlVHEhiGecbeWplg7h9vLTX7Bpb9evGYy9vani3+ybN7DQ=="
+      }
+    },
+    {
+      "seq": 16,
+      "evidence_id": "evd_JEJFA9HNBT",
+      "time": 7300,
+      "kind": "verdict",
+      "incident_hint": "",
+      "payload": {
+        "verdict_id": "vrd_2V7AJR67DF",
+        "decision": "record",
+        "entity": {
+          "type": "ip",
+          "id": "198.51.100.7",
+          "role": 0
+        },
+        "risk": 0.15,
+        "reasons": [
+          "drift.edge"
+        ],
+        "sources": [],
+        "policy_version": "default-1",
+        "expires_at": 0,
+        "mode": "enforce",
+        "evidence_ids": [
+          "evd_AE7JKVGW13"
+        ],
+        "time": 7300,
+        "ladder_level": 0
+      },
+      "prev_hash": "0dca9f4e95557525cf27d77c151f76e7997cb3d58c4715e531e0b1a71d33f7fa",
+      "hash": "15aa47f63cd20762253f12999b10bca366459871ca10996015e2cfa660db8e72",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "ZMivCSx9GQST770Xm3fV2DkHKBo5UvDrdt3oOCAk5h6I7mQGEFy6KDbi3e/hw5BRZfhGPIOXfhWsrFgLcwYaBA=="
+      }
+    },
+    {
+      "seq": 17,
+      "evidence_id": "evd_530CAF95VJ",
+      "time": 7300,
+      "kind": "verdict",
+      "incident_hint": "",
+      "payload": {
+        "verdict_id": "vrd_HC9S9JN630",
+        "decision": "record",
+        "entity": {
+          "type": "service",
+          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "role": 0
+        },
+        "risk": 0.15,
+        "reasons": [
+          "drift.edge"
+        ],
+        "sources": [],
+        "policy_version": "default-1",
+        "expires_at": 0,
+        "mode": "enforce",
+        "evidence_ids": [
+          "evd_AE7JKVGW13"
+        ],
+        "time": 7300,
+        "ladder_level": 0
+      },
+      "prev_hash": "15aa47f63cd20762253f12999b10bca366459871ca10996015e2cfa660db8e72",
+      "hash": "9ac7afdbb7570adf07d8124d6eb0ddfea6dc17b502a548e96786bd0dcd3fed0a",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "MfW6Xll5EJAsJJYOnSOO6vQwFYXvuEZOvPAvTKWKeA6tgBMgG7GMIQjhnjMk8SvQfJPzPc4LJKAWPnqC8+NIBg=="
+      }
+    },
+    {
+      "seq": 18,
+      "evidence_id": "evd_B1B0CMZXAJ",
+      "time": 8300,
+      "kind": "event",
+      "incident_hint": "",
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 8050,
+        "severity_id": 1,
+        "status_id": 1,
+        "status": "",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_9431ec20e893f6f4590d6fc2",
+            "name": "",
+            "type": "service",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "db.query",
+        "ivar": {
+          "sensor_id": "db-1",
+          "sensor_type": "database",
+          "observation_point": "database",
+          "sensor_seq": 11,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "381",
+            "hop_decide_us": "112",
+            "hop_enforce_us": "1640",
+            "hop_ingest_us": "257",
+            "hop_sensor_us": "73",
+            "operation": "SELECT",
+            "table": "persons"
+          },
+          "value_moved": 0.0,
+          "records_read": 100,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "prev_hash": "9ac7afdbb7570adf07d8124d6eb0ddfea6dc17b502a548e96786bd0dcd3fed0a",
+      "hash": "0120e201736bf493673d60cfffb812ab7e0810d1a7c247ba7fd1fc30b69d979b",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "IELW4PyWBOctz+jldGipk7rIlz66iEF6mMgGCj7c0SNX7Sj7nusgrrg3FdnihBGbG8eAQIsHTWxI4H+1fiKeBw=="
+      }
+    },
+    {
+      "seq": 19,
+      "evidence_id": "evd_GWRZNWE86N",
+      "time": 8300,
+      "kind": "verdict",
+      "incident_hint": "",
+      "payload": {
+        "verdict_id": "vrd_GJD901C0K0",
+        "decision": "record",
+        "entity": {
+          "type": "ip",
+          "id": "198.51.100.7",
+          "role": 0
+        },
+        "risk": 0.15,
+        "reasons": [
+          "drift.edge"
+        ],
+        "sources": [],
+        "policy_version": "default-1",
+        "expires_at": 0,
+        "mode": "enforce",
+        "evidence_ids": [
+          "evd_B1B0CMZXAJ"
+        ],
+        "time": 8300,
+        "ladder_level": 0
+      },
+      "prev_hash": "0120e201736bf493673d60cfffb812ab7e0810d1a7c247ba7fd1fc30b69d979b",
+      "hash": "eafe6fa754cc665bafa21477859b7e0e512fed5dcbd8ab1dd2f4f05babe0c5f0",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "M1W1tLxMbXBMuVCEIJ6bj3jhP2AJOQTB7Gcz1C309JkdqRhjc9g2Ss9eo5OwCebpMzlmUw1U63YLb2n9dZX6DA=="
+      }
+    },
+    {
+      "seq": 20,
+      "evidence_id": "evd_PSBSEG4AR1",
+      "time": 8300,
+      "kind": "verdict",
+      "incident_hint": "",
+      "payload": {
+        "verdict_id": "vrd_SDNM6J4FZY",
+        "decision": "record",
+        "entity": {
+          "type": "service",
+          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "role": 0
+        },
+        "risk": 0.15,
+        "reasons": [
+          "drift.edge"
+        ],
+        "sources": [],
+        "policy_version": "default-1",
+        "expires_at": 0,
+        "mode": "enforce",
+        "evidence_ids": [
+          "evd_B1B0CMZXAJ"
+        ],
+        "time": 8300,
+        "ladder_level": 0
+      },
+      "prev_hash": "eafe6fa754cc665bafa21477859b7e0e512fed5dcbd8ab1dd2f4f05babe0c5f0",
+      "hash": "72d4c209dea3b4196efbe6bc5ebfbf1f3d250c0175e80bf85f7ec836414d32e4",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "QT/cZLkOb8RGlWxoV/8a6PtVCZN/HOU6V6cAjL4C9gP7/OwDuReGZ+N75WUNjym9nGH1mm0PuBDu5iOJqq5zDw=="
+      }
+    },
+    {
+      "seq": 21,
+      "evidence_id": "evd_SPFXTPNJT9",
+      "time": 9300,
+      "kind": "event",
+      "incident_hint": "",
+      "payload": {
+        "class_uid": 0,
+        "category_uid": 0,
+        "activity_id": 1,
+        "type_uid": 1,
+        "time": 9050,
+        "severity_id": 1,
+        "status_id": 1,
+        "status": "",
+        "message": "",
+        "metadata": {
+          "version": "1.3.0",
+          "product": {
+            "name": "ivar",
+            "vendor_name": "ivar",
+            "version": "0.1.0"
+          },
+          "profiles": [],
+          "extensions": [
+            {
+              "name": "ivar",
+              "uid": "999",
+              "version": "1.0.0"
+            }
+          ],
+          "uid": "",
+          "correlation_uid": ""
+        },
+        "actor": {
+          "user": {
+            "uid": "kh_9431ec20e893f6f4590d6fc2",
+            "name": "",
+            "type": "service",
+            "org_uid": ""
+          },
+          "session": null,
+          "app_name": "",
+          "authorizations": "",
+          "invoked_by": ""
+        },
+        "device": null,
+        "src_endpoint": {
+          "ip": "198.51.100.7",
+          "port": 0,
+          "hostname": "",
+          "uid": "",
+          "svc_name": ""
+        },
+        "dst_endpoint": null,
+        "process": null,
+        "http_request": null,
+        "http_response": null,
+        "activity_name": "db.query",
+        "ivar": {
+          "sensor_id": "db-1",
+          "sensor_type": "database",
+          "observation_point": "database",
+          "sensor_seq": 12,
+          "evidence_id": "",
+          "request_id": "",
+          "business_action": "",
+          "intent_token": "",
+          "target_entity": "",
+          "attributes": {
+            "hop_core_us": "392",
+            "hop_decide_us": "114",
+            "hop_enforce_us": "1680",
+            "hop_ingest_us": "264",
+            "hop_sensor_us": "76",
+            "operation": "SELECT",
+            "table": "persons"
+          },
+          "value_moved": 0.0,
+          "records_read": 60000,
+          "destructive": false,
+          "tenant": "",
+          "engine_alerts": [],
+          "engine_alert_confidence": 0.0,
+          "declared_route": "",
+          "decoy_touched": false,
+          "decoy_id": "",
+          "egress_destination": ""
+        }
+      },
+      "prev_hash": "72d4c209dea3b4196efbe6bc5ebfbf1f3d250c0175e80bf85f7ec836414d32e4",
+      "hash": "19e921707063fc15cc59d66d097effe93444026cb469690a15f1da9d23404f47",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "Zl+NErqmOvQlxByyNVizag2xKfMyyev7X01/emnDmFxM98zFCCCo8Vumwd2hh1Nz9re3PEfcAN4mTHe+avOlBg=="
+      }
+    },
+    {
+      "seq": 22,
+      "evidence_id": "evd_1YG06XH7N1",
+      "time": 9300,
+      "kind": "finding",
+      "incident_hint": "",
+      "payload": {
+        "finding_id": "fnd_JFHPHHYP25",
+        "rule": "bulk_read_anomaly",
+        "rule_family": "exfil.bulk_read",
+        "technique": "T1530",
+        "method": 3,
+        "confidence": 0.7,
+        "severity": 4,
+        "evidence_ids": [
+          "evd_SPFXTPNJT9"
+        ],
+        "entities": [
+          {
+            "type": "ip",
+            "id": "198.51.100.7",
+            "role": 1
+          },
+          {
+            "type": "service",
+            "id": "kh_9431ec20e893f6f4590d6fc2",
+            "role": 1
+          }
+        ],
+        "observation_point": "database",
+        "time": 9300,
+        "critical_positive_security": false,
+        "deception_hit": false,
+        "attack_stage": "data_theft",
+        "explanation": "bulk read far above the usage profile of edg_K8RE2YPHBZ",
+        "source_event": "evd_SPFXTPNJT9"
+      },
+      "prev_hash": "19e921707063fc15cc59d66d097effe93444026cb469690a15f1da9d23404f47",
+      "hash": "bff979cbb22d6fb3203e1660e302cdbf5ddd238b5393812dc4b0a965c6523b7f",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "VmnY+nCht22xx/2YHBZo04i0E7aOvfiva5BTMI5CBRUI2o/0lm8bGYCYwI5m3jCMXb3/Pd6RNO30qmNRTb7eBA=="
+      }
+    },
+    {
+      "seq": 23,
+      "evidence_id": "evd_NZY6GYQ8HD",
+      "time": 9300,
+      "kind": "finding",
+      "incident_hint": "",
+      "payload": {
+        "finding_id": "fnd_ZKY10XDE3G",
+        "rule": "invariant_breach",
+        "rule_family": "consequence.per_identity_records",
+        "technique": "T1657",
+        "method": 8,
+        "confidence": 1.0,
+        "severity": 5,
+        "evidence_ids": [
+          "evd_SPFXTPNJT9"
+        ],
+        "entities": [
+          {
+            "type": "ip",
+            "id": "198.51.100.7",
+            "role": 1
+          },
+          {
+            "type": "service",
+            "id": "kh_9431ec20e893f6f4590d6fc2",
+            "role": 1
+          }
+        ],
+        "observation_point": "database",
+        "time": 9300,
+        "critical_positive_security": true,
+        "deception_hit": false,
+        "attack_stage": "impact",
+        "explanation": "consequence invariant breached (per_identity_records: 60400 of 10000)",
+        "source_event": "evd_SPFXTPNJT9"
+      },
+      "prev_hash": "bff979cbb22d6fb3203e1660e302cdbf5ddd238b5393812dc4b0a965c6523b7f",
+      "hash": "2ddc1fd69765ee99fdf6da2985b031c05b076550da258d7d2fdb7caeadec0c81",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "yI0m57fE9GVlKMPVEgTUfHA+BCZWEYmyxxUcFbszmIxPwWisaqxZRKySbFNPYW+mpcZ3hFLVuSwubAcdKZDNBw=="
+      }
+    },
+    {
+      "seq": 24,
+      "evidence_id": "evd_MEVWXBWSNP",
+      "time": 9300,
+      "kind": "action_request",
+      "incident_hint": "",
+      "payload": {
+        "request": {
+          "action_request_id": "act_W71CQBQ0J4",
+          "target": {
+            "type": "ip",
+            "id": "198.51.100.7",
+            "role": 1
+          },
+          "action": "ip.ban",
+          "ladder_level": 4,
+          "expiry": 3609300,
+          "approval": {
+            "approved_by": "policy:auto",
+            "approvers": [],
+            "approved_at": 9300
+          },
+          "reversal_method": "ip.unban",
+          "evidence_ids": [
+            "evd_SPFXTPNJT9",
+            "evd_1YG06XH7N1",
+            "evd_NZY6GYQ8HD"
+          ],
+          "verdict_id": "vrd_NCG78EY939",
+          "confidence_class": "two_source_high",
+          "evidence_captured_first": false,
+          "time": 9300,
+          "responder": "",
+          "mode": "enforce"
+        },
+        "review": "Allowed",
+        "needs_approval": false
+      },
+      "prev_hash": "2ddc1fd69765ee99fdf6da2985b031c05b076550da258d7d2fdb7caeadec0c81",
+      "hash": "f830228828ea64febb92c58e1ae18b95ae174f3365945a1bc31822ef1338e0e2",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "aamWZCCfWyrRtHxmrFIezQHjE7Ipdyey42BH9vJWR2Cu+bDq9FeBVoF1g6k8EHQwrwHStaHrLx6yTKl3yodOAQ=="
+      }
+    },
+    {
+      "seq": 25,
+      "evidence_id": "evd_4ECHNE4XQQ",
+      "time": 9300,
+      "kind": "verdict",
+      "incident_hint": "",
+      "payload": {
+        "verdict_id": "vrd_NCG78EY939",
+        "decision": "contain",
+        "entity": {
+          "type": "ip",
+          "id": "198.51.100.7",
+          "role": 0
+        },
+        "risk": 1.0,
+        "reasons": [
+          "drift.edge",
+          "exfil.bulk_read",
+          "consequence.per_identity_records"
+        ],
+        "sources": [
+          "database"
+        ],
+        "policy_version": "default-1",
+        "expires_at": 3609300,
+        "mode": "enforce",
+        "evidence_ids": [
+          "evd_SPFXTPNJT9",
+          "evd_1YG06XH7N1",
+          "evd_NZY6GYQ8HD"
+        ],
+        "time": 9300,
+        "ladder_level": 4
+      },
+      "prev_hash": "f830228828ea64febb92c58e1ae18b95ae174f3365945a1bc31822ef1338e0e2",
+      "hash": "7878f98e668fa642f4269cd5dc45ebdcaf70530b3f6d7341e8b10dc0ef98aed7",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "wAv3+3e+vj3fGrU51K/eXVa2seIsWh1vxZYBg4wwHUjsKocXYVdl2G+5o4zsNUAIIKK1a4L6CrAuH/eXpR4CAA=="
+      }
+    },
+    {
+      "seq": 26,
+      "evidence_id": "evd_5AEV0TFTRV",
+      "time": 9300,
+      "kind": "action_request",
+      "incident_hint": "",
+      "payload": {
+        "request": {
+          "action_request_id": "act_Z4WYE5V0RG",
+          "target": {
+            "type": "service",
+            "id": "kh_9431ec20e893f6f4590d6fc2",
+            "role": 1
+          },
+          "action": "trust_edge.narrow",
+          "ladder_level": 4,
+          "expiry": 3609300,
+          "approval": {
+            "approved_by": "policy:auto",
+            "approvers": [],
+            "approved_at": 9300
+          },
+          "reversal_method": "trust_edge.restore",
+          "evidence_ids": [
+            "evd_SPFXTPNJT9",
+            "evd_1YG06XH7N1",
+            "evd_NZY6GYQ8HD"
+          ],
+          "verdict_id": "vrd_SQHT1HVZXH",
+          "confidence_class": "two_source_high",
+          "evidence_captured_first": false,
+          "time": 9300,
+          "responder": "",
+          "mode": "enforce"
+        },
+        "review": "Allowed",
+        "needs_approval": false
+      },
+      "prev_hash": "7878f98e668fa642f4269cd5dc45ebdcaf70530b3f6d7341e8b10dc0ef98aed7",
+      "hash": "d580bd63020f841a5247fba4e7ea9a118ce04f0325d28ca44d63dacbbec772c3",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "kdE+fKh8RD4BZsGWDvVNjH0xtZ/ppY/M2sODQzUScEK6baFBSQf6wC+ZSyMmLOs4ncphfKoSGxkHBCimWd17CA=="
+      }
+    },
+    {
+      "seq": 27,
+      "evidence_id": "evd_A4YVCH3H12",
+      "time": 9300,
+      "kind": "verdict",
+      "incident_hint": "",
+      "payload": {
+        "verdict_id": "vrd_SQHT1HVZXH",
+        "decision": "contain",
+        "entity": {
+          "type": "service",
+          "id": "kh_9431ec20e893f6f4590d6fc2",
+          "role": 0
+        },
+        "risk": 1.0,
+        "reasons": [
+          "drift.edge",
+          "exfil.bulk_read",
+          "consequence.per_identity_records"
+        ],
+        "sources": [
+          "database"
+        ],
+        "policy_version": "default-1",
+        "expires_at": 3609300,
+        "mode": "enforce",
+        "evidence_ids": [
+          "evd_SPFXTPNJT9",
+          "evd_1YG06XH7N1",
+          "evd_NZY6GYQ8HD"
+        ],
+        "time": 9300,
+        "ladder_level": 4
+      },
+      "prev_hash": "d580bd63020f841a5247fba4e7ea9a118ce04f0325d28ca44d63dacbbec772c3",
+      "hash": "927ab2f531e94016a1f416985d077ec3c4e29aeb5000ea22061930ebe1694f74",
+      "signature": {
+        "alg": "ed25519",
+        "key_id": "evidence-1",
+        "sig": "PQe5UG+VCIGTGsoi3g7B8AlGnd50c9Ga7nQFI5xRB6QNTnCzFlTTHlMvT0Ak3k6/yrRea7DCub6WQbZbqeNdAw=="
+      }
+    }
+  ],
+  "policy": {
+    "contract": "ivar.v1",
+    "version": 1,
+    "policy_version": "default-1",
+    "issued_at": 0,
+    "expires_at": 2592000000,
+    "thresholds": {
+      "throttle": 0.3,
+      "challenge": 0.6,
+      "contain": 0.85,
+      "half_life_fast_secs": 1800,
+      "half_life_slow_secs": 604800,
+      "slow_throttle": 0.3,
+      "slow_challenge": 0.6,
+      "slow_contain": 0.85,
+      "high_confidence": 0.55
+    },
+    "method_weights": {
+      "signatures": 1.0,
+      "positive_security": 1.0,
+      "behaviour_baselines": 0.7,
+      "sequence_correlation": 0.9,
+      "machine_learning": 0.5,
+      "deception": 1.0,
+      "declared_intent_drift": 0.5,
+      "consequence_invariants": 1.0
+    },
+    "rules": [],
+    "protected_entities": [],
+    "invariants": [
+      {
+        "invariant_id": "hot_wallet_outflow",
+        "action": "payout",
+        "measured_outcome": "value_moved",
+        "scope": "business",
+        "window_secs": 3600,
+        "limit": 1000000.0,
+        "time_lock": {
+          "threshold": 50000.0,
+          "delay_secs": 1800,
+          "cancelling_owners": [
+            "user:treasury-owner-1",
+            "user:treasury-owner-2"
+          ]
+        },
+        "approvers": [
+          "role:treasury"
+        ],
+        "action_on_breach": "block_and_alert"
+      },
+      {
+        "invariant_id": "per_identity_records",
+        "action": "*",
+        "measured_outcome": "records_read",
+        "scope": "identity",
+        "window_secs": 86400,
+        "limit": 10000.0,
+        "time_lock": null,
+        "approvers": [
+          "role:data_owner"
+        ],
+        "action_on_breach": "suspend_identity"
+      },
+      {
+        "invariant_id": "destructive_management_ops",
+        "action": "*",
+        "measured_outcome": "destructive_operations",
+        "scope": "global",
+        "window_secs": 3600,
+        "limit": 5.0,
+        "time_lock": {
+          "threshold": 0.0,
+          "delay_secs": 1800,
+          "cancelling_owners": [
+            "user:infra-owner"
+          ]
+        },
+        "approvers": [
+          "role:infra",
+          "role:infra"
+        ],
+        "action_on_breach": "block_and_alert"
+      }
+    ],
+    "decoys": [
+      {
+        "decoy_id": "dcy_route_env",
+        "kind": "route",
+        "marker": "/.env.backup",
+        "issued_context": "*",
+        "protects": "edge"
+      },
+      {
+        "decoy_id": "dcy_tool_export",
+        "kind": "decoy_tool",
+        "marker": "export_all_customers",
+        "issued_context": "*",
+        "protects": "ai agents"
+      }
+    ],
+    "decoy_touchers": [],
+    "cedar_policies": "\n// The core may record, throttle, challenge and block automatically.\npermit (\n  principal == Ivar::Engine::\"core\",\n  action in [Ivar::Action::\"record\", Ivar::Action::\"throttle\", Ivar::Action::\"challenge\", Ivar::Action::\"block\"],\n  resource\n);\n\n// Containment (ladder level 4) is automatic only at high confidence: two\n// independent sources, or a deception hit.\npermit (\n  principal == Ivar::Engine::\"core\",\n  action == Ivar::Action::\"contain\",\n  resource\n) when { context.independent_sources >= 2 || context.deception_hit };\n\n// Never contain on target side evidence, and never contain a protected entity\n// without a person.\nforbid (principal, action == Ivar::Action::\"contain\", resource) when { context.target_only };\nforbid (principal, action == Ivar::Action::\"contain\", resource) when { context.protected };\n\n// Levels 5 and 6 are never automatic for the core.\nforbid (principal == Ivar::Engine::\"core\", action, resource) when { context.ladder_level >= 5 };\n\n// AI at autonomy A3 (bounded) may trigger pre approved actions up to level 3.\npermit (\n  principal == Ivar::Engine::\"ai\",\n  action in [Ivar::Action::\"record\", Ivar::Action::\"throttle\", Ivar::Action::\"challenge\", Ivar::Action::\"block\"],\n  resource\n) when { context.ai_autonomy == \"bounded\" && context.ladder_level <= 3 };\nforbid (principal == Ivar::Engine::\"ai\", action, resource) when { context.ladder_level >= 4 };\n\n// Operators: every action needs hardware backed staff 2FA.\nforbid (principal is Ivar::Operator, action, resource) unless { context.hardware_2fa };\n\n// Destructive or fleet wide actions need two approvers.\nforbid (principal is Ivar::Operator, action, resource) when { context.destructive_or_fleet_wide && context.approvers < 2 };\n\n// Analysts may read, replay and annotate.\npermit (\n  principal in Ivar::Role::\"analyst\",\n  action in [Ivar::Action::\"read\", Ivar::Action::\"replay\", Ivar::Action::\"annotate\"],\n  resource\n);\n\n// On call may isolate workloads (level 5) and reverse actions.\npermit (\n  principal in Ivar::Role::\"on_call\",\n  action in [Ivar::Action::\"read\", Ivar::Action::\"replay\", Ivar::Action::\"isolate\", Ivar::Action::\"reverse\", Ivar::Action::\"approve\", Ivar::Action::\"cancel_time_lock\"],\n  resource\n);\n\n// The incident lead may use business kill switches (level 6) and posture.\npermit (\n  principal in Ivar::Role::\"incident_lead\",\n  action in [Ivar::Action::\"read\", Ivar::Action::\"replay\", Ivar::Action::\"isolate\", Ivar::Action::\"reverse\", Ivar::Action::\"approve\", Ivar::Action::\"killswitch\", Ivar::Action::\"set_posture\", Ivar::Action::\"cancel_time_lock\"],\n  resource\n);\n\n// Owners of irreversible actions may cancel a time lock.\npermit (\n  principal in Ivar::Role::\"owner\",\n  action == Ivar::Action::\"cancel_time_lock\",\n  resource\n);\n\n// Policy authors may sign policy; weakening changes need a second key (TUF threshold).\npermit (\n  principal in Ivar::Role::\"policy_author\",\n  action == Ivar::Action::\"sign_policy\",\n  resource\n);\n",
+    "settings": {
+      "ai_autonomy": "advise",
+      "auto_contain_max_users_pct": 0.5,
+      "compromise_assessment_done": false,
+      "detection_mode": "enforce",
+      "evidence_retention_days": 400,
+      "fail_open_budget_pct": 0.1,
+      "intent_binding": "observe",
+      "intent_binding_per_action": {},
+      "risk_half_life_fast_secs": 1800,
+      "risk_half_life_slow_secs": 604800,
+      "runtime_posture": "standard",
+      "time_locks_file": "time-locks.yaml"
+    },
+    "shared_networks": [
+      "100.64.0.0/10"
+    ],
+    "intent_binding": {
+      "agent_action": "observe",
+      "bulk_export": "observe",
+      "deploy": "observe",
+      "payout": "observe",
+      "role_grant": "observe",
+      "signing": "observe"
+    },
+    "declared": null,
+    "plugin_versions": {},
+    "weakens_protection": false
+  },
+  "policy_history": [],
+  "signature": {
+    "alg": "ed25519",
+    "key_id": "replay-1",
+    "sig": "vgwC9TS/MV+Ab/dnXDtNlcRHDA/HtJsJWK6tLwJAoFlTG0DQsMOxDhxCu2gHz+Xo1eCfH1XgrnHh2FHL1eySBg=="
+  }
+}
