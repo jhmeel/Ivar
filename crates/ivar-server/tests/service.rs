@@ -32,14 +32,20 @@ fn bundle(version: u64, keys: &[&KeyPair], enforce: bool) -> String {
 
 fn fixture() -> Fixture {
     let dir = tempfile::tempdir().unwrap();
+    let state = start(dir.path());
+    Fixture { state, policy_key: KeyPair::ed25519_from_seed("policy-1", [1; 32]), _dir: dir }
+}
+
+/// A core over `dir`, configured with policy version 1.
+fn start(dir: &std::path::Path) -> Arc<AppState> {
     let policy_key = KeyPair::ed25519_from_seed("policy-1", [1; 32]);
     let evidence_key = KeyPair::ed25519_from_seed("evidence-0", [2; 32]);
     let action_key = KeyPair::ed25519_from_seed("action-0", [3; 32]);
     let mut ring = Keyring::default();
     ring.add(policy_key.public(), &["policy"]);
     ring.add(evidence_key.public(), &["evidence"]);
-    let state = AppState::start(StartOptions {
-        evidence: FileEvidenceStore::open(&dir.path().join("evidence.jsonl")).unwrap(),
+    AppState::start(StartOptions {
+        evidence: FileEvidenceStore::open(&dir.join("evidence.jsonl")).unwrap(),
         policy_archive_b64: bundle(1, &[&policy_key], true),
         keyring: ring,
         evidence_key,
@@ -50,9 +56,9 @@ fn fixture() -> Fixture {
         responders: Responders::empty(action_key),
         shard: 0,
         shards: 1,
+        policy_dir: Some(dir.join("policies")),
     })
-    .unwrap();
-    Fixture { state, policy_key, _dir: dir }
+    .unwrap()
 }
 
 async fn call(f: &Fixture, method: &str, uri: &str, body: Value, operator: Option<&str>) -> (StatusCode, Value) {
@@ -89,6 +95,11 @@ async fn ingest_incident_replay_and_operator_rules() {
     let (s, bundle) = call(&f, "GET", &format!("/v1/incidents/{id}/replay"), json!(null), Some("analyst")).await;
     assert_eq!(s, StatusCode::OK, "{bundle}");
     assert_eq!(bundle["re_execution"]["matched"], true);
+    assert_eq!(bundle["signature"]["key_id"], "evidence-0", "served replays are signed by the shard (section 13)");
+    let mut ring = Keyring::default();
+    ring.add(KeyPair::ed25519_from_seed("evidence-0", [2; 32]).public(), &["evidence", "replay"]);
+    let parsed: ivar_contracts::ReplayBundle = serde_json::from_value(bundle.clone()).unwrap();
+    ivar_replay::reverify_bundle(&parsed, Some(&ring), &[7; 16]).expect("a partner re verifies the served bundle");
     assert!(bundle["frames"].as_array().unwrap().iter().all(|fr| !fr["evidence_ids"].as_array().unwrap().is_empty() || fr["kind"] == "gap"));
 
     let (s, _) = call(&f, "POST", "/v1/policy", json!(bundle_forged()), Some("analyst")).await;
@@ -121,4 +132,18 @@ async fn sink_reports_open_incidents() {
     let (s, r) = call(&f, "POST", "/v1/sink-decisions", json!({"subject": {"type": "session", "id": "ses_1", "role": 1}, "decision": {"outcome": {"outcome": "refused", "reason": "no intent chain"}, "open_incident": true}}), None).await;
     assert_eq!(s, StatusCode::OK);
     assert!(r["incident"].is_string());
+}
+
+#[tokio::test]
+async fn a_restart_resumes_at_the_newest_applied_policy() {
+    let dir = tempfile::tempdir().unwrap();
+    let key = KeyPair::ed25519_from_seed("policy-1", [1; 32]);
+    {
+        let state = start(dir.path());
+        assert_eq!(state.update_policy(&bundle(2, &[&key], true)).unwrap(), 2);
+    }
+    // The config still names version 1; the core must not fall back to it.
+    let restarted = start(dir.path());
+    assert_eq!(restarted.inner.lock().unwrap().core.policy().version, 2);
+    assert!(restarted.update_policy(&bundle(1, &[&key], true)).is_err(), "rollback still refused");
 }

@@ -32,7 +32,7 @@ for k in root1 root2 targets1 targets2 snapshot timestamp; do gen "$state/tuf/$k
 
 "$bin/ivar-core" keyring "$state/keyring.json" \
   "$state/keys/policy-a.seed=policy" "$state/keys/policy-b.seed=policy" \
-  "$state/keys/flags-1.seed=flags" "$state/keys/evidence-0.seed=evidence" "$state/keys/action-0.seed=action"
+  "$state/keys/flags-1.seed=flags" "$state/keys/evidence-0.seed=evidence+replay" "$state/keys/action-0.seed=action"
 "$bin/ivar-core" keyring "$state/policy-keyring.json" "$state/keys/policy-a.seed=policy" "$state/keys/policy-b.seed=policy"
 pub() { "$bin/ivar-core" keyring /dev/stdout "$1=operator" | python3 -c 'import json,sys; print(list(json.load(sys.stdin)["keys"].values())[0][0]["bytes"])'; }
 printf '{"alice":"%s","bob":"%s"}\n' "$(pub "$state/keys/operator-alice.seed")" "$(pub "$state/keys/operator-bob.seed")" > "$state/operators.json"

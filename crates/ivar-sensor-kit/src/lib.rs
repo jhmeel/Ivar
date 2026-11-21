@@ -96,11 +96,14 @@ pub struct HttpUplink {
     core_url: String,
     control_url: String,
     agent: ureq::Agent,
+    /// Position in the core's verdict feed, so verdicts other sensors caused
+    /// reach this one with its next batch or heartbeat.
+    verdict_cursor: u64,
 }
 
 impl HttpUplink {
     pub fn new(core_url: &str, control_url: &str) -> Self {
-        HttpUplink { core_url: core_url.trim_end_matches('/').into(), control_url: control_url.trim_end_matches('/').into(), agent: ureq::AgentBuilder::new().timeout(Duration::from_secs(3)).build() }
+        HttpUplink { core_url: core_url.trim_end_matches('/').into(), control_url: control_url.trim_end_matches('/').into(), agent: ureq::AgentBuilder::new().timeout(Duration::from_secs(3)).build(), verdict_cursor: 0 }
     }
 }
 
@@ -109,9 +112,12 @@ impl Uplink for HttpUplink {
         let r = self
             .agent
             .post(&format!("{}/v1/events", self.core_url))
-            .send_json(serde_json::json!({ "sensor_id": sensor_id, "events": events }))
+            .send_json(serde_json::json!({ "sensor_id": sensor_id, "events": events, "verdict_cursor": self.verdict_cursor }))
             .map_err(|e| e.to_string())?;
         let v: serde_json::Value = r.into_json().map_err(|e| e.to_string())?;
+        if let Some(c) = v.get("verdict_cursor").and_then(|c| c.as_u64()) {
+            self.verdict_cursor = self.verdict_cursor.max(c);
+        }
         Ok(v.get("verdicts").and_then(|x| serde_json::from_value(x.clone()).ok()).unwrap_or_default())
     }
     fn fetch_policy(&mut self, have: u64) -> Result<Option<String>, String> {

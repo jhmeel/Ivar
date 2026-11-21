@@ -47,6 +47,11 @@ export class ActionSink {
     return JSON.parse(this.sink.cancel(lockId, owner, JSON.stringify(req)));
   }
 
+  /** Change INTENT_BINDING for one action in place; held time locks are kept. */
+  setMode(action: string, mode: 'off' | 'observe' | 'enforce'): void {
+    this.sink.setMode(action, mode);
+  }
+
   releaseDue(now = Date.now()): unknown[] {
     return JSON.parse(this.sink.releaseDue(now));
   }

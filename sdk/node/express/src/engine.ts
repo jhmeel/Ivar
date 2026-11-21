@@ -9,16 +9,43 @@ export interface LocalResult {
 }
 
 export class Engine {
-  readonly policyJson: string;
+  policyJson: string;
+  /** Version of the policy in force; a refresh only applies a newer one. */
+  policyVersion: number;
   private sensor: core.LocalSensor;
   private embedded?: core.Core;
+  private verdicts = new Map<string, Verdict>();
 
   constructor(policy: unknown, redactionKey: string, embedded: boolean) {
-    this.policyJson = policy ? JSON.stringify(policy) : core.defaultPolicy(Date.now());
+    this.policyJson = policy ? (typeof policy === 'string' ? policy : JSON.stringify(policy)) : core.defaultPolicy(Date.now());
+    this.policyVersion = Number(JSON.parse(this.policyJson).version ?? 0);
     this.sensor = new core.LocalSensor(this.policyJson);
     if (embedded) this.embedded = new core.Core(this.policyJson, redactionKey || '00');
-    // Warm the WebAssembly code paths so the first request stays in budget.
+    this.warm();
+  }
+
+  /** Warm the WebAssembly code paths so the first request stays in budget. */
+  private warm(): void {
     for (let i = 0; i < 3; i++) this.sensor.decide(JSON.stringify({ activity_name: 'http.request', http_request: { http_method: 'GET', url_path: '/' }, ivar: {} }), Date.now());
+  }
+
+  /**
+   * Swap in a newer verified policy. The fast path is rebuilt from it and
+   * keeps the core's unexpired verdicts; the embedded core keeps its trust
+   * graph, risk and evidence. Throws when the core refuses the policy, and
+   * the current one stays in force.
+   */
+  updatePolicy(policyJson: string, now = Date.now()): void {
+    const sensor = new core.LocalSensor(policyJson);
+    if (this.embedded) {
+      const r = JSON.parse(this.embedded.updatePolicy(policyJson, now));
+      if (r.error) throw new Error(r.error);
+    }
+    this.sensor = sensor;
+    this.policyJson = policyJson;
+    this.policyVersion = Number(JSON.parse(policyJson).version ?? 0);
+    for (const v of this.verdicts.values()) if (!v.expires_at || v.expires_at > now) this.sensor.pushVerdict(JSON.stringify(v));
+    this.warm();
   }
 
   /** The sensor fast path: known attacks and cached verdicts, no round trip. */
@@ -36,6 +63,7 @@ export class Engine {
   }
 
   pushVerdict(v: Verdict): void {
+    if (v.entity) this.verdicts.set(`${v.entity.type}:${v.entity.id}`, v);
     this.sensor.pushVerdict(JSON.stringify(v));
   }
 

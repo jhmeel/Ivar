@@ -19,6 +19,20 @@ impl Core {
         Ok(Core { inner })
     }
 
+    /// Apply a newer verified PolicyContent without losing the trust graph,
+    /// risk, incidents or evidence. A policy the core refuses leaves the
+    /// current one in force. Returns the rules whose content changed.
+    pub fn update_policy(&mut self, policy_json: &str, now_ms: f64) -> String {
+        let policy: PolicyContent = match serde_json::from_str(policy_json) {
+            Ok(p) => p,
+            Err(e) => return err(e),
+        };
+        match self.inner.update_policy(policy, now_ms as i64) {
+            Ok(changed) => json!({ "applied": true, "changed_rules": changed }).to_string(),
+            Err(e) => err(e),
+        }
+    }
+
     /// Judge one SecurityEvent. Returns decision, verdicts, findings, actions and incidents.
     pub fn process(&mut self, event_json: &str, now_ms: f64) -> String {
         let ev: SecurityEvent = match serde_json::from_str(event_json) {

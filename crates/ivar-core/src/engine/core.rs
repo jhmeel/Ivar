@@ -21,7 +21,7 @@ use crate::trust::TrustGraph;
 use ivar_contracts::sign::KeyPair;
 use ivar_contracts::{DetectionMethod, EntityRef, Finding, PolicyContent, SecurityEvent, TimelineEntry, Verdict};
 use serde_json::json;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 /// Accounts this old or older count as established for the blast radius budget.
 const ESTABLISHED_AFTER_DAYS: u64 = 30;
@@ -57,6 +57,10 @@ pub struct DecisionCore<S: EvidenceStore = MemoryEvidenceStore> {
     signer: Option<KeyPair>,
     redactor: Redactor,
     containments: BTreeMap<String, u32>,
+    /// Distinct accounts seen behind each source address, up to the crowded
+    /// threshold. An address carrying many accounts is a proxy, gateway or
+    /// shared network, and is never contained (section 11.1).
+    accounts_by_ip: BTreeMap<String, BTreeSet<String>>,
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -82,6 +86,10 @@ fn challengeable(ev: &SecurityEvent) -> bool {
     matches!(ev.activity_name.as_str(), v::AUTH_LOGIN | v::AUTH_SIGNUP | v::AUTH_PASSWORD_RESET)
         || matches!(ev.ext().business_action.as_str(), "login" | "payout" | "password_reset")
 }
+
+/// Distinct accounts behind one address that mark it as shared.
+pub const CROWDED_ADDRESS_ACCOUNTS: usize = 10;
+const MAX_TRACKED_ADDRESSES: usize = 200_000;
 
 fn established(ev: &SecurityEvent) -> bool {
     let ext = ev.ext();
@@ -131,6 +139,7 @@ impl<S: EvidenceStore> DecisionCore<S> {
             redactor: Redactor::new(&opts.redaction_key),
             signer: opts.evidence_signer,
             containments: BTreeMap::new(),
+            accounts_by_ip: BTreeMap::new(),
             declared,
             graph,
             cedar,
@@ -244,6 +253,15 @@ impl<S: EvidenceStore> DecisionCore<S> {
         if let Some(u) = ev.actor.as_ref().and_then(|a| a.user.as_ref()) {
             if !u.uid.is_empty() {
                 self.budget.seen_user(&u.uid, now);
+                if let Some(ip) = ev.src_endpoint.as_ref().map(|s| s.ip.clone()).filter(|ip| !ip.is_empty()) {
+                    if self.accounts_by_ip.len() >= MAX_TRACKED_ADDRESSES && !self.accounts_by_ip.contains_key(&ip) {
+                        self.accounts_by_ip.clear();
+                    }
+                    let seen = self.accounts_by_ip.entry(ip).or_default();
+                    if seen.len() < CROWDED_ADDRESS_ACCOUNTS {
+                        seen.insert(u.uid.clone());
+                    }
+                }
             }
         }
         if ev.activity_name == v::SENSOR_HEARTBEAT {
@@ -364,7 +382,8 @@ impl<S: EvidenceStore> DecisionCore<S> {
             });
             for p in planned.iter_mut() {
                 let est = p.request.target.as_ref().map(|t| self.graph.node(&t.key()).map(|n| n.established).unwrap_or(false) || est).unwrap_or(est);
-                let outcome = review(p, &mut ReviewContext { assessment: &a, protected: &self.policy.protected_entities, shared: &self.shared, budget: &mut self.budget, established: est, now });
+                let crowded = p.request.target.as_ref().filter(|t| t.r#type == "ip").and_then(|t| self.accounts_by_ip.get(&t.id)).map(|s| s.len() >= CROWDED_ADDRESS_ACCOUNTS).unwrap_or(false);
+                let outcome = review(p, &mut ReviewContext { assessment: &a, protected: &self.policy.protected_entities, shared: &self.shared, crowded, budget: &mut self.budget, established: est, now });
                 match &outcome {
                     ReviewOutcome::Refused { reason } => {
                         reasons.push(format!("safeguard: {reason}"));
@@ -372,7 +391,21 @@ impl<S: EvidenceStore> DecisionCore<S> {
                             decision = if can_challenge { Decision::Challenge } else { Decision::Block };
                         }
                     }
-                    ReviewOutcome::Downgraded { reason, .. } | ReviewOutcome::NeedsApproval { reason } => reasons.push(format!("safeguard: {reason}")),
+                    // The verdict follows the safeguard: sensors enforce the
+                    // verdict, so a containment the safeguards downgraded or
+                    // held for a person must not reach them as a containment.
+                    ReviewOutcome::Downgraded { reason, to, .. } => {
+                        reasons.push(format!("safeguard: {reason}"));
+                        if decision == Decision::Contain {
+                            decision = if to == "throttle" { Decision::Throttle } else if can_challenge { Decision::Challenge } else { Decision::Block };
+                        }
+                    }
+                    ReviewOutcome::NeedsApproval { reason } => {
+                        reasons.push(format!("safeguard: {reason}"));
+                        if decision == Decision::Contain && p.request.ladder_level == 4 {
+                            decision = if can_challenge { Decision::Challenge } else { Decision::Block };
+                        }
+                    }
                     ReviewOutcome::Allowed => {}
                 }
                 let aid = self.seal(EvidenceKind::ActionRequest, now, "", json!({"request": p.request, "review": format!("{:?}", outcome), "needs_approval": p.needs_approval}));

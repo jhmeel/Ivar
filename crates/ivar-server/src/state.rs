@@ -43,6 +43,8 @@ pub struct Inner {
     pub pending: BTreeMap<String, PendingApproval>,
     pub metrics: Metrics,
     pub cedar: CedarPolicy,
+    /// Standing verdicts for every enforcement point (crate::feed).
+    pub feed: crate::feed::VerdictFeed,
 }
 
 pub struct AppState {
@@ -53,6 +55,10 @@ pub struct AppState {
     pub expected_layers: Vec<String>,
     pub shard: u32,
     pub shards: u32,
+    /// Signs ReplayBundles (section 13): the shard's evidence key, so the
+    /// deployment keyring lists it with the evidence and replay roles.
+    pub replay_key: ivar_contracts::sign::KeyPair,
+    policy_dir: Option<std::path::PathBuf>,
     outbound: mpsc::Sender<Outbound>,
     actions: mpsc::Sender<ActionRequest>,
 }
@@ -91,23 +97,68 @@ pub struct StartOptions {
     pub responders: Responders,
     pub shard: u32,
     pub shards: u32,
+    /// Where every applied policy bundle is kept by version. On restart the
+    /// core resumes at the newest verified one, so a policy an operator
+    /// pushed is never silently replaced by the older bundle in the config.
+    pub policy_dir: Option<std::path::PathBuf>,
+}
+
+/// Verified bundles kept in `dir`, as (version, archive, content).
+fn stored_policies(ring: &Keyring, dir: &std::path::Path) -> Vec<(u64, String, PolicyContent)> {
+    let mut out = Vec::new();
+    let Ok(entries) = std::fs::read_dir(dir) else { return out };
+    for e in entries.flatten() {
+        let path = e.path();
+        if path.extension().map(|x| x == "bundle").unwrap_or(false) {
+            if let Ok(text) = std::fs::read_to_string(&path) {
+                match verify_bundle(ring, &text, 0, now_ms()) {
+                    Ok(p) => out.push((p.version, text.trim().to_string(), p)),
+                    Err(e) => tracing::warn!(file = %path.display(), error = %e, "stored policy refused"),
+                }
+            }
+        }
+    }
+    out.sort_by_key(|(v, _, _)| *v);
+    out
+}
+
+fn store_policy(dir: &std::path::Path, version: u64, archive_b64: &str) -> std::io::Result<()> {
+    std::fs::create_dir_all(dir)?;
+    let tmp = dir.join(format!("{version}.bundle.tmp"));
+    std::fs::write(&tmp, archive_b64.trim())?;
+    std::fs::rename(tmp, dir.join(format!("{version}.bundle")))
 }
 
 impl AppState {
     pub fn start(o: StartOptions) -> anyhow::Result<Arc<Self>> {
-        let policy = verify_bundle(&o.keyring, &o.policy_archive_b64, 0, now_ms()).map_err(|e| anyhow::anyhow!("startup policy rejected: {e}"))?;
+        let configured = verify_bundle(&o.keyring, &o.policy_archive_b64, 0, now_ms()).map_err(|e| anyhow::anyhow!("startup policy rejected: {e}"))?;
+        let stored = o.policy_dir.as_deref().map(|d| stored_policies(&o.keyring, d)).unwrap_or_default();
+        let mut history: BTreeMap<u64, PolicyContent> = stored.iter().map(|(v, _, p)| (*v, p.clone())).collect();
+        history.entry(configured.version).or_insert_with(|| configured.clone());
+        let (policy, archive) = match stored.last() {
+            Some((v, a, p)) if *v > configured.version => {
+                tracing::info!(stored = v, configured = configured.version, "resuming at the newest verified policy");
+                (p.clone(), a.clone())
+            }
+            _ => (configured.clone(), o.policy_archive_b64.trim().to_string()),
+        };
+        if let Some(d) = &o.policy_dir {
+            store_policy(d, policy.version, &archive)?;
+        }
         let cedar = CedarPolicy::parse(&policy.cedar_policies).map_err(|e| anyhow::anyhow!(e.to_string()))?;
+        let replay_key = o.evidence_key.clone();
         let core = DecisionCore::with_store(policy.clone(), CoreOptions { evidence_signer: Some(o.evidence_key), redaction_key: o.redaction_key.clone() }, o.evidence)?;
         let (out_tx, out_rx) = mpsc::channel::<Outbound>();
         let (act_tx, act_rx) = mpsc::channel::<ActionRequest>();
         let state = Arc::new(AppState {
             inner: Mutex::new(Inner {
                 core,
-                policy_archive_b64: o.policy_archive_b64,
-                policy_history: [(policy.version, policy)].into_iter().collect(),
+                policy_archive_b64: archive,
+                policy_history: history,
                 pending: BTreeMap::new(),
                 metrics: Metrics::default(),
                 cedar,
+                feed: Default::default(),
             }),
             keyring: o.keyring,
             redaction_key: o.redaction_key,
@@ -115,6 +166,8 @@ impl AppState {
             expected_layers: o.expected_layers,
             shard: o.shard,
             shards: o.shards,
+            replay_key,
+            policy_dir: o.policy_dir,
             outbound: out_tx,
             actions: act_tx,
         });
@@ -177,6 +230,27 @@ impl AppState {
     }
 
     /// Judge a batch of events. Returns the verdicts for sensors to cache.
+    /// Ingest a batch and answer with its verdicts plus, when the sensor
+    /// sent a cursor, every standing verdict since it; returns the new cursor.
+    pub fn ingest_with_feed(&self, events: Vec<SecurityEvent>, cursor: Option<u64>) -> (u64, Vec<Verdict>, u64) {
+        let (accepted, mut verdicts) = self.ingest(events);
+        let g = self.inner.lock().expect("state");
+        if let Some(c) = cursor {
+            for v in g.feed.since(c, now_ms()) {
+                if !verdicts.iter().any(|x| x.verdict_id == v.verdict_id) {
+                    verdicts.push(v);
+                }
+            }
+        }
+        (accepted, verdicts, g.feed.cursor())
+    }
+
+    /// Standing verdicts since `cursor`, for a sensor polling while idle.
+    pub fn verdicts_since(&self, cursor: u64) -> (Vec<Verdict>, u64) {
+        let g = self.inner.lock().expect("state");
+        (g.feed.since(cursor, now_ms()), g.feed.cursor())
+    }
+
     pub fn ingest(&self, events: Vec<SecurityEvent>) -> (u64, Vec<Verdict>) {
         let started = std::time::Instant::now();
         let mut verdicts = Vec::new();
@@ -193,6 +267,7 @@ impl AppState {
             g.metrics.events_total += 1;
             for v in &out.verdicts {
                 *g.metrics.verdicts_by_decision.entry(v.decision.clone()).or_insert(0) += 1;
+                g.feed.push(v);
                 if v.decision != "record" {
                     self.emit(Outbound::Verdict { verdict: serde_json::to_value(v).unwrap_or_default() });
                 }
@@ -269,6 +344,11 @@ impl AppState {
         g.cedar = cedar;
         g.policy_archive_b64 = archive_b64.trim().to_string();
         let v = p.version;
+        if let Some(d) = &self.policy_dir {
+            if let Err(e) = store_policy(d, v, archive_b64) {
+                tracing::error!(error = %e, "applied policy could not be stored; a restart would resume at an older version");
+            }
+        }
         g.policy_history.insert(v, p);
         Ok(v)
     }

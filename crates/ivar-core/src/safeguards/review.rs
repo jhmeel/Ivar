@@ -19,6 +19,9 @@ pub struct ReviewContext<'a> {
     pub assessment: &'a RiskAssessment,
     pub protected: &'a [ProtectedEntity],
     pub shared: &'a SharedNetworks,
+    /// The target address carries many distinct accounts (a proxy, gateway or
+    /// shared network seen in traffic, not only the configured ranges).
+    pub crowded: bool,
     pub budget: &'a mut BlastRadiusBudget,
     pub established: bool,
     pub now: i64,
@@ -41,14 +44,16 @@ pub fn review(action: &mut PlannedAction, ctx: &mut ReviewContext) -> ReviewOutc
     if req.ladder_level >= 4 && r.independent_sources < 2 && !r.deception_hit {
         return ReviewOutcome::Refused { reason: "levels 4 and above need two independent sources".into() };
     }
-    // Shared networks: Carrier NAT ranges are throttled and never banned.
-    if req.action == "ip.ban" && ctx.shared.contains(&target.id) {
+    // Shared networks: Carrier NAT ranges, and any address carrying many
+    // accounts, are throttled and never banned or contained.
+    if target.r#type == "ip" && req.ladder_level >= 4 && (ctx.shared.contains(&target.id) || ctx.crowded) {
         let from = req.action.clone();
         req.action = "throttle".into();
         req.reversal_method = "throttle.lift".into();
         req.ladder_level = 1;
         req.expiry = crate::response::LADDER[1].expires_at(ctx.now, 0);
-        return ReviewOutcome::Downgraded { from, to: "throttle".into(), reason: "shared network: throttled, never banned".into() };
+        let why = if ctx.crowded && !ctx.shared.contains(&target.id) { "address carries many accounts" } else { "shared network" };
+        return ReviewOutcome::Downgraded { from, to: "throttle".into(), reason: format!("{why}: throttled, never banned") };
     }
     // Protected entities: partners, health checks and break glass admins need a person.
     if req.ladder_level >= 4 && ctx.protected.iter().any(|p| p.entity.key() == target.key()) {

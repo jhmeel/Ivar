@@ -100,6 +100,7 @@ async fn serve(cfg: ServerConfig) -> anyhow::Result<()> {
         responders,
         shard: cfg.shard,
         shards: cfg.shards,
+        policy_dir: Some(Path::new(&cfg.data_dir).join(format!("policies-{}", cfg.shard))),
     })?;
 
     // Tamper monitoring: a sensor silent for 60 seconds raises an alert.

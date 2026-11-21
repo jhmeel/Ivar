@@ -1,0 +1,10 @@
+{
+  "name": "ivar-live-demo-app",
+  "private": true,
+  "description": "A small payments API protected by the IVAR Express SDK, for the live test",
+  "main": "server.js",
+  "dependencies": {
+    "@ivar/express": "file:../../../sdk/node/express",
+    "express": "5.1.0"
+  }
+}

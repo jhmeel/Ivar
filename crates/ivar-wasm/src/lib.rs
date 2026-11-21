@@ -77,6 +77,10 @@ impl Core {
     pub fn tick(&mut self, now_ms: f64) -> String {
         self.0.tick(now_ms)
     }
+    #[wasm_bindgen(js_name = updatePolicy)]
+    pub fn update_policy(&mut self, policy_json: &str, now_ms: f64) -> String {
+        self.0.update_policy(policy_json, now_ms)
+    }
 }
 
 #[wasm_bindgen]

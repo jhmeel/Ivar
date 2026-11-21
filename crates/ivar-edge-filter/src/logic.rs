@@ -36,9 +36,15 @@ pub struct EdgeLogic {
     policy_label: String,
     budget: FailOpenBudget,
     outbox: EventBuffer<SecurityEvent>,
+    /// The batch sent and not yet acknowledged; requeued if the call fails.
+    unacked: Vec<SecurityEvent>,
+    /// Position in the core's verdict feed (see ivar-server feed).
+    verdict_cursor: u64,
     redactor: Redactor,
     seq: u64,
 }
+
+
 
 #[derive(Debug, PartialEq)]
 pub enum PolicyUpdate {
@@ -65,6 +71,8 @@ impl EdgeLogic {
         let mut logic = EdgeLogic {
             budget: FailOpenBudget::new(cfg.fail_open_budget_pct),
             outbox: EventBuffer::new(cfg.max_outbox),
+            unacked: Vec::new(),
+            verdict_cursor: 0,
             sensor: None,
             policy_version: 0,
             policy_label: String::new(),
@@ -217,12 +225,38 @@ impl EdgeLogic {
         }
         let events = self.outbox.drain();
         let dropped = std::mem::take(&mut self.outbox.dropped);
-        serde_json::to_vec(&serde_json::json!({ "sensor_id": self.cfg.sensor_id, "dropped": dropped, "events": events })).ok()
+        let body = serde_json::to_vec(&serde_json::json!({ "sensor_id": self.cfg.sensor_id, "dropped": dropped, "events": events, "verdict_cursor": self.verdict_cursor })).ok();
+        self.unacked = events;
+        body
     }
 
-    /// Verdicts from the core's ingest acknowledgement.
+    /// The last batch was not acknowledged (the core is down or answered an
+    /// error): put it back so it is sent again, oldest first.
+    pub fn requeue_unacked(&mut self) {
+        let mut pending = std::mem::take(&mut self.unacked);
+        pending.extend(self.outbox.drain());
+        for ev in pending {
+            self.outbox.push(ev);
+        }
+    }
+
+    /// The verdict feed request for a tick with no events to send.
+    pub fn feed_path(&self) -> String {
+        format!("/v1/verdicts?since={}", self.verdict_cursor)
+    }
+
+    /// The policy refresh request.
+    pub fn policy_path(&self) -> String {
+        format!("/v1/policy/bundle?have={}", self.policy_version)
+    }
+
+    /// Verdicts from the core's ingest acknowledgement or the verdict feed.
     pub fn apply_ack(&mut self, ack: &[u8]) -> usize {
+        self.unacked.clear();
         let Ok(v) = serde_json::from_slice::<serde_json::Value>(ack) else { return 0 };
+        if let Some(c) = v.get("verdict_cursor").and_then(|c| c.as_u64()) {
+            self.verdict_cursor = self.verdict_cursor.max(c);
+        }
         let verdicts: Vec<Verdict> = v.get("verdicts").and_then(|x| serde_json::from_value(x.clone()).ok()).unwrap_or_default();
         let n = verdicts.len();
         if let Some(s) = self.sensor.as_mut() {
@@ -336,4 +370,24 @@ mod tests {
         let (action, _) = l.on_request_body(&r, br#"{"role":"admin"}"#, 1_000);
         assert!(matches!(action, EdgeAction::Continue), "observe records, it never blocks");
     }
+
+    #[test]
+    fn unacknowledged_batches_are_requeued_and_the_feed_cursor_advances() {
+        let mut l = logic("enforce");
+        l.on_log(&req("/hello"), &[], 200, 1);
+        let first: serde_json::Value = serde_json::from_slice(&l.drain_outbox().unwrap()).unwrap();
+        assert_eq!(first["verdict_cursor"], 0);
+        l.requeue_unacked();
+        let again: serde_json::Value = serde_json::from_slice(&l.drain_outbox().unwrap()).unwrap();
+        assert_eq!(again["events"].as_array().unwrap().len(), 1, "the lost batch is sent again");
+        let ack = serde_json::json!({"verdicts": [{"verdict_id": "vrd_9", "decision": "contain", "mode": "enforce", "entity": {"type": "ip", "id": "198.51.100.9"}, "expires_at": 0}], "verdict_cursor": 42});
+        assert_eq!(l.apply_ack(ack.to_string().as_bytes()), 1);
+        assert!(l.drain_outbox().is_none(), "acknowledged: nothing left to resend");
+        assert_eq!(l.feed_path(), "/v1/verdicts?since=42");
+        assert_eq!(l.policy_path(), "/v1/policy/bundle?have=5");
+        let mut r = req("/hello");
+        r.client_ip = "198.51.100.9".into();
+        assert!(matches!(l.on_request_headers(&r, 5), EdgeAction::Respond { status: 403, .. }), "a containment learned from the feed is enforced");
+    }
 }
+

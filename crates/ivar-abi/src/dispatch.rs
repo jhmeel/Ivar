@@ -74,6 +74,7 @@ pub fn handle(input: &[u8]) -> String {
         "core.evidence" => with(handle, |o| match o { Object::Core(c) => c.evidence(), _ => wrong("core") }),
         "core.incidents" => with(handle, |o| match o { Object::Core(c) => c.incidents(), _ => wrong("core") }),
         "core.drift" => with(handle, |o| match o { Object::Core(c) => c.drift(), _ => wrong("core") }),
+        "core.update_policy" => with(handle, |o| match o { Object::Core(c) => c.update_policy(&j(&a, "policy"), n(&a, "now_ms")), _ => wrong("core") }),
         "core.tick" => with(handle, |o| match o { Object::Core(c) => c.tick(n(&a, "now_ms")), _ => wrong("core") }),
         "sensor.new" => api::LocalSensor::new(&j(&a, "policy")).map(|c| store(Object::Sensor(c))),
         "sensor.decide" => with(handle, |o| match o { Object::Sensor(c) => c.decide(&j(&a, "event"), n(&a, "now_ms")), _ => wrong("sensor") }),

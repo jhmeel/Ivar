@@ -1,0 +1,22 @@
+# Live test policy. Version and detection mode are set by the live test
+# script; everything else is the deployment's real source.
+version: 1
+policy_version: live-1
+profile: payments
+valid_days: 7
+operator_decisions_file: operator-decisions.yaml
+settings:
+  detection_mode: observe
+intent_binding:
+  payout: enforce
+shared_networks: ["100.64.0.0/10"]
+# Decoys placed from the trust graph (section 10.3): the default env file
+# decoy plus a billing export route no real client calls. The full default
+# list is restated because the source replaces it.
+decoys:
+  - { decoy_id: dcy_route_env, kind: route, marker: /.env.backup, issued_context: "*", protects: edge }
+  - { decoy_id: dcy_tool_export, kind: decoy_tool, marker: export_all_customers, issued_context: "*", protects: ai_gateway }
+  - { decoy_id: dcy_route_billing, kind: route, marker: /internal/billing-export, issued_context: "*", protects: payments-api }
+declarations:
+  - kind: openapi
+    file: openapi.yaml

@@ -27,6 +27,7 @@ pub fn router(state: Arc<AppState>) -> Router {
         .route("/healthz", get(|| async { "ok" }))
         .route("/metrics", get(metrics))
         .route("/v1/events", post(events))
+        .route("/v1/verdicts", get(verdicts))
         .route("/v1/adapters/{engine}", post(adapter))
         .route("/v1/sink-decisions", post(sink_decision))
         .route("/v1/policy/bundle", get(policy_bundle))
@@ -49,6 +50,15 @@ fn err(code: StatusCode, msg: impl ToString) -> Response {
 struct Batch {
     #[serde(default)]
     events: Vec<Value>,
+    /// The sensor's position in the verdict feed; see crate::feed.
+    #[serde(default)]
+    verdict_cursor: Option<u64>,
+}
+
+#[derive(Deserialize)]
+struct Since {
+    #[serde(default)]
+    since: u64,
 }
 
 async fn events(State(s): S, Json(b): Json<Batch>) -> Response {
@@ -61,8 +71,15 @@ async fn events(State(s): S, Json(b): Json<Batch>) -> Response {
         }
     }
     let st = s.clone();
-    let (accepted, verdicts) = tokio::task::spawn_blocking(move || st.ingest(evs)).await.unwrap_or_default();
-    Json(json!({ "accepted": accepted, "verdicts": verdicts })).into_response()
+    let cursor = b.verdict_cursor;
+    let (accepted, verdicts, next) = tokio::task::spawn_blocking(move || st.ingest_with_feed(evs, cursor)).await.unwrap_or_default();
+    Json(json!({ "accepted": accepted, "verdicts": verdicts, "verdict_cursor": next })).into_response()
+}
+
+/// Standing verdicts for a sensor that has no events to send.
+async fn verdicts(State(s): S, Query(q): Query<Since>) -> Response {
+    let (verdicts, next) = s.verdicts_since(q.since);
+    Json(json!({ "accepted": 0, "verdicts": verdicts, "verdict_cursor": next })).into_response()
 }
 
 async fn adapter(State(s): S, Path(engine): Path<String>, body: String) -> Response {
@@ -179,7 +196,7 @@ async fn replay(State(s): S, h: HeaderMap, Path(id): Path<String>, Query(q): Que
             keyring: Some(&st.keyring),
             redaction_key: st.redaction_key.clone(),
             expected_layers: layers,
-            signer: None,
+            signer: Some(&st.replay_key),
             policy_history: later,
         })
     })

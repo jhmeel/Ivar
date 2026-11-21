@@ -7,6 +7,7 @@
 
 pub use ivar_sensor_kit::adapters;
 pub mod config;
+pub mod feed;
 pub mod grpc;
 pub mod http;
 pub mod responders;

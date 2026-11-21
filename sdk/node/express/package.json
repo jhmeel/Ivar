@@ -2,8 +2,8 @@
   "name": "@ivar/express",
   "version": "0.1.0",
   "description": "IVAR application SDK for Express: observe first, enforce per control, intent bound action sinks",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "license": "Apache-2.0",
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -20,5 +20,8 @@
     "@types/node": "22.15.30",
     "express": "5.1.0",
     "typescript": "5.8.3"
-  }
+  },
+  "files": [
+    "dist/src"
+  ]
 }

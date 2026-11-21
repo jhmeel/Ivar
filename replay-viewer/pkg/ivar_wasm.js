@@ -118,6 +118,26 @@ export class Core {
             wasm.__wbindgen_free(deferred1_0, deferred1_1, 1);
         }
     }
+    /**
+     * @param {string} policy_json
+     * @param {number} now_ms
+     * @returns {string}
+     */
+    updatePolicy(policy_json, now_ms) {
+        let deferred3_0;
+        let deferred3_1;
+        try {
+            const val2 = +now_ms;
+            const ptr0 = passStringToWasm0(policy_json, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+            const len0 = WASM_VECTOR_LEN;
+            const ret = wasm.core_updatePolicy(this.__wbg_ptr, ptr0, len0, val2);
+            deferred3_0 = ret[0];
+            deferred3_1 = ret[1];
+            return getStringFromWasm0(ret[0], ret[1]);
+        } finally {
+            wasm.__wbindgen_free(deferred3_0, deferred3_1, 1);
+        }
+    }
 }
 if (Symbol.dispose) Core.prototype[Symbol.dispose] = Core.prototype.free;
 

@@ -10,6 +10,7 @@ export class Core {
     constructor(policy_json: string, redaction_key_hex: string);
     process(event_json: string, now_ms: number): string;
     tick(now_ms: number): string;
+    updatePolicy(policy_json: string, now_ms: number): string;
 }
 
 export class LocalSensor {
@@ -66,6 +67,7 @@ export interface InitOutput {
     readonly core_new: (a: number, b: number, c: number, d: number) => [number, number, number];
     readonly core_process: (a: number, b: number, c: number, d: number) => [number, number];
     readonly core_tick: (a: number, b: number) => [number, number];
+    readonly core_updatePolicy: (a: number, b: number, c: number, d: number) => [number, number];
     readonly defaultPolicy: (a: number) => [number, number];
     readonly engineVersion: () => [number, number];
     readonly localsensor_decide: (a: number, b: number, c: number, d: number) => [number, number];

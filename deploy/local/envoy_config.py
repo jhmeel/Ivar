@@ -87,7 +87,7 @@ config = {
                 },
             }]}],
         }],
-        "clusters": [cluster("app", 9000), cluster("ivar_core", 8080), cluster("ivar_control", 8090)],
+        "clusters": [cluster("app", int(os.environ.get("APP_PORT", "9000"))), cluster("ivar_core", 8080), cluster("ivar_control", 8090)],
     },
 }
 print(json.dumps(config, indent=2))

@@ -56,6 +56,19 @@ impl SensorPolicy {
         }
     }
 
+    /// Whether a core verdict applies to the entity's later requests. Level 3
+    /// blocks only the request it judged (reversal none, per request), so it
+    /// never carries over; containment (level 4) holds until it expires or
+    /// is reversed; throttles and challenges carry over only while they have
+    /// an expiry, so no response short of containment is open ended.
+    fn carries_over(v: &Verdict, now: i64) -> bool {
+        match v.decision.as_str() {
+            "contain" => v.expires_at == 0 || v.expires_at > now,
+            "throttle" | "challenge" => v.expires_at > now,
+            _ => false,
+        }
+    }
+
     pub fn push_verdict(&mut self, v: Verdict) {
         if let Some(e) = &v.entity {
             self.verdicts.insert(e.key(), v);
@@ -86,7 +99,7 @@ impl SensorPolicy {
         let entity = EntityRef::actor("ip", &ip);
         for key in crate::detect::actor_entities(ev).iter().map(|e| e.key()) {
             if let Some(v) = self.verdicts.get(&key) {
-                if (v.expires_at == 0 || v.expires_at > now) && matches!(v.decision.as_str(), "contain" | "block" | "throttle" | "challenge") {
+                if Self::carries_over(v, now) {
                     return LocalDecision::Cached(v.clone());
                 }
             }

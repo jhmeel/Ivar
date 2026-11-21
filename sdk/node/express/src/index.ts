@@ -16,12 +16,14 @@ import { buildEvent, EventContext, OCSF_API_ACTIVITY, OCSF_AUTHENTICATION, OCSF_
 import { INTENT_HEADER } from './intent';
 import { ActionSink, SinkDecision, SinkRequest } from './sink';
 import { HttpTransport, Transport } from './transport';
-import type { Alert, GuardOptions, IvarOptions, IntentKeys, Verdict } from './types';
+import { initialPolicy, persistPolicy, PolicyRefresher } from './policy';
+import type { Alert, GuardOptions, IvarOptions, IntentKeys, PolicyStatus, Verdict } from './types';
 
 export * from './types';
 export { mintIntent, attestStep, narrowIntent, stepPublicKey, INTENT_HEADER } from './intent';
 export { ActionSink } from './sink';
 export { keyedHash } from './redact';
+export { verifyBundle } from './policy';
 
 export interface RequestIvar {
   /** Report a login attempt so spraying and takeover can be correlated. */
@@ -45,11 +47,45 @@ export interface IvarMiddleware extends RequestHandler {
   /** Action sink middleware: intent binding, consequence invariants and time locks. */
   guard(action: string, keys: IntentKeys, options?: GuardOptions): RequestHandler;
   engine: Engine;
+  /** The policy in force and where it came from. */
+  policy(): PolicyStatus;
+  /** Poll the control plane now; resolves true when a newer signed policy was applied. */
+  refreshPolicy(): Promise<boolean>;
   /** Stop timers and flush. */
   close(): void;
 }
 
 const DEFAULT_ADMIN_PREFIXES = ['/admin'];
+/** Distinct identities behind one client address that suggest the address is a proxy. */
+const CROWDED_IDENTITIES = 10;
+
+/**
+ * Phase 1 exit test: the real client IP is verified. Raises one alert when
+ * forwarded headers arrive but Express does not trust a proxy, or when many
+ * identities share one client address, both signs that every request is
+ * attributed to the proxy rather than to the person behind it.
+ */
+function clientIpCheck(alert: (a: Alert) => void) {
+  let warned = false;
+  const byIp = new Map<string, Set<string>>();
+  return (req: Request, identity: string | undefined | null) => {
+    if (warned) return;
+    if (req.headers['x-forwarded-for'] && !req.app.get('trust proxy')) {
+      warned = true;
+      alert({ kind: 'client_ip_unverified', message: "X-Forwarded-For arrives but Express does not trust a proxy: set app.set('trust proxy', <your gateway address>) so the real client IP is used" });
+      return;
+    }
+    if (!identity || !req.ip) return;
+    if (byIp.size > 10_000) byIp.clear();
+    const seen = byIp.get(req.ip) ?? new Set<string>();
+    seen.add(identity);
+    byIp.set(req.ip, seen);
+    if (seen.size >= CROWDED_IDENTITIES) {
+      warned = true;
+      alert({ kind: 'client_ip_unverified', message: `${seen.size} identities share client address ${req.ip}: it is probably a proxy; check 'trust proxy' covers every gateway hop`, details: { ip: req.ip } });
+    }
+  };
+}
 
 function alertSink(opts: IvarOptions): (a: Alert) => void {
   return opts.onAlert ?? ((a) => console.error(`[ivar] ${a.kind}: ${a.message}`));
@@ -59,16 +95,25 @@ export function ivar(opts: IvarOptions): IvarMiddleware {
   const alert = alertSink(opts);
   const budget = opts.budgetMs ?? 1;
   const adminPrefixes = opts.adminPrefixes ?? DEFAULT_ADMIN_PREFIXES;
-  const engine = new Engine(opts.policy, opts.redactionKey ?? '', !opts.coreUrl);
+  const source = { bundle: opts.policyBundle, keyring: opts.policyKeyring, controlUrl: opts.controlUrl, refreshMs: opts.policyRefreshMs, stateFile: opts.policyStateFile, sensorId: opts.sensorId ?? 'express-sdk' };
+  const signed = initialPolicy(source, alert);
+  const engine = new Engine(signed?.json ?? opts.policy, opts.redactionKey ?? '', !opts.coreUrl);
+  if (signed) persistPolicy(source.stateFile, signed.archive);
+  const parsedPolicy = JSON.parse(engine.policyJson);
+  let status: PolicyStatus = { version: engine.policyVersion, policyVersion: String(parsedPolicy.policy_version ?? ''), source: signed?.source ?? (opts.policy ? 'options' : 'default') };
+  const refresher = new PolicyRefresher(engine, source, alert, (s) => (status = s));
+  refresher.start();
   const transport: Transport | undefined = opts.coreUrl
     ? new HttpTransport(opts.coreUrl, opts.sensorId ?? 'express-sdk', (vs) => vs.forEach((v) => engine.pushVerdict(v)))
     : undefined;
 
   const submit = (event: Record<string, unknown>) => {
     // Scoring runs off the request path.
+    const activity = String(event.activity_name ?? '');
+    const urgent = activity.startsWith('auth.') || activity === 'business.action';
     setImmediate(() => {
       try {
-        if (transport) transport.send(event);
+        if (transport) transport.send(event, urgent);
         else engine.process(event, Date.now());
       } catch (e) {
         alert({ kind: 'sdk_fault', message: String(e) });
@@ -77,6 +122,7 @@ export function ivar(opts: IvarOptions): IvarMiddleware {
   };
 
   const report = (req: Request, ctx: EventContext) => submit(buildEvent(req, opts, ctx, Date.now()));
+  const checkClientIp = clientIpCheck(alert);
 
   const apply = (req: Request, res: Response, next: NextFunction, v: Verdict): void => {
     req.ivar!.verdict = v;
@@ -102,6 +148,7 @@ export function ivar(opts: IvarOptions): IvarMiddleware {
     const started = performance.now();
     const admin = adminPrefixes.some((p) => req.path.startsWith(p));
     req.ivarRequestId = (req.headers['x-request-id'] as string | undefined) ?? randomUUID();
+    checkClientIp(req, opts.identity(req));
     req.ivar = {
       login: (r) => report(req, { activity: 'auth.login', classUid: OCSF_AUTHENTICATION, success: r.success, target: `user:${r.account}` }),
       signup: (r) => report(req, { activity: 'auth.signup', classUid: OCSF_AUTHENTICATION, success: r.success, target: r.account ? `user:${r.account}` : undefined }),
@@ -133,14 +180,26 @@ export function ivar(opts: IvarOptions): IvarMiddleware {
   }) as IvarMiddleware;
 
   middleware.engine = engine;
-  middleware.close = () => transport?.close();
+  middleware.policy = () => status;
+  middleware.refreshPolicy = () => refresher.refresh();
+  middleware.close = () => {
+    refresher.stop();
+    transport?.close();
+  };
 
   middleware.guard = (action: string, keys: IntentKeys, g: GuardOptions = {}) => {
     const policy = JSON.parse(engine.policyJson);
     const perAction: Record<string, string> = { ...(policy.intent_binding ?? {}) };
     if (g.intentBinding) perAction[action] = g.intentBinding;
     const sink = new ActionSink(keys, policy.invariants ?? [], perAction[action] === undefined ? 'observe' : (perAction[action] as 'off' | 'observe' | 'enforce'), perAction);
+    let seenVersion = engine.policyVersion;
     return (req: Request, res: Response, next: NextFunction) => {
+      if (engine.policyVersion !== seenVersion && !g.intentBinding) {
+        // A newer signed policy arrived: follow its INTENT_BINDING for this action.
+        const mode = (JSON.parse(engine.policyJson).intent_binding ?? {})[action] as 'off' | 'observe' | 'enforce' | undefined;
+        sink.setMode(action, mode ?? 'observe');
+        seenVersion = engine.policyVersion;
+      }
       const subject = g.subject?.(req) ?? opts.session?.(req) ?? opts.identity(req) ?? '';
       const sreq: SinkRequest = {
         action,

@@ -2,8 +2,9 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import express from 'express';
 import type { AddressInfo } from 'node:net';
+import http from 'node:http';
 import * as core from '@ivar/core-wasm';
-import { ivar, mintIntent, attestStep, stepPublicKey, INTENT_HEADER } from '../src/index';
+import { ivar, mintIntent, attestStep, stepPublicKey, INTENT_HEADER, Alert } from '../src/index';
 
 /** The spec default policy with DETECTION_MODE enforce. */
 function enforcePolicy(): unknown {
@@ -120,4 +121,60 @@ test('local decision stays inside the latency budget', async () => {
   console.log(`local decision p99 ${p99.toFixed(3)} ms`);
   assert.ok(p99 < 1, `p99 ${p99}`);
   mw.close();
+});
+
+test('an unverified client IP raises an alert once', async () => {
+  const alerts: Alert[] = [];
+  const app = express();
+  const mw = ivar({ mode: 'observe', identity: () => 'u1', onAlert: (a) => alerts.push(a) });
+  app.use(mw);
+  app.get('/hello', (_req, res) => res.send('hi'));
+  await withServer(app, mw, async (url) => {
+    await fetch(`${url}/hello`, { headers: { 'x-forwarded-for': '203.0.113.5' } });
+    await fetch(`${url}/hello`, { headers: { 'x-forwarded-for': '203.0.113.6' } });
+  });
+  assert.equal(alerts.filter((a) => a.kind === 'client_ip_unverified').length, 1);
+
+  const crowded: Alert[] = [];
+  const app2 = express();
+  app2.set('trust proxy', 'loopback');
+  let n = 0;
+  const mw2 = ivar({ mode: 'observe', identity: () => `user${n++}`, onAlert: (a) => crowded.push(a) });
+  app2.use(mw2);
+  app2.get('/hello', (_req, res) => res.send('hi'));
+  await withServer(app2, mw2, async (url) => {
+    for (let i = 0; i < 12; i++) await fetch(`${url}/hello`, { headers: { 'x-forwarded-for': '192.0.2.2' } });
+  });
+  assert.ok(crowded.some((a) => a.kind === 'client_ip_unverified' && /192\.0\.2\.2/.test(a.message)), 'many identities behind one address');
+});
+
+test('verdicts caused by other sensors reach the app through the feed', async () => {
+  const contain = { verdict_id: 'vrd_feed', decision: 'contain', entity: { type: 'ip', id: '198.51.100.31', role: 0 }, risk: 1, reasons: ['deception'], sources: ['edge'], policy_version: 'x', expires_at: 0, mode: 'enforce', ladder_level: 4 };
+  let polls = 0;
+  const core = http.createServer((req, res) => {
+    if (req.url?.startsWith('/v1/verdicts')) {
+      polls += 1;
+      res.writeHead(200, { 'content-type': 'application/json' }).end(JSON.stringify({ verdicts: [contain], verdict_cursor: 7 }));
+      return;
+    }
+    req.resume();
+    req.on('end', () => res.writeHead(200, { 'content-type': 'application/json' }).end(JSON.stringify({ accepted: 0, verdicts: [], verdict_cursor: 7 })));
+  });
+  await new Promise<void>((r) => core.listen(0, () => r()));
+  const app = express();
+  app.set('trust proxy', 'loopback');
+  const mw = ivar({ mode: 'enforce', policy: enforcePolicy(), coreUrl: `http://127.0.0.1:${(core.address() as AddressInfo).port}`, identity: () => undefined, onAlert: () => {} });
+  app.use(mw);
+  app.get('/hello', (_req, res) => res.send('hi'));
+  try {
+    await withServer(app, mw, async (url) => {
+      await sleep(1300);
+      assert.ok(polls >= 1, 'the idle SDK polled the feed');
+      assert.equal((await fetch(`${url}/hello`, { headers: { 'x-forwarded-for': '198.51.100.31' } })).status, 403, 'contained by a verdict another sensor caused');
+      assert.equal((await fetch(`${url}/hello`, { headers: { 'x-forwarded-for': '198.51.100.32' } })).status, 200);
+    });
+  } finally {
+    core.closeAllConnections();
+    core.close();
+  }
 });

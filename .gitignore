@@ -13,3 +13,5 @@ sdk/dotnet/**/bin/
 sdk/dotnet/**/obj/
 sdk/node/core-wasm/
 .build-ca.crt
+deploy/live/.state/
+deploy/live/app/node_modules/

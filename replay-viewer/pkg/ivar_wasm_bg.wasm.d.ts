@@ -12,6 +12,7 @@ export const core_incidents: (a: number) => [number, number];
 export const core_new: (a: number, b: number, c: number, d: number) => [number, number, number];
 export const core_process: (a: number, b: number, c: number, d: number) => [number, number];
 export const core_tick: (a: number, b: number) => [number, number];
+export const core_updatePolicy: (a: number, b: number, c: number, d: number) => [number, number];
 export const defaultPolicy: (a: number) => [number, number];
 export const engineVersion: () => [number, number];
 export const localsensor_decide: (a: number, b: number, c: number, d: number) => [number, number];

@@ -1,0 +1,55 @@
+openapi: 3.0.3
+info: { title: Payments API (live test), version: "1.0" }
+paths:
+  /login:
+    post:
+      x-ivar-action: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties: { email: { type: string }, password: { type: string } }
+  /accounts/{id}:
+    get:
+      x-ivar-action: account.read
+  /users/{id}:
+    patch:
+      x-ivar-action: profile.update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                role: { type: string, x-ivar-privileged: true }
+  /payouts/intent:
+    post:
+      x-ivar-action: payout.intent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties: { amount: { type: number } }
+  /payouts:
+    post:
+      x-ivar-action: payout
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties: { amount: { type: number } }
+  /admin/users:
+    get:
+      x-ivar-action: admin.read
+      x-ivar-roles: [admin]
+  /healthz:
+    get: {}
+  /ivar/policy:
+    get: {}

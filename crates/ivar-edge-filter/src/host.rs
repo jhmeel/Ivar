@@ -11,18 +11,25 @@ use std::time::{Duration, UNIX_EPOCH};
 
 proxy_wasm::main! {{
     proxy_wasm::set_log_level(LogLevel::Info);
-    proxy_wasm::set_root_context(|_| -> Box<dyn RootContext> { Box::new(Root { logic: None, pending: None }) });
+    proxy_wasm::set_root_context(|_| -> Box<dyn RootContext> { Box::new(Root { logic: None, core_call: None, control_call: None }) });
 }}
 
-#[derive(Clone, Copy, PartialEq)]
-enum Pending {
-    Events(u32),
-    Policy(u32),
+/// What a call to the core was for: a failed event batch is requeued, a
+/// failed feed poll is simply retried on the next tick.
+#[derive(Debug, Clone, Copy, PartialEq)]
+enum CoreCall {
+    Events,
+    Feed,
 }
 
 struct Root {
     logic: Option<Rc<RefCell<EdgeLogic>>>,
-    pending: Option<Pending>,
+    /// One call to the core at a time: an event batch or, when idle, the
+    /// verdict feed. Both answer with verdicts and the feed cursor.
+    core_call: Option<(u32, CoreCall)>,
+    /// One policy refresh from the control plane at a time, every tick, so
+    /// every gateway worker converges on a new signed policy quickly.
+    control_call: Option<u32>,
 }
 
 fn now_ms(ctx: &dyn Context) -> i64 {
@@ -38,22 +45,26 @@ impl Context for Root {
         // answered by the gateway itself) is ignored and the last signed
         // policy stays in force.
         let status = self.get_http_call_response_header(":status").unwrap_or_default();
-        let pending = self.pending.take();
-        if status != "200" {
-            if status != "204" {
-                log::warn!("ivar: call answered {status}, keeping the current state");
-            }
-            return;
-        }
-        let Some(logic) = &self.logic else { return };
-        match pending {
-            Some(Pending::Events(t)) if t == token => {
+        let Some(logic) = self.logic.clone() else { return };
+        if self.core_call.as_ref().map(|(t, _)| *t) == Some(token) {
+            let (_, kind) = self.core_call.take().expect("core call");
+            if status == "200" {
                 let n = logic.borrow_mut().apply_ack(&body);
                 if n > 0 {
                     log::info!("ivar: applied {n} core verdicts");
                 }
+            } else {
+                log::warn!("ivar: core answered {status}, keeping the current state");
+                if kind == CoreCall::Events {
+                    logic.borrow_mut().requeue_unacked();
+                }
             }
-            Some(Pending::Policy(t)) if t == token => {
+        } else if self.control_call == Some(token) {
+            self.control_call = None;
+            // A 204 means the policy is current; anything else but a 200 (an
+            // unreachable control plane answered by the gateway itself) is
+            // ignored and the last signed policy stays in force.
+            if status == "200" {
                 let text = String::from_utf8_lossy(&body).to_string();
                 if !text.trim().is_empty() {
                     match logic.borrow_mut().apply_bundle(&text, now) {
@@ -61,8 +72,9 @@ impl Context for Root {
                         crate::logic::PolicyUpdate::Rejected { reason } => log::warn!("ivar: policy update rejected, current policy kept: {reason}"),
                     }
                 }
+            } else if status != "204" {
+                log::warn!("ivar: control plane answered {status}, keeping the current policy");
             }
-            _ => {}
         }
     }
 }
@@ -85,29 +97,42 @@ impl RootContext for Root {
 
     fn on_tick(&mut self) {
         let Some(logic) = self.logic.clone() else { return };
-        if self.pending.is_some() {
-            return;
-        }
-        let (cluster, authority, batch) = {
-            let mut l = logic.borrow_mut();
-            (l.cfg.core_cluster.clone(), l.cfg.core_authority.clone(), l.drain_outbox())
-        };
-        if let Some(body) = batch {
-            let headers = vec![(":method", "POST"), (":path", "/v1/events"), (":authority", authority.as_str()), ("content-type", "application/json")];
-            match self.dispatch_http_call(&cluster, headers, Some(&body), vec![], Duration::from_secs(2)) {
-                Ok(t) => self.pending = Some(Pending::Events(t)),
-                Err(e) => log::warn!("ivar: core unreachable, keeping last signed policy: {e:?}"),
+        if self.core_call.is_none() {
+            let (cluster, authority, batch) = {
+                let mut l = logic.borrow_mut();
+                (l.cfg.core_cluster.clone(), l.cfg.core_authority.clone(), l.drain_outbox())
+            };
+            match batch {
+                Some(body) => {
+                    let headers = vec![(":method", "POST"), (":path", "/v1/events"), (":authority", authority.as_str()), ("content-type", "application/json")];
+                    match self.dispatch_http_call(&cluster, headers, Some(&body), vec![], Duration::from_secs(2)) {
+                        Ok(t) => self.core_call = Some((t, CoreCall::Events)),
+                        Err(e) => {
+                            logic.borrow_mut().requeue_unacked();
+                            log::warn!("ivar: core unreachable, keeping last signed policy: {e:?}");
+                        }
+                    }
+                }
+                None => {
+                    // Nothing to send: fetch standing verdicts, since each
+                    // gateway worker keeps its own cache.
+                    let path = logic.borrow().feed_path();
+                    let headers = vec![(":method", "GET"), (":path", path.as_str()), (":authority", authority.as_str())];
+                    if let Ok(t) = self.dispatch_http_call(&cluster, headers, None, vec![], Duration::from_secs(2)) {
+                        self.core_call = Some((t, CoreCall::Feed));
+                    }
+                }
             }
-            return;
         }
-        let (cluster, authority, version) = {
-            let l = logic.borrow();
-            (l.cfg.control_cluster.clone(), l.cfg.control_authority.clone(), l.policy_version().0)
-        };
-        let path = format!("/v1/policy/bundle?have={version}");
-        let headers = vec![(":method", "GET"), (":path", path.as_str()), (":authority", authority.as_str())];
-        if let Ok(t) = self.dispatch_http_call(&cluster, headers, None, vec![], Duration::from_secs(2)) {
-            self.pending = Some(Pending::Policy(t));
+        if self.control_call.is_none() {
+            let (cluster, authority, path) = {
+                let l = logic.borrow();
+                (l.cfg.control_cluster.clone(), l.cfg.control_authority.clone(), l.policy_path())
+            };
+            let headers = vec![(":method", "GET"), (":path", path.as_str()), (":authority", authority.as_str())];
+            if let Ok(t) = self.dispatch_http_call(&cluster, headers, None, vec![], Duration::from_secs(2)) {
+                self.control_call = Some(t);
+            }
         }
     }
 

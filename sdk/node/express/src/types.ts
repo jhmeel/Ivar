@@ -17,8 +17,19 @@ export interface IvarOptions {
   tenant?: (req: Request) => string | undefined;
   /** Core ingest endpoint. When unset, the core runs embedded in this process. */
   coreUrl?: string;
-  /** Verified PolicyContent. Defaults to the spec default policy. */
+  /** Verified PolicyContent. Defaults to the spec default policy. Prefer policyBundle. */
   policy?: unknown;
+  /** Signed policy bundle (base64 archive from ivar-control build), verified before use. */
+  policyBundle?: string;
+  /** Trusted policy keys (the keyring JSON) that policyBundle and refreshes must verify against. */
+  policyKeyring?: unknown;
+  /** Control plane URL. The SDK polls it for newer signed policy, so a signed change such as
+   *  DETECTION_MODE or the runtime posture reaches the app with no deploy. */
+  controlUrl?: string;
+  /** Poll period for controlUrl, milliseconds. Defaults to 30 seconds. */
+  policyRefreshMs?: number;
+  /** Where the last verified bundle is kept, so a restart while the control plane is down keeps it. */
+  policyStateFile?: string;
   /** Deployment key for keyed identifier hashes, hex. */
   redactionKey?: string;
   sensorId?: string;
@@ -33,7 +44,7 @@ export interface IvarOptions {
 }
 
 export interface Alert {
-  kind: 'sdk_fault' | 'fail_open' | 'action_refused' | 'invariant_breach' | 'time_lock' | 'budget_exceeded';
+  kind: 'sdk_fault' | 'fail_open' | 'action_refused' | 'invariant_breach' | 'time_lock' | 'budget_exceeded' | 'policy_applied' | 'policy_rejected' | 'client_ip_unverified';
   message: string;
   details?: unknown;
 }
@@ -61,6 +72,12 @@ export interface GuardOptions {
   /** The subject the intent was minted for. Defaults to the session, then the identity. */
   subject?: (req: Request) => string | undefined;
   payload?: (req: Request) => unknown;
+}
+
+export interface PolicyStatus {
+  version: number;
+  policyVersion: string;
+  source: 'default' | 'options' | 'bundle' | 'state_file' | 'control_plane';
 }
 
 export interface IntentKeys {
