@@ -20,6 +20,7 @@
 </p>
 
 <p align="center">
+  <a href="#installation">Install</a> ·
   <a href="#quick-start">Quick start</a> ·
   <a href="#architecture">Architecture</a> ·
   <a href="#integrating-ivar">Integrations</a> ·
@@ -44,6 +45,7 @@ bulk exports only execute with a valid intent chain behind them.
 
 - [Why IVAR](#why-ivar)
 - [Architecture](#architecture)
+- [Installation](#installation)
 - [Quick start](#quick-start)
 - [Integrating IVAR](#integrating-ivar)
 - [The console](#the-console)
@@ -139,6 +141,75 @@ DETECTION_MODE is signed runtime policy. A sensor blocks only when its own
 mode and the verified policy both say enforce, so a sensor installed in
 observe for rollout phase 1 never blocks, and a signed observe policy stops
 every sensor from blocking with no deploy.
+
+## Installation
+
+Everything is published from this repository: there is nothing to install
+from npm, PyPI, Maven Central, Packagist or NuGet. Each tagged version has a
+[GitHub Release](https://github.com/jhmeel/Ivar/releases) with every package,
+the binaries and the WebAssembly modules (with a `SHA256SUMS` file), and
+container images in GitHub's registry under `ghcr.io/jhmeel/ivar`.
+
+| Component | Install |
+|---|---|
+| Node.js SDK | `npm install https://github.com/jhmeel/Ivar/releases/download/v0.1.0/ivar-express-0.1.0.tgz` |
+| Python SDK | `pip install https://github.com/jhmeel/Ivar/releases/download/v0.1.0/ivar-0.1.0-py3-none-any.whl` |
+| Go SDK | `go get github.com/jhmeel/ivar/sdk/go@v0.1.0` |
+| Java SDK | the jar and pom from the release, installed into your local Maven repository (below) |
+| PHP SDK | the zip from the release, through a Composer `package` repository (below) |
+| .NET SDK | the `.nupkg` from the release, added from a local folder (below) |
+| Core, control plane, connectors, sensors | `docker pull ghcr.io/jhmeel/ivar/core:v0.1.0` (also `control`, `connectors`, `sensors`) |
+| Edge filter for Envoy and Istio | `ghcr.io/jhmeel/ivar/edge-filter:v0.1.0`, or `ivar_edge_filter.wasm` from the release |
+| Linux binaries | `ivar-0.1.0-linux-x86_64.tar.gz` from the release |
+
+Verify what you download:
+
+```bash
+curl -LO https://github.com/jhmeel/Ivar/releases/download/v0.1.0/SHA256SUMS
+sha256sum --check --ignore-missing SHA256SUMS
+```
+
+The Python SDK also installs straight from git, without a release:
+`pip install "ivar @ git+https://github.com/jhmeel/Ivar.git@v0.1.0#subdirectory=sdk/python"`.
+
+**Java**, with Maven or Gradle:
+
+```bash
+curl -LO https://github.com/jhmeel/Ivar/releases/download/v0.1.0/ivar-java-0.1.0.jar -LO https://github.com/jhmeel/Ivar/releases/download/v0.1.0/ivar-java-0.1.0.pom
+mvn install:install-file -Dfile=ivar-java-0.1.0.jar -DpomFile=ivar-java-0.1.0.pom
+```
+
+then depend on `dev.ivar:ivar-java:0.1.0` (Gradle: add `mavenLocal()` to the
+repositories). Its own dependencies resolve from Maven Central as usual.
+
+**PHP**, in `composer.json`:
+
+```json
+{
+  "repositories": [{
+    "type": "package",
+    "package": {
+      "name": "ivar/ivar-php",
+      "version": "0.1.0",
+      "dist": { "url": "https://github.com/jhmeel/Ivar/releases/download/v0.1.0/ivar-php-0.1.0.zip", "type": "zip" },
+      "require": { "php": ">=8.1", "ext-ffi": "*", "ext-json": "*" },
+      "autoload": { "psr-4": { "Ivar\\": "src/" } }
+    }
+  }],
+  "require": { "ivar/ivar-php": "0.1.0" }
+}
+```
+
+**.NET**:
+
+```bash
+mkdir -p packages && curl -L -o packages/Ivar.AspNetCore.0.1.0.nupkg https://github.com/jhmeel/Ivar/releases/download/v0.1.0/Ivar.AspNetCore.0.1.0.nupkg
+dotnet add package Ivar.AspNetCore --version 0.1.0 --source ./packages
+```
+
+**From source**: `scripts/build-wasm.sh` builds the core for every SDK, and
+each SDK then builds in place (`sdk/<language>`). Releases are made by
+`.github/workflows/release.yml` when a `v*` tag is pushed.
 
 ## Quick start
 
@@ -240,7 +311,7 @@ console_dir: /usr/share/ivar/console      # optional: the operator console at /c
 
 ```bash
 docker run -d --name ivar-core -p 8080:8080 -v "$PWD:/etc/ivar:ro" -v ivar-evidence:/var/lib/ivar \
-  ghcr.io/ivar/core:0.1.0 serve --config /etc/ivar/core.yaml
+  ghcr.io/jhmeel/ivar/core:v0.1.0 serve --config /etc/ivar/core.yaml
 ```
 
 The redaction key is shared with every sensor: payload values and
@@ -273,7 +344,7 @@ one does the same four things:
 #### Node.js (Express)
 
 ```bash
-npm install @ivar/express
+npm install https://github.com/jhmeel/Ivar/releases/download/v0.1.0/ivar-express-0.1.0.tgz
 ```
 
 ```js
@@ -346,7 +417,7 @@ with a cancellation window.
 #### Python (FastAPI, Starlette, any ASGI app)
 
 ```bash
-pip install ivar
+pip install https://github.com/jhmeel/Ivar/releases/download/v0.1.0/ivar-0.1.0-py3-none-any.whl
 ```
 
 ```python
@@ -416,7 +487,7 @@ as above.
 #### Go (net/http)
 
 ```bash
-go get github.com/jhmeel/ivar/sdk/go
+go get github.com/jhmeel/ivar/sdk/go@v0.1.0
 ```
 
 ```go
@@ -469,6 +540,8 @@ Intent tokens in Go: `ivar.MintIntent`, `ivar.AttestStep`,
 `ivar.StepPublicKey`, header `ivar.IntentHeader`.
 
 #### Java (Spring Boot, Jakarta EE, any Servlet container)
+
+After installing the jar from the release (see [Installation](#installation)):
 
 ```xml
 <dependency>
@@ -526,8 +599,10 @@ On plain Jakarta EE register the same filter in `web.xml` or with
 
 #### PHP (Laravel, or any PHP app)
 
+Add the release as a Composer package repository (see [Installation](#installation)), then:
+
 ```bash
-composer require ivar/ivar-php
+composer require ivar/ivar-php:0.1.0
 ```
 
 The SDK runs the core with wasmtime through FFI: enable `ffi.enable=1` and
@@ -579,7 +654,9 @@ a small file and applied by every worker.
 #### .NET (ASP.NET Core)
 
 ```bash
-dotnet add package Ivar.AspNetCore
+mkdir -p packages
+curl -L -o packages/Ivar.AspNetCore.0.1.0.nupkg https://github.com/jhmeel/Ivar/releases/download/v0.1.0/Ivar.AspNetCore.0.1.0.nupkg
+dotnet add package Ivar.AspNetCore --version 0.1.0 --source ./packages
 ```
 
 ```csharp
@@ -614,7 +691,7 @@ app.Run();
 ### Gateways and the edge
 
 The edge filter is a Proxy-Wasm module (`ivar_edge_filter.wasm`, also the
-`ghcr.io/ivar/edge-filter` OCI image). Run Coraza with the OWASP Core Rule
+`ghcr.io/jhmeel/ivar/edge-filter` OCI image). Run Coraza with the OWASP Core Rule
 Set ahead of it: Coraza catches known payloads, IVAR decides on identity,
 intent and behaviour, and reads Coraza's matches as one more signal.
 

@@ -3,6 +3,9 @@ node_modules/
 dist/
 *.wasm
 !replay-viewer/pkg/*.wasm
+# The core module is committed where `go get` and `pip install git+...` need it.
+!sdk/go/wasm/ivar_core.wasm
+!sdk/python/ivar/_wasm/ivar_core.wasm
 # Generated keys, bundles and evidence from deploy/local/up.sh
 deploy/local/.state/
 # Build output

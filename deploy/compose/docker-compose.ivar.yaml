@@ -8,7 +8,7 @@
 # core.yaml, keyring.json, policy.bundle and keys/ (see README.md here).
 services:
   ivar:
-    image: ghcr.io/ivar/core:0.1.0
+    image: ghcr.io/jhmeel/ivar/core:v0.1.0
     command: [serve, --config, /etc/ivar/core.yaml]
     environment:
       IVAR_SHARD: "0"

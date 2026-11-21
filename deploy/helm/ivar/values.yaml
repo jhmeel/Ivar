@@ -1,8 +1,8 @@
 # Rollout phase 1 (observe) defaults: nothing blocks until the signed policy
 # says enforce and the component's own mode allows it.
 image:
-  registry: ghcr.io/ivar
-  tag: "0.1.0"
+  registry: ghcr.io/jhmeel/ivar
+  tag: "v0.1.0"
   pullPolicy: IfNotPresent
 
 # Secrets the chart never generates. Create them first (see NOTES.txt):
