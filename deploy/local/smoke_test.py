@@ -51,6 +51,17 @@ def envoy_log():
     return subprocess.run(["docker", "logs", "ivar-envoy"], capture_output=True, text=True).stderr
 
 
+def envoy_workers():
+    # Every Envoy worker runs its own copy of the filter and fetches policy on
+    # its own, so a rollout is complete only when each of them applied it.
+    info = json.load(urllib.request.urlopen("http://127.0.0.1:9901/server_info", timeout=5))
+    return int(info["command_line_options"]["concurrency"])
+
+
+def applied_everywhere(version):
+    return envoy_log().count(f"policy {version} applied") >= envoy_workers()
+
+
 def wait_for(pred, timeout=15):
     end = time.time() + timeout
     while time.time() < end:
@@ -127,7 +138,7 @@ check("observe: edge events reach the core", wait_for(lambda: metric("ivar_event
 # 2. Live rollout of a stronger policy signed by both keys.
 v2 = build(2, "enforce", ["policy-a", "policy-b"])
 serve_control(v2)
-check("rollout: filter verifies and applies v2", wait_for(lambda: "policy 2 applied" in envoy_log()), envoy_log()[-400:])
+check("rollout: every Envoy worker verifies and applies v2", wait_for(lambda: applied_everywhere(2)), envoy_log()[-400:])
 
 # 3. Enforce.
 s, body = req("PATCH", "/users/7", {"role": "admin"})
