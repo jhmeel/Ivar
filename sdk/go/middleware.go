@@ -8,8 +8,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"net"
 	"net/http"
+	"net/netip"
 	"strings"
 	"sync/atomic"
 	"time"
@@ -20,31 +20,39 @@ const IntentHeader = "Ivar-Intent"
 
 // Options configure the middleware. Mode is "observe" or "enforce".
 type Options struct {
-	Mode          string
-	Identity      func(*http.Request) string
-	Session       func(*http.Request) string
-	Roles         func(*http.Request) []string
-	Tenant        func(*http.Request) string
-	CoreURL       string
-	Policy        json.RawMessage
-	RedactionKey  string
-	SensorID      string
-	AdminPrefixes []string
-	Budget        time.Duration
-	OnAlert       func(kind, message string)
+	Mode     string
+	Identity func(*http.Request) string
+	Session  func(*http.Request) string
+	Roles    func(*http.Request) []string
+	Tenant   func(*http.Request) string
+	CoreURL  string
+	// CoreToken is the sensor token the core issued for SensorID.
+	CoreToken string
+	// TrustedProxies are the gateway addresses or CIDR prefixes in front of
+	// the app. From them, the client is the nearest X-Forwarded-For hop that
+	// is not itself a trusted proxy; without them the connection's peer is.
+	TrustedProxies []string
+	Policy         json.RawMessage
+	RedactionKey   string
+	SensorID       string
+	AdminPrefixes  []string
+	Budget         time.Duration
+	OnAlert        func(kind, message string)
 }
 
 // Middleware is the net/http IVAR sensor.
 type Middleware struct {
-	opts   Options
-	rt     *Runtime
-	policy json.RawMessage
-	sensor *LocalSensor
-	core   *Core
-	queue  chan map[string]any
-	seq    atomic.Uint64
-	done   chan struct{}
-	idle   chan struct{}
+	trusted []netip.Prefix
+	opts    Options
+	rt      *Runtime
+	policy  json.RawMessage
+	sensor  *LocalSensor
+	core    *Core
+	queue   chan map[string]any
+	seq     atomic.Uint64
+	done    chan struct{}
+	// pending counts events submitted and not yet scored, in flight included.
+	pending atomic.Int64
 }
 
 // KeyedHash matches ivar_core::redact::keyed_hash.
@@ -65,6 +73,10 @@ func New(opts Options) (*Middleware, error) {
 	}
 	if opts.Identity == nil {
 		opts.Identity = func(*http.Request) string { return "" }
+	}
+	trustedProxies, err := parseTrusted(opts.TrustedProxies)
+	if err != nil {
+		return nil, fmt.Errorf("ivar: TrustedProxies: %w", err)
 	}
 	if opts.SensorID == "" {
 		opts.SensorID = "go-sdk"
@@ -93,7 +105,7 @@ func New(opts Options) (*Middleware, error) {
 		return nil, err
 	}
 	warm(sensor)
-	m := &Middleware{opts: opts, rt: rt, policy: policy, sensor: sensor, queue: make(chan map[string]any, 10_000), done: make(chan struct{}), idle: make(chan struct{}, 1)}
+	m := &Middleware{opts: opts, trusted: trustedProxies, rt: rt, policy: policy, sensor: sensor, queue: make(chan map[string]any, 10_000), done: make(chan struct{})}
 	if opts.CoreURL == "" {
 		if m.core, err = NewCore(rt, policy, orDefault(opts.RedactionKey, "00")); err != nil {
 			return nil, err
@@ -108,14 +120,6 @@ func orDefault(v, d string) string {
 		return d
 	}
 	return v
-}
-
-func clientIP(r *http.Request) string {
-	host, _, err := net.SplitHostPort(r.RemoteAddr)
-	if err != nil {
-		return r.RemoteAddr
-	}
-	return host
 }
 
 // Event builds an OCSF SecurityEvent with the IVAR extension.
@@ -144,8 +148,8 @@ func (m *Middleware) Event(r *http.Request, activity string, classUID uint32, st
 		"class_uid": classUID, "category_uid": classUID / 1000, "activity_id": 1, "time": nowMs(), "status_id": 1, "activity_name": activity,
 		"metadata":     map[string]any{"version": "1.3.0", "extensions": []any{map[string]any{"name": "ivar", "uid": "999", "version": "1.0.0"}}},
 		"actor":        actor,
-		"src_endpoint": map[string]any{"ip": clientIP(r)},
-		"http_request": map[string]any{"http_method": r.Method, "url_path": r.URL.Path, "user_agent": r.UserAgent()},
+		"src_endpoint": map[string]any{"ip": m.clientIP(r)},
+		"http_request": map[string]any{"http_method": r.Method, "url_path": r.URL.Path, "user_agent": r.UserAgent(), "body_keys": bodyKeys(r)},
 		"ivar":         ivarExt,
 	}
 	if status != 0 {
@@ -171,6 +175,7 @@ func writeJSON(w http.ResponseWriter, code int, v any) {
 func (m *Middleware) Handler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		started := time.Now()
+		r = withBodyKeys(r)
 		admin := false
 		for _, p := range m.opts.AdminPrefixes {
 			admin = admin || strings.HasPrefix(r.URL.Path, p)
@@ -224,65 +229,96 @@ func (m *Middleware) ReportLogin(r *http.Request, success bool, account string) 
 }
 
 func (m *Middleware) submit(ev map[string]any) {
+	m.pending.Add(1)
 	select {
 	case m.queue <- ev:
 	default:
+		m.pending.Add(-1)
 		m.opts.OnAlert("fail_open", "event buffer full")
 	}
 }
 
 func (m *Middleware) drain() {
 	client := &http.Client{Timeout: 2 * time.Second}
+	failing := false
 	for {
 		select {
 		case <-m.done:
 			return
 		case ev := <-m.queue:
+			// Everything queued so far goes in one request, up to 500 events.
+			batch := []map[string]any{ev}
+			for len(batch) < 500 {
+				select {
+				case more := <-m.queue:
+					batch = append(batch, more)
+					continue
+				default:
+				}
+				break
+			}
 			var verdicts []Verdict
 			if m.core != nil {
-				out, err := m.core.Process(ev, nowMs())
-				if err != nil {
-					m.opts.OnAlert("sdk_fault", err.Error())
-				} else {
-					verdicts = out.Verdicts
+				for _, e := range batch {
+					out, err := m.core.Process(e, nowMs())
+					if err != nil {
+						m.opts.OnAlert("sdk_fault", err.Error())
+						continue
+					}
+					verdicts = append(verdicts, out.Verdicts...)
 				}
 			} else {
-				body, _ := json.Marshal(map[string]any{"sensor_id": m.opts.SensorID, "events": []any{ev}})
-				resp, err := client.Post(strings.TrimRight(m.opts.CoreURL, "/")+"/v1/events", "application/json", bytes.NewReader(body))
-				if err == nil {
-					var ack struct {
-						Verdicts []Verdict `json:"verdicts"`
-					}
-					_ = json.NewDecoder(resp.Body).Decode(&ack)
-					resp.Body.Close()
-					verdicts = ack.Verdicts
-				}
+				verdicts, failing = m.send(client, batch, failing)
 			}
 			for _, v := range verdicts {
 				_ = m.sensor.PushVerdict(v)
 			}
-			if len(m.queue) == 0 {
-				select {
-				case m.idle <- struct{}{}:
-				default:
-				}
-			}
+			m.pending.Add(-int64(len(batch)))
 		}
 	}
 }
 
-// Flush waits until queued events were scored.
-func (m *Middleware) Flush(timeout time.Duration) {
-	deadline := time.After(timeout)
-	for len(m.queue) > 0 {
-		select {
-		case <-m.idle:
-		case <-deadline:
-			return
-		case <-time.After(5 * time.Millisecond):
-		}
+// send posts one batch to the core. It alerts once when sending starts to
+// fail, and again only after it has recovered.
+func (m *Middleware) send(client *http.Client, batch []map[string]any, failing bool) ([]Verdict, bool) {
+	body, _ := json.Marshal(map[string]any{"sensor_id": m.opts.SensorID, "events": batch})
+	req, _ := http.NewRequest(http.MethodPost, strings.TrimRight(m.opts.CoreURL, "/")+"/v1/events", bytes.NewReader(body))
+	req.Header.Set("Content-Type", "application/json")
+	if m.opts.CoreToken != "" {
+		req.Header.Set("Authorization", "Bearer "+m.opts.CoreToken)
 	}
-	time.Sleep(20 * time.Millisecond)
+	resp, err := client.Do(req)
+	if err != nil {
+		if !failing {
+			m.opts.OnAlert("sdk_fault", "the core is unreachable, events are not scored until it returns: "+err.Error())
+		}
+		return nil, true
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		if !failing {
+			msg := fmt.Sprintf("the core answered HTTP %d", resp.StatusCode)
+			if resp.StatusCode == http.StatusUnauthorized || resp.StatusCode == http.StatusForbidden {
+				msg = fmt.Sprintf("the core refused this sensor's token (HTTP %d): check CoreToken and the sensor id it is issued for", resp.StatusCode)
+			}
+			m.opts.OnAlert("sdk_fault", msg)
+		}
+		return nil, true
+	}
+	var ack struct {
+		Verdicts []Verdict `json:"verdicts"`
+	}
+	_ = json.NewDecoder(resp.Body).Decode(&ack)
+	return ack.Verdicts, false
+}
+
+// Flush waits until every submitted event was scored, including a batch
+// still being sent.
+func (m *Middleware) Flush(timeout time.Duration) {
+	deadline := time.Now().Add(timeout)
+	for m.pending.Load() > 0 && time.Now().Before(deadline) {
+		time.Sleep(5 * time.Millisecond)
+	}
 }
 
 // Close stops the background worker.

@@ -22,8 +22,10 @@ type Client struct {
 	URL        string
 	SensorID   string
 	SensorType string
-	HTTP       *http.Client
-	Capacity   int
+	// Token is the sensor token the core issued for SensorID.
+	Token    string
+	HTTP     *http.Client
+	Capacity int
 
 	mu      sync.Mutex
 	buf     []ocsf.Event
@@ -68,6 +70,9 @@ func (c *Client) Flush(ctx context.Context) error {
 	body, _ := json.Marshal(map[string]any{"sensor_id": c.SensorID, "dropped": dropped, "events": batch})
 	req, _ := http.NewRequestWithContext(ctx, http.MethodPost, c.URL+"/v1/events", bytes.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
+	if c.Token != "" {
+		req.Header.Set("Authorization", "Bearer "+c.Token)
+	}
 	resp, err := c.HTTP.Do(req)
 	if err == nil && resp.StatusCode >= 300 {
 		err = fmt.Errorf("core returned %d", resp.StatusCode)

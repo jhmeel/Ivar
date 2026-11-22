@@ -18,6 +18,9 @@ pub struct EdgeConfig {
     /// Gateway cluster of the core ingest gateway.
     pub core_cluster: String,
     pub core_authority: String,
+    /// The sensor token the core issued for this filter's sensor_id. The
+    /// filter configuration is not a Secret, so restrict who may read it.
+    pub core_token: String,
     /// Gateway cluster of the control plane that serves signed policy.
     pub control_cluster: String,
     pub control_authority: String,
@@ -41,6 +44,7 @@ impl Default for EdgeConfig {
             max_body_bytes: 64 * 1024,
             core_cluster: "ivar_core".into(),
             core_authority: "ivar-core".into(),
+            core_token: String::new(),
             control_cluster: "ivar_control".into(),
             control_authority: "ivar-control".into(),
             keyring: Keyring::default(),

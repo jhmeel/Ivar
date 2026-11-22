@@ -13,6 +13,11 @@ secrets:
   keys: ivar-keys
   tuf: ivar-tuf
   policy: ivar-policy
+  # Who may talk to the core. Set it for any shared cluster: without it the
+  # core accepts events from anyone who can reach it and believes operator
+  # headers from any client. The Secret holds sensor-tokens.json and
+  # proxy-token.sha256 (ivar-core token sensor|proxy).
+  access: ""
 
 core:
   replicas: 1

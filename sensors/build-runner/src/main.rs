@@ -25,7 +25,7 @@ fn main() -> anyhow::Result<()> {
     let keyring: Keyring = std::fs::read_to_string(&cfg.keyring_file).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or_default();
     let sensor = Arc::new(Sensor::new(cfg.clone(), keyring));
     let job = std::env::var("GITHUB_WORKFLOW").map(|w| format!("{w}/{}", std::env::var("GITHUB_JOB").unwrap_or_default())).or_else(|_| std::env::var("CI_JOB_NAME")).unwrap_or_else(|_| "ci-job".into());
-    let mut up = HttpUplink::new(&cfg.core_url, &cfg.control_url);
+    let mut up = HttpUplink::for_sensor(&cfg);
     match args.get(1).map(String::as_str) {
         Some("start") => {
             let allow: Vec<String> = get("--allow").map(|s| s.split(',').map(|x| x.trim().to_string()).collect()).unwrap_or_default();
@@ -38,7 +38,7 @@ fn main() -> anyhow::Result<()> {
             std::thread::spawn(move || memory::watch(&s2));
             let s3 = sensor.clone();
             std::thread::spawn(move || {
-                let mut up = HttpUplink::new(&cfg.core_url, &cfg.control_url);
+                let mut up = HttpUplink::for_sensor(&cfg);
                 s3.run(&mut up, &|| false);
             });
             dns_proxy::serve(&sensor, &policy, &job, "127.0.0.53:53", "1.1.1.1:53")

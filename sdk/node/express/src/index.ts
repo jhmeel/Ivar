@@ -108,7 +108,9 @@ export function ivar(opts: IvarOptions): IvarMiddleware {
   const refresher = new PolicyRefresher(engine, source, alert, (s) => (status = s));
   refresher.start();
   const transport: Transport | undefined = opts.coreUrl
-    ? new HttpTransport(opts.coreUrl, opts.sensorId ?? 'express-sdk', (vs) => vs.forEach((v) => engine.pushVerdict(v)))
+    ? new HttpTransport(opts.coreUrl, opts.sensorId ?? 'express-sdk', (vs) => vs.forEach((v) => engine.pushVerdict(v)), 10_000, opts.coreToken, (status) =>
+        alert({ kind: 'sdk_fault', message: `the core refused this sensor's token (HTTP ${status}): check coreToken and the sensor id it is issued for` }),
+      )
     : undefined;
 
   const submit = (event: Record<string, unknown>) => {

@@ -69,6 +69,8 @@ fn err(code: StatusCode, msg: impl ToString) -> Response {
 #[derive(Deserialize)]
 struct Batch {
     #[serde(default)]
+    sensor_id: String,
+    #[serde(default)]
     events: Vec<Value>,
     /// The sensor's position in the verdict feed; see crate::feed.
     #[serde(default)]
@@ -81,30 +83,108 @@ struct Since {
     since: u64,
 }
 
-async fn events(State(s): S, Json(b): Json<Batch>) -> Response {
+fn bearer(h: &HeaderMap) -> Option<&str> {
+    h.get(axum::http::header::AUTHORIZATION).and_then(|v| v.to_str().ok())
+}
+
+/// A sensor request the access rules refuse, as an HTTP response.
+fn denied(s: &AppState, d: crate::access::Denied) -> Response {
+    s.inner.lock().expect("state").metrics.ingest_denied_total += 1;
+    match d {
+        crate::access::Denied::Unauthenticated => err(StatusCode::UNAUTHORIZED, "a valid sensor token is required"),
+        crate::access::Denied::Forbidden(id) => err(StatusCode::FORBIDDEN, format!("this token may not send events for sensor {id}")),
+    }
+}
+
+fn http_client() -> &'static reqwest::Client {
+    static CLIENT: std::sync::OnceLock<reqwest::Client> = std::sync::OnceLock::new();
+    CLIENT.get_or_init(|| reqwest::Client::builder().timeout(std::time::Duration::from_secs(5)).build().expect("http client"))
+}
+
+async fn events(State(s): S, h: HeaderMap, Json(b): Json<Batch>) -> Response {
     let mut evs = Vec::new();
+    let mut rejected = 0u64;
     for e in b.events {
-        if let Ok(ev) = serde_json::from_value::<SecurityEvent>(e) {
-            if ev.activity_name == "sensor.heartbeat" || !ev.activity_name.is_empty() {
-                evs.push(ev);
-            }
+        match serde_json::from_value::<SecurityEvent>(e) {
+            Ok(ev) if !ev.activity_name.is_empty() => evs.push(ev),
+            _ => rejected += 1,
         }
     }
+    let ids: Vec<String> = std::iter::once(b.sensor_id.clone()).filter(|x| !x.is_empty()).chain(evs.iter().map(|e| e.ext().sensor_id)).collect();
+    if let Err(d) = s.access.sensor(bearer(&h), ids.iter().map(String::as_str)) {
+        return denied(&s, d);
+    }
+    if rejected > 0 {
+        s.inner.lock().expect("state").metrics.events_rejected_total += rejected;
+    }
+    // Events another shard owns go to it; a forwarded batch is never sent on.
+    let forwarded = h.contains_key(crate::access::FORWARDED_HEADER);
+    let mut by_shard: BTreeMap<u32, Vec<SecurityEvent>> = BTreeMap::new();
+    if s.shards > 1 && !forwarded && !s.access.peers.is_empty() {
+        let mine;
+        (mine, evs) = evs.into_iter().partition(|e| crate::shard_of(e, s.shards) == s.shard);
+        for e in evs {
+            by_shard.entry(crate::shard_of(&e, s.shards)).or_default().push(e);
+        }
+        evs = mine;
+    }
+    let peer_calls = by_shard.into_iter().map(|(shard, batch)| {
+        let url = format!("{}/v1/events", s.access.peers[shard as usize]);
+        let auth = bearer(&h).map(str::to_string);
+        let body = json!({ "sensor_id": b.sensor_id, "events": batch });
+        let n = batch_len(&body);
+        async move {
+            let mut req = http_client().post(url).header(crate::access::FORWARDED_HEADER, "1").json(&body);
+            if let Some(a) = auth {
+                req = req.header(axum::http::header::AUTHORIZATION, a);
+            }
+            match req.send().await {
+                Ok(r) if r.status().is_success() => r.json::<Value>().await.map_err(|_| n),
+                _ => Err(n),
+            }
+        }
+    });
+    let calls: Vec<_> = peer_calls.map(tokio::spawn).collect();
     let st = s.clone();
     let cursor = b.verdict_cursor;
-    let (accepted, verdicts, next) = tokio::task::spawn_blocking(move || st.ingest_with_feed(evs, cursor)).await.unwrap_or_default();
-    Json(json!({ "accepted": accepted, "verdicts": verdicts, "verdict_cursor": next })).into_response()
+    let (mut accepted, mut verdicts, next) = tokio::task::spawn_blocking(move || st.ingest_with_feed(evs, cursor)).await.unwrap_or_default();
+    let mut unrouted = 0u64;
+    for call in calls {
+        match call.await.unwrap_or(Err(0)) {
+            Ok(v) => {
+                accepted += v["accepted"].as_u64().unwrap_or(0);
+                verdicts.extend(v["verdicts"].as_array().cloned().unwrap_or_default().into_iter().filter_map(|x| serde_json::from_value(x).ok()));
+            }
+            Err(n) => unrouted += n,
+        }
+    }
+    if unrouted > 0 {
+        s.inner.lock().expect("state").metrics.events_unrouted_total += unrouted;
+        tracing::warn!(unrouted, "events for an unreachable shard were not processed");
+    }
+    Json(json!({ "accepted": accepted, "rejected": rejected, "unrouted": unrouted, "verdicts": verdicts, "verdict_cursor": next })).into_response()
+}
+
+fn batch_len(body: &Value) -> u64 {
+    body["events"].as_array().map(|a| a.len() as u64).unwrap_or(0)
 }
 
 /// Standing verdicts for a sensor that has no events to send.
-async fn verdicts(State(s): S, Query(q): Query<Since>) -> Response {
+async fn verdicts(State(s): S, h: HeaderMap, Query(q): Query<Since>) -> Response {
+    if let Err(d) = s.access.sensor(bearer(&h), std::iter::empty()) {
+        return denied(&s, d);
+    }
     let (verdicts, next) = s.verdicts_since(q.since);
     Json(json!({ "accepted": 0, "verdicts": verdicts, "verdict_cursor": next })).into_response()
 }
 
-async fn adapter(State(s): S, Path(engine): Path<String>, body: String) -> Response {
+async fn adapter(State(s): S, h: HeaderMap, Path(engine): Path<String>, body: String) -> Response {
     let now = now_ms();
     let evs: Vec<SecurityEvent> = body.lines().enumerate().filter_map(|(i, l)| crate::adapters::parse(&engine, l, now as u64 + i as u64, now)).collect();
+    let ids: Vec<String> = evs.iter().map(|e| e.ext().sensor_id).collect();
+    if let Err(d) = s.access.sensor(bearer(&h), ids.iter().map(String::as_str)) {
+        return denied(&s, d);
+    }
     if evs.is_empty() && !body.trim().is_empty() {
         return err(StatusCode::BAD_REQUEST, format!("no {engine} events recognised"));
     }
@@ -119,7 +199,10 @@ struct SinkReport {
     decision: Value,
 }
 
-async fn sink_decision(State(s): S, Json(r): Json<SinkReport>) -> Response {
+async fn sink_decision(State(s): S, h: HeaderMap, Json(r): Json<SinkReport>) -> Response {
+    if let Err(d) = s.access.sensor(bearer(&h), std::iter::empty()) {
+        return denied(&s, d);
+    }
     let id = s.record_sink(r.subject, r.decision);
     Json(json!({ "incident": id })).into_response()
 }
@@ -146,6 +229,9 @@ fn operator(h: &HeaderMap) -> Option<(String, Vec<String>, bool)> {
 }
 
 fn authorize(s: &AppState, h: &HeaderMap, action: &str, target: &str) -> Result<String, Response> {
+    if !s.access.operator_proxy(h.get(crate::access::PROXY_TOKEN_HEADER).and_then(|v| v.to_str().ok())) {
+        return Err(err(StatusCode::UNAUTHORIZED, "operator requests must come through the staff SSO proxy"));
+    }
     let Some((op, roles, hw)) = operator(h) else { return Err(err(StatusCode::UNAUTHORIZED, "operator identity required")) };
     let req = ivar_core::policy::OperatorRequest { operator: op.clone(), roles, action: action.into(), target: target.into(), approvers: 1, destructive_or_fleet_wide: false, hardware_2fa: hw };
     let ok = s.inner.lock().expect("state").cedar.allow_operator(&req).unwrap_or(false);
@@ -271,6 +357,10 @@ async fn metrics(State(s): S) -> Response {
         "# TYPE ivar_events_total counter\nivar_events_total {}\n# TYPE ivar_actions_total counter\nivar_actions_total {}\n# TYPE ivar_ingest_seconds_total counter\nivar_ingest_seconds_total {}\n# TYPE ivar_policy_rejected_total counter\nivar_policy_rejected_total {}\n# TYPE ivar_verdicts_total counter\n",
         m.events_total, m.actions_total, m.ingest_micros_total as f64 / 1e6, m.policy_rejected_total
     );
+    out.push_str(&format!(
+        "# TYPE ivar_events_rejected_total counter\nivar_events_rejected_total {}\n# TYPE ivar_events_unrouted_total counter\nivar_events_unrouted_total {}\n# TYPE ivar_ingest_denied_total counter\nivar_ingest_denied_total {}\n",
+        m.events_rejected_total, m.events_unrouted_total, m.ingest_denied_total
+    ));
     for (d, n) in m.verdicts_by_decision {
         out.push_str(&format!("ivar_verdicts_total{{decision=\"{d}\"}} {n}\n"));
     }

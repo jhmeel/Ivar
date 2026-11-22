@@ -7,7 +7,7 @@
 //	ivar-connector indicators  the shared indicator network service
 //	ivar-connector respond <provider>   responder plugin: JSON lines on stdin and stdout
 //
-// Configuration comes from the environment (IVAR_CORE_URL, IVAR_SENSOR_ID,
+// Configuration comes from the environment (IVAR_CORE_URL, IVAR_CORE_TOKEN, IVAR_SENSOR_ID,
 // provider credentials); responders receive only their declared secrets as
 // IVAR_SECRET_* from the plugin host.
 package main
@@ -50,6 +50,7 @@ func main() {
 	kind := os.Args[1]
 	sensorID := env("IVAR_SENSOR_ID", kind+"-1")
 	core := coreclient.New(env("IVAR_CORE_URL", "http://ivar-core:8080"), sensorID, kind)
+	core.Token = os.Getenv("IVAR_CORE_TOKEN")
 	go core.Run(ctx, 500*time.Millisecond)
 	listen := env("IVAR_LISTEN", ":8085")
 	var err error

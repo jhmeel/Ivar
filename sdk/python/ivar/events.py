@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import hashlib
 import hmac
 import itertools
@@ -88,3 +89,18 @@ def build_event(
             "attributes": safe_attributes(attributes),
         },
     }
+
+
+MAX_BODY_BYTES = 64 * 1024
+
+
+def json_body_keys(content_type: str, body: bytes) -> list[str]:
+    """Top level field names of a JSON object body. Values are never kept:
+    only names leave the application (section 16)."""
+    if "json" not in (content_type or "") or not body or len(body) > MAX_BODY_BYTES:
+        return []
+    try:
+        parsed = json.loads(body)
+    except ValueError:
+        return []
+    return sorted(parsed)[:64] if isinstance(parsed, dict) else []

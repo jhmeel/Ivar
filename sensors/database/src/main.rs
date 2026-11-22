@@ -25,7 +25,7 @@ fn main() -> anyhow::Result<()> {
         let s = sensor.clone();
         let stop = stop.clone();
         std::thread::spawn(move || {
-            let mut up = HttpUplink::new(&cfg.core_url, &cfg.control_url);
+            let mut up = HttpUplink::for_sensor(&cfg);
             s.run(&mut up, &|| stop.load(Ordering::Relaxed));
         });
     }

@@ -28,7 +28,16 @@ export class HttpTransport implements Transport {
   private cursor = 0;
   private lastPoll = 0;
 
-  constructor(private url: string, private sensorId: string, private onVerdicts: (v: Verdict[]) => void, private capacity = 10_000) {
+  private refusedAlerted = false;
+
+  constructor(
+    private url: string,
+    private sensorId: string,
+    private onVerdicts: (v: Verdict[]) => void,
+    private capacity = 10_000,
+    private token?: string,
+    private onRefused?: (status: number) => void,
+  ) {
     this.timer = setInterval(() => void (this.queue.length ? this.flush() : this.pollFeed()), 200);
     this.heartbeat = setInterval(() => this.send({ activity_name: 'sensor.heartbeat', time: Date.now(), ivar: { sensor_id: sensorId, sensor_type: 'app_sdk' } }), 20_000);
     this.timer.unref();
@@ -67,14 +76,26 @@ export class HttpTransport implements Transport {
     try {
       const res = await fetch(`${this.url.replace(/\/$/, '')}/v1/events`, {
         method: 'POST',
-        headers: { 'content-type': 'application/json', 'x-ivar-dropped': String(this.dropped) },
+        headers: { 'content-type': 'application/json', 'x-ivar-dropped': String(this.dropped), ...this.auth() },
         body: JSON.stringify({ sensor_id: this.sensorId, events: batch, verdict_cursor: this.cursor }),
       });
+      if (res.status === 401 || res.status === 403) this.refused(res.status);
       if (!res.ok) throw new Error(`ingest ${res.status}`);
       this.accept((await res.json()) as Ack);
     } catch {
       this.queue.unshift(...batch.slice(0, Math.max(0, this.capacity - this.queue.length)));
     }
+  }
+
+  private auth(): Record<string, string> {
+    return this.token ? { authorization: `Bearer ${this.token}` } : {};
+  }
+
+  /** The core refuses this sensor's token: say so once, keep events queued. */
+  private refused(status: number): void {
+    if (this.refusedAlerted) return;
+    this.refusedAlerted = true;
+    this.onRefused?.(status);
   }
 
   private accept(ack: Ack): void {
@@ -88,7 +109,7 @@ export class HttpTransport implements Transport {
     if (this.inFlight || now - this.lastPoll < 1_000) return;
     this.lastPoll = now;
     try {
-      const res = await fetch(`${this.url.replace(/\/$/, '')}/v1/verdicts?since=${this.cursor}`, { signal: AbortSignal.timeout(2_000) });
+      const res = await fetch(`${this.url.replace(/\/$/, '')}/v1/verdicts?since=${this.cursor}`, { headers: this.auth(), signal: AbortSignal.timeout(2_000) });
       if (res.ok) this.accept((await res.json()) as Ack);
     } catch {
       // The core is unreachable: the cached verdicts and signed policy stay in force.

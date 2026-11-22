@@ -32,6 +32,8 @@ pub struct SensorConfig {
     /// observe or enforce.
     pub mode: String,
     pub core_url: String,
+    /// A file holding the sensor token the core issued for sensor_id.
+    pub core_token_file: String,
     pub control_url: String,
     pub keyring_file: String,
     pub redaction_key_hex: String,
@@ -49,6 +51,7 @@ impl Default for SensorConfig {
             sensor_type: "host".into(),
             mode: "observe".into(),
             core_url: "http://ivar-core:8080".into(),
+            core_token_file: String::new(),
             control_url: "http://ivar-control:8090".into(),
             keyring_file: "/etc/ivar/keyring.json".into(),
             redaction_key_hex: String::new(),
@@ -99,19 +102,34 @@ pub struct HttpUplink {
     /// Position in the core's verdict feed, so verdicts other sensors caused
     /// reach this one with its next batch or heartbeat.
     verdict_cursor: u64,
+    token: Option<String>,
 }
 
 impl HttpUplink {
     pub fn new(core_url: &str, control_url: &str) -> Self {
-        HttpUplink { core_url: core_url.trim_end_matches('/').into(), control_url: control_url.trim_end_matches('/').into(), agent: ureq::AgentBuilder::new().timeout(Duration::from_secs(3)).build(), verdict_cursor: 0 }
+        HttpUplink { core_url: core_url.trim_end_matches('/').into(), control_url: control_url.trim_end_matches('/').into(), agent: ureq::AgentBuilder::new().timeout(Duration::from_secs(3)).build(), verdict_cursor: 0, token: None }
+    }
+
+    /// The uplink for a sensor config, with its token when one is configured.
+    pub fn for_sensor(cfg: &SensorConfig) -> Self {
+        let mut up = Self::new(&cfg.core_url, &cfg.control_url);
+        if !cfg.core_token_file.is_empty() {
+            match std::fs::read_to_string(&cfg.core_token_file) {
+                Ok(t) => up.token = Some(format!("Bearer {}", t.trim())),
+                Err(e) => eprintln!("ivar: sensor token {} unreadable ({e}); the core will refuse this sensor's events", cfg.core_token_file),
+            }
+        }
+        up
     }
 }
 
 impl Uplink for HttpUplink {
     fn send(&mut self, sensor_id: &str, events: &[SecurityEvent]) -> Result<Vec<Verdict>, String> {
-        let r = self
-            .agent
-            .post(&format!("{}/v1/events", self.core_url))
+        let mut req = self.agent.post(&format!("{}/v1/events", self.core_url));
+        if let Some(t) = &self.token {
+            req = req.set("authorization", t);
+        }
+        let r = req
             .send_json(serde_json::json!({ "sensor_id": sensor_id, "events": events, "verdict_cursor": self.verdict_cursor }))
             .map_err(|e| e.to_string())?;
         let v: serde_json::Value = r.into_json().map_err(|e| e.to_string())?;

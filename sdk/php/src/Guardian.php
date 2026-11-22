@@ -22,11 +22,11 @@ final class Guardian
     private static int $seq = 0;
 
     /**
-     * @param array{mode?:string, core_url?:?string, policy?:?string, redaction_key?:string, sensor_id?:string, admin_prefixes?:list<string>, budget_ms?:float, on_alert?:?callable, verdict_cache?:?VerdictCache, embedded?:bool} $options
+     * @param array{mode?:string, core_url?:?string, core_token?:string, policy?:?string, redaction_key?:string, sensor_id?:string, admin_prefixes?:list<string>, budget_ms?:float, on_alert?:?callable, verdict_cache?:?VerdictCache, embedded?:bool} $options
      */
     public function __construct(private array $options = [])
     {
-        $this->options += ['mode' => 'observe', 'core_url' => null, 'policy' => null, 'redaction_key' => '', 'sensor_id' => 'php-sdk', 'admin_prefixes' => ['/admin'], 'budget_ms' => 1.0, 'on_alert' => null, 'verdict_cache' => null, 'embedded' => false];
+        $this->options += ['mode' => 'observe', 'core_url' => null, 'core_token' => '', 'policy' => null, 'redaction_key' => '', 'sensor_id' => 'php-sdk', 'admin_prefixes' => ['/admin'], 'budget_ms' => 1.0, 'on_alert' => null, 'verdict_cache' => null, 'embedded' => false];
         if (!in_array($this->options['mode'], ['observe', 'enforce'], true)) {
             throw new \InvalidArgumentException('mode must be observe or enforce');
         }
@@ -117,6 +117,20 @@ final class Guardian
         $this->pending[] = $event;
     }
 
+    /** Report a login so credential spraying and account takeover are correlated. */
+    public function reportLogin(array $r, bool $success, string $account): void
+    {
+        $ev = $this->event($r, 'auth.login', 3002, 0, ['target_entity' => 'user:' . Ivar::keyedHash($this->options['redaction_key'], $account)]);
+        $ev['status_id'] = $success ? 1 : 2;
+        $this->report($ev);
+    }
+
+    /** Report a business action such as a payout, a role change or an export. */
+    public function reportAction(array $r, string $name, float $value = 0, int $records = 0, bool $destructive = false): void
+    {
+        $this->report($this->event($r, 'business.action', 6003, 0, ['business_action' => $name, 'value_moved' => $value, 'records_read' => $records, 'destructive' => $destructive]));
+    }
+
     /** Send pending events. Call after the response is sent (terminate middleware). */
     public function flush(): void
     {
@@ -130,9 +144,22 @@ final class Guardian
                     $verdicts = array_merge($verdicts, $out['verdicts'] ?? []);
                 }
             } elseif ($events !== []) {
-                $ctx = stream_context_create(['http' => ['method' => 'POST', 'header' => "content-type: application/json\r\n", 'content' => json_encode(['sensor_id' => $this->options['sensor_id'], 'events' => $events]), 'timeout' => 2]]);
-                $ack = json_decode((string) @file_get_contents(rtrim($this->options['core_url'], '/') . '/v1/events', false, $ctx), true);
-                $verdicts = $ack['verdicts'] ?? [];
+                $headers = "content-type: application/json\r\n";
+                if (($this->options['core_token'] ?? '') !== '') {
+                    $headers .= 'authorization: Bearer ' . $this->options['core_token'] . "\r\n";
+                }
+                $ctx = stream_context_create(['http' => ['method' => 'POST', 'header' => $headers, 'content' => json_encode(['sensor_id' => $this->options['sensor_id'], 'events' => $events]), 'timeout' => 2, 'ignore_errors' => true]]);
+                $body = @file_get_contents(rtrim($this->options['core_url'], '/') . '/v1/events', false, $ctx);
+                $status = isset($http_response_header[0]) && preg_match('#\s(\d{3})\s#', $http_response_header[0], $m) ? (int) $m[1] : 0;
+                if ($body === false || $status === 0) {
+                    $this->alert('sdk_fault', 'the core is unreachable, events are not scored until it returns');
+                } elseif ($status === 401 || $status === 403) {
+                    $this->alert('sdk_fault', "the core refused this sensor's token (HTTP $status): check core_token and the sensor id it is issued for");
+                } elseif ($status !== 200) {
+                    $this->alert('sdk_fault', "the core answered HTTP $status");
+                } else {
+                    $verdicts = json_decode($body, true)['verdicts'] ?? [];
+                }
             }
         } catch (\Throwable $e) {
             $this->alert('sdk_fault', $e->getMessage());

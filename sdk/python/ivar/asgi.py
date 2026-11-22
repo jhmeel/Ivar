@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 from typing import Any, Awaitable, Callable
 
+from .events import MAX_BODY_BYTES, json_body_keys
 from .guardian import Guardian, RequestInfo
 
 Scope = dict[str, Any]
@@ -31,10 +32,30 @@ class IvarMiddleware:
         return RequestInfo(method=scope.get("method", ""), path=scope.get("path", ""), client_ip=client[0], headers=_headers(scope),
                            identity=self.identity(scope) or "", session=self.session(scope) or "", roles=self.roles(scope) or [])
 
+    async def _read_body_keys(self, scope: Scope, receive: Callable[[], Awaitable[dict]], info: RequestInfo) -> Callable[[], Awaitable[dict]]:
+        """Read a JSON body's field names, then replay the body to the app."""
+        headers = info.headers
+        if "json" not in headers.get("content-type", "") or not headers.get("content-length", "0").isdigit() or int(headers.get("content-length", "0")) > MAX_BODY_BYTES:
+            return receive
+        messages, size = [], 0
+        while True:
+            message = await receive()
+            messages.append(message)
+            size += len(message.get("body", b""))
+            if message["type"] != "http.request" or not message.get("more_body") or size > MAX_BODY_BYTES:
+                break
+        info.body_keys = json_body_keys(headers.get("content-type", ""), b"".join(m.get("body", b"") for m in messages if m["type"] == "http.request"))
+
+        async def replay() -> dict:
+            return messages.pop(0) if messages else await receive()
+
+        return replay
+
     async def __call__(self, scope: Scope, receive: Callable[[], Awaitable[dict]], send: Callable[[dict], Awaitable[None]]) -> None:
         if scope["type"] != "http":
             return await self.app(scope, receive, send)
         info = self.info(scope)
+        receive = await self._read_body_keys(scope, receive, info)
         scope.setdefault("state", {})["ivar"] = (self.guardian, info)
         decision = self.guardian.inspect(info)
         if decision.action != "allow":

@@ -13,6 +13,7 @@ import logging
 import queue
 import threading
 import time
+import urllib.error
 import urllib.request
 from dataclasses import dataclass, field
 from typing import Any, Callable
@@ -52,6 +53,7 @@ class Guardian:
         mode: str = "observe",
         policy: dict | None = None,
         core_url: str | None = None,
+        core_token: str | None = None,
         redaction_key: str = "",
         sensor_id: str = "python-sdk",
         admin_prefixes: tuple[str, ...] = ("/admin",),
@@ -71,6 +73,7 @@ class Guardian:
         self._warm()
         self.core = None if core_url else Core.create(self.policy, redaction_key or "00")
         self.core_url = core_url
+        self.core_token = core_token
         self._q: queue.Queue = queue.Queue(maxsize=10_000)
         self._worker = threading.Thread(target=self._drain, name="ivar-scoring", daemon=True)
         self._worker.start()
@@ -136,22 +139,41 @@ class Guardian:
             self.alert("fail_open", "event buffer full, oldest dropped")
 
     def _drain(self) -> None:
+        failing = False
         while True:
-            ev = self._q.get()
+            # Everything queued so far goes in one request, up to 500 events.
+            batch = [self._q.get()]
+            while len(batch) < 500:
+                try:
+                    batch.append(self._q.get_nowait())
+                except queue.Empty:
+                    break
             try:
                 if self.core is not None:
-                    out = self.core.process(ev)
-                    for v in out.get("verdicts", []):
-                        self.sensor.push_verdict(v)
+                    for ev in batch:
+                        for v in self.core.process(ev).get("verdicts", []):
+                            self.sensor.push_verdict(v)
                 else:
-                    req = urllib.request.Request(f"{self.core_url.rstrip('/')}/v1/events", json.dumps({"sensor_id": self.sensor_id, "events": [ev]}).encode(), {"content-type": "application/json"})
+                    headers = {"content-type": "application/json"}
+                    if self.core_token:
+                        headers["authorization"] = f"Bearer {self.core_token}"
+                    req = urllib.request.Request(f"{self.core_url.rstrip('/')}/v1/events", json.dumps({"sensor_id": self.sensor_id, "events": batch}).encode(), headers)
                     with urllib.request.urlopen(req, timeout=2) as r:
                         for v in json.loads(r.read()).get("verdicts", []):
                             self.sensor.push_verdict(v)
+                failing = False
+            except urllib.error.HTTPError as e:
+                if not failing:
+                    refused = e.code in (401, 403)
+                    self.alert("sdk_fault", f"the core refused this sensor's token (HTTP {e.code}): check core_token and the sensor id it is issued for" if refused else f"the core answered HTTP {e.code}")
+                failing = True
             except Exception as e:  # noqa: BLE001
-                self.alert("sdk_fault", str(e))
+                if not failing:
+                    self.alert("sdk_fault", f"the core is unreachable, events are not scored until it returns: {e}")
+                failing = True
             finally:
-                self._q.task_done()
+                for _ in batch:
+                    self._q.task_done()
 
     def flush(self) -> None:
         self._q.join()

@@ -34,6 +34,12 @@ pub struct Metrics {
     pub actions_total: u64,
     pub ingest_micros_total: u64,
     pub policy_rejected_total: u64,
+    /// Events refused as malformed.
+    pub events_rejected_total: u64,
+    /// Events that belonged to a shard no request reached.
+    pub events_unrouted_total: u64,
+    /// Sensor requests refused for a missing or wrong token.
+    pub ingest_denied_total: u64,
 }
 
 pub struct Inner {
@@ -59,6 +65,8 @@ pub struct AppState {
     /// deployment keyring lists it with the evidence and replay roles.
     pub replay_key: ivar_contracts::sign::KeyPair,
     policy_dir: Option<std::path::PathBuf>,
+    /// Who may send events and act as an operator (crate::access).
+    pub access: crate::access::Access,
     outbound: mpsc::Sender<Outbound>,
     actions: mpsc::Sender<ActionRequest>,
 }
@@ -101,6 +109,7 @@ pub struct StartOptions {
     /// core resumes at the newest verified one, so a policy an operator
     /// pushed is never silently replaced by the older bundle in the config.
     pub policy_dir: Option<std::path::PathBuf>,
+    pub access: crate::access::Access,
 }
 
 /// Verified bundles kept in `dir`, as (version, archive, content).
@@ -168,6 +177,7 @@ impl AppState {
             shards: o.shards,
             replay_key,
             policy_dir: o.policy_dir,
+            access: o.access,
             outbound: out_tx,
             actions: act_tx,
         });

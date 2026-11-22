@@ -6,6 +6,7 @@
 //! their last signed policy and keep protecting while the core is unreachable.
 
 pub use ivar_sensor_kit::adapters;
+pub mod access;
 pub mod config;
 pub mod feed;
 pub mod grpc;

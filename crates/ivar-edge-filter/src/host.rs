@@ -105,13 +105,17 @@ impl RootContext for Root {
         let Some(logic) = self.logic.clone() else { return };
         logic.borrow_mut().heartbeat(now_ms(self));
         if self.core_call.is_none() {
-            let (cluster, authority, batch) = {
+            let (cluster, authority, batch, auth) = {
                 let mut l = logic.borrow_mut();
-                (l.cfg.core_cluster.clone(), l.cfg.core_authority.clone(), l.drain_outbox())
+                let auth = (!l.cfg.core_token.is_empty()).then(|| format!("Bearer {}", l.cfg.core_token));
+                (l.cfg.core_cluster.clone(), l.cfg.core_authority.clone(), l.drain_outbox(), auth)
             };
             match batch {
                 Some(body) => {
-                    let headers = vec![(":method", "POST"), (":path", "/v1/events"), (":authority", authority.as_str()), ("content-type", "application/json")];
+                    let mut headers = vec![(":method", "POST"), (":path", "/v1/events"), (":authority", authority.as_str()), ("content-type", "application/json")];
+                    if let Some(a) = &auth {
+                        headers.push(("authorization", a.as_str()));
+                    }
                     match self.dispatch_http_call(&cluster, headers, Some(&body), vec![], Duration::from_secs(2)) {
                         Ok(t) => self.core_call = Some((t, CoreCall::Events)),
                         Err(e) => {
@@ -124,7 +128,10 @@ impl RootContext for Root {
                     // Nothing to send: fetch standing verdicts, since each
                     // gateway worker keeps its own cache.
                     let path = logic.borrow().feed_path();
-                    let headers = vec![(":method", "GET"), (":path", path.as_str()), (":authority", authority.as_str())];
+                    let mut headers = vec![(":method", "GET"), (":path", path.as_str()), (":authority", authority.as_str())];
+                    if let Some(a) = &auth {
+                        headers.push(("authorization", a.as_str()));
+                    }
                     if let Ok(t) = self.dispatch_http_call(&cluster, headers, None, vec![], Duration::from_secs(2)) {
                         self.core_call = Some((t, CoreCall::Feed));
                     }

@@ -17,6 +17,8 @@ export interface IvarOptions {
   tenant?: (req: Request) => string | undefined;
   /** Core ingest endpoint. When unset, the core runs embedded in this process. */
   coreUrl?: string;
+  /** The sensor token the core issued for this sensor id (`ivar-core token sensor`). */
+  coreToken?: string;
   /** Verified PolicyContent. Defaults to the spec default policy. Prefer policyBundle. */
   policy?: unknown;
   /** Signed policy bundle (base64 archive from ivar-control build), verified before use. */

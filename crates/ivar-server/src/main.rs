@@ -73,12 +73,28 @@ async fn main() -> anyhow::Result<()> {
             std::fs::write(out, serde_json::to_string_pretty(&ring)?)?;
             Ok(())
         }
+        Some("token") => {
+            // Prints the token once; only its hash is stored.
+            let token = ivar_server::access::new_token();
+            match (args.get(2).map(String::as_str), args.get(3)) {
+                (Some("sensor"), Some(file)) if args.len() >= 6 => {
+                    let mut f: ivar_server::access::TokenFile = std::fs::read_to_string(file).ok().map(|t| serde_json::from_str(&t)).transpose()?.unwrap_or_default();
+                    f.tokens.retain(|t| &t.name != &args[4]);
+                    f.tokens.push(ivar_server::access::SensorToken { name: args[4].clone(), sha256: ivar_server::access::token_sha256(&token), sensors: args[5..].to_vec() });
+                    std::fs::write(file, serde_json::to_string_pretty(&f)? + "\n")?;
+                }
+                (Some("proxy"), Some(file)) => std::fs::write(file, ivar_server::access::token_sha256(&token) + "\n")?,
+                _ => anyhow::bail!("usage: ivar-core token sensor <tokens.json> <name> <sensor-id-pattern>... | ivar-core token proxy <proxy-token.sha256>"),
+            }
+            println!("{token}");
+            Ok(())
+        }
         Some("serve") => {
             let cfg_path = args.iter().position(|a| a == "--config").and_then(|i| args.get(i + 1)).cloned().unwrap_or_else(|| "/etc/ivar/core.yaml".into());
             serve(ServerConfig::load(&cfg_path)?).await
         }
         _ => {
-            eprintln!("usage: ivar-core serve --config <path> | ivar-core health [host:port] | ivar-core keygen <path> | ivar-core keyring <out.json> <seed>=<role>[+<role>] ...");
+            eprintln!("usage: ivar-core serve --config <path> | ivar-core health [host:port] | ivar-core keygen <path> | ivar-core keyring <out.json> <seed>=<role>[+<role>] ... | ivar-core token sensor|proxy ...");
             std::process::exit(2);
         }
     }
@@ -112,6 +128,17 @@ async fn serve(cfg: ServerConfig) -> anyhow::Result<()> {
     let evidence = FileEvidenceStore::open(&Path::new(&cfg.data_dir).join(format!("evidence-{}.jsonl", cfg.shard)))?;
     let sinks = ivar_server::sinks::build(&cfg.sinks, Some(action_key.clone()), &cfg.public_url);
     let responders = Responders::start(&cfg.responders, action_key)?;
+    let peers = cfg.shard_peers.iter().map(|p| p.trim_end_matches('/').to_string()).collect::<Vec<_>>();
+    if cfg.shards > 1 && peers.len() != cfg.shards as usize {
+        anyhow::bail!("shards is {} but shard_peers lists {}: every shard needs every peer's URL, or events another shard owns are lost", cfg.shards, peers.len());
+    }
+    let access = ivar_server::access::Access::load(cfg.sensor_tokens_file.as_deref(), cfg.operator_proxy_token_file.as_deref(), peers)?;
+    if access.ingest_open() {
+        tracing::warn!("ingest is open: anyone who can reach this core can send events and frame an address; set sensor_tokens_file");
+    }
+    if access.operators_open() {
+        tracing::warn!("operator headers are believed from any client: set operator_proxy_token_file so only the staff SSO proxy can assert an operator");
+    }
     let state = AppState::start(StartOptions {
         evidence,
         policy_archive_b64: bundle,
@@ -125,6 +152,7 @@ async fn serve(cfg: ServerConfig) -> anyhow::Result<()> {
         shard: cfg.shard,
         shards: cfg.shards,
         policy_dir: Some(Path::new(&cfg.data_dir).join(format!("policies-{}", cfg.shard))),
+        access,
     })?;
 
     // Tamper monitoring: a sensor silent for 60 seconds raises an alert.

@@ -18,6 +18,15 @@ data:
     {{- if not .Values.core.console.enabled }}
     console_dir: ""
     {{- end }}
+    # Every shard, so events another shard owns are forwarded to it.
+    shard_peers:
+    {{- range $i := until (int .Values.core.replicas) }}
+      - http://ivar-core-{{ $i }}.ivar-core-shards.{{ $.Release.Namespace }}.svc:8080
+    {{- end }}
+    {{- with .Values.secrets.access }}
+    sensor_tokens_file: /etc/ivar/access/sensor-tokens.json
+    operator_proxy_token_file: /etc/ivar/access/proxy-token.sha256
+    {{- end }}
     {{- with .Values.core.sinks }}
     sinks: {{- toYaml . | nindent 6 }}
     {{- end }}
@@ -63,10 +72,16 @@ spec:
             - { name: keys, mountPath: /etc/ivar/keys, readOnly: true }
             - { name: policy, mountPath: /etc/ivar/policy, readOnly: true }
             - { name: evidence, mountPath: /var/lib/ivar }
+            {{- if .Values.secrets.access }}
+            - { name: access, mountPath: /etc/ivar/access, readOnly: true }
+            {{- end }}
       volumes:
         - { name: config, configMap: { name: ivar-core } }
         - { name: keys, secret: { secretName: {{ .Values.secrets.keys }}, defaultMode: 0400 } }
         - { name: policy, secret: { secretName: {{ .Values.secrets.policy }} } }
+        {{- with .Values.secrets.access }}
+        - { name: access, secret: { secretName: {{ . }}, defaultMode: 0400 } }
+        {{- end }}
   volumeClaimTemplates:
     - metadata: { name: evidence }
       spec:

@@ -32,6 +32,15 @@ pub struct ServerConfig {
     /// same origin as the API so live mode needs no cross origin access.
     /// Unset: the console bundled in the image, when present. Empty: off.
     pub console_dir: Option<String>,
+    /// Sensor tokens (JSON, hashes only; `ivar-core token`). Unset: ingest
+    /// is open to anyone who can reach the core.
+    pub sensor_tokens_file: Option<String>,
+    /// The hex SHA-256 of the token the staff SSO proxy sends in
+    /// X-Ivar-Proxy-Token. Unset: operator headers are believed from anyone.
+    pub operator_proxy_token_file: Option<String>,
+    /// Base URL of every shard, by shard number, so events another shard
+    /// owns are forwarded to it rather than dropped.
+    pub shard_peers: Vec<String>,
 }
 
 impl Default for ServerConfig {
@@ -53,6 +62,9 @@ impl Default for ServerConfig {
             ai_config: None,
             expected_layers: vec!["edge".into(), "app_sdk".into(), "host".into(), "network".into(), "database".into()],
             console_dir: None,
+            sensor_tokens_file: None,
+            operator_proxy_token_file: None,
+            shard_peers: vec![],
         }
     }
 }

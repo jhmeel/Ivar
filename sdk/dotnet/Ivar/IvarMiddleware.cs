@@ -25,6 +25,8 @@ public sealed class IvarOptions
     public Func<HttpContext, string?> Session { get; set; } = _ => null;
     public Func<HttpContext, IEnumerable<string>> Roles { get; set; } = _ => [];
     public string? CoreUrl { get; set; }
+    /// <summary>The sensor token the core issued for SensorId.</summary>
+    public string? CoreToken { get; set; }
     public string? PolicyJson { get; set; }
     public string RedactionKey { get; set; } = "";
     public string SensorId { get; set; } = "dotnet-sdk";
@@ -77,7 +79,7 @@ public sealed class IvarGuardian
             ["metadata"] = new JsonObject { ["version"] = "1.3.0", ["extensions"] = new JsonArray(new JsonObject { ["name"] = "ivar", ["uid"] = "999", ["version"] = "1.0.0" }) },
             ["actor"] = actor,
             ["src_endpoint"] = new JsonObject { ["ip"] = ctx.Connection.RemoteIpAddress?.ToString() ?? "" },
-            ["http_request"] = new JsonObject { ["http_method"] = ctx.Request.Method, ["url_path"] = ctx.Request.Path.Value ?? "", ["user_agent"] = ctx.Request.Headers.UserAgent.ToString() },
+            ["http_request"] = new JsonObject { ["http_method"] = ctx.Request.Method, ["url_path"] = ctx.Request.Path.Value ?? "", ["user_agent"] = ctx.Request.Headers.UserAgent.ToString(), ["body_keys"] = new JsonArray(BodyKeys.Of(ctx).Select(k => (JsonNode)k!).ToArray()) },
             ["ivar"] = x,
         };
         if (status != 0) ev["http_response"] = new JsonObject { ["code"] = status };
@@ -87,26 +89,65 @@ public sealed class IvarGuardian
     public void Submit(JsonNode ev)
     {
         Interlocked.Increment(ref _pending);
-        if (!_queue.Writer.TryWrite(ev)) Options.OnAlert("fail_open", "event buffer full");
+        if (_queue.Writer.TryWrite(ev)) return;
+        Interlocked.Decrement(ref _pending);
+        Options.OnAlert("fail_open", "event buffer full");
     }
+
+    /// <summary>Report a login so credential spraying and account takeover are correlated.</summary>
+    public void ReportLogin(HttpContext ctx, bool success, string account)
+    {
+        var ev = Event(ctx, "auth.login", 3002, 0, new JsonObject { ["target_entity"] = "user:" + IvarApi.KeyedHash(Options.RedactionKey, account) });
+        ev["status_id"] = success ? 1 : 2;
+        Submit(ev);
+    }
+
+    /// <summary>Report a business action such as a payout, a role change or an export.</summary>
+    public void ReportAction(HttpContext ctx, string name, double value = 0, long records = 0, bool destructive = false) =>
+        Submit(Event(ctx, "business.action", 6003, 0, new JsonObject { ["business_action"] = name, ["value_moved"] = value, ["records_read"] = records, ["destructive"] = destructive }));
 
     private async Task DrainAsync()
     {
-        await foreach (var ev in _queue.Reader.ReadAllAsync())
+        var failing = false;
+        var reader = _queue.Reader;
+        while (await reader.WaitToReadAsync())
         {
+            // Everything queued so far goes in one request, up to 500 events.
+            var batch = new List<JsonNode>();
+            while (batch.Count < 500 && reader.TryRead(out var ev)) batch.Add(ev);
             try
             {
-                JsonNode? verdicts;
-                if (_core is not null) verdicts = _core.Process(ev, IvarApi.Now())["verdicts"];
+                var verdicts = new List<JsonNode>();
+                if (_core is not null)
+                {
+                    foreach (var ev in batch) if (_core.Process(ev, IvarApi.Now())["verdicts"] is JsonArray a) verdicts.AddRange(a.Where(v => v is not null)!);
+                }
                 else
                 {
-                    var resp = await _http.PostAsJsonAsync(Options.CoreUrl!.TrimEnd('/') + "/v1/events", new JsonObject { ["sensor_id"] = Options.SensorId, ["events"] = new JsonArray(ev.DeepClone()) });
-                    verdicts = JsonNode.Parse(await resp.Content.ReadAsStringAsync())?["verdicts"];
+                    using var req = new HttpRequestMessage(HttpMethod.Post, Options.CoreUrl!.TrimEnd('/') + "/v1/events")
+                    {
+                        Content = JsonContent.Create(new JsonObject { ["sensor_id"] = Options.SensorId, ["events"] = new JsonArray(batch.Select(e => e.DeepClone()).ToArray()) }),
+                    };
+                    if (!string.IsNullOrEmpty(Options.CoreToken)) req.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Options.CoreToken);
+                    using var resp = await _http.SendAsync(req);
+                    if (!resp.IsSuccessStatusCode)
+                    {
+                        var code = (int)resp.StatusCode;
+                        if (!failing) Options.OnAlert("sdk_fault", code is 401 or 403 ? $"the core refused this sensor's token (HTTP {code}): check CoreToken and the sensor id it is issued for" : $"the core answered HTTP {code}");
+                        failing = true;
+                        continue;
+                    }
+                    failing = false;
+                    if (JsonNode.Parse(await resp.Content.ReadAsStringAsync())?["verdicts"] is JsonArray a) verdicts.AddRange(a.Where(v => v is not null)!);
                 }
-                if (verdicts is JsonArray arr) foreach (var v in arr) if (v is not null) Sensor.PushVerdict(v);
+                foreach (var v in verdicts) Sensor.PushVerdict(v);
             }
-            catch (Exception e) { Options.OnAlert("sdk_fault", e.Message); }
-            finally { Interlocked.Decrement(ref _pending); }
+            catch (Exception e)
+            {
+                if (!failing) Options.OnAlert("sdk_fault", "the core is unreachable, events are not scored until it returns: " + e.Message);
+                failing = true;
+            }
+            finally { Interlocked.Add(ref _pending, -batch.Count); }
         }
     }
 
@@ -133,6 +174,7 @@ public sealed class IvarMiddleware(RequestDelegate next, IvarGuardian g)
 {
     public async Task InvokeAsync(HttpContext ctx)
     {
+        await BodyKeys.ReadAsync(ctx);
         var o = g.Options;
         var admin = o.AdminPrefixes.Any(p => ctx.Request.Path.StartsWithSegments(p));
         var sw = Stopwatch.StartNew();

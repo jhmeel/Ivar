@@ -57,6 +57,7 @@ fn start(dir: &std::path::Path) -> Arc<AppState> {
         shard: 0,
         shards: 1,
         policy_dir: Some(dir.join("policies")),
+        access: Default::default(),
     })
     .unwrap()
 }

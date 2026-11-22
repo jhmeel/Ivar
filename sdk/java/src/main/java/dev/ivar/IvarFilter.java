@@ -40,6 +40,8 @@ public final class IvarFilter implements Filter {
         public Function<HttpServletRequest, String> session = r -> null;
         public Function<HttpServletRequest, List<String>> roles = r -> List.of();
         public String coreUrl;
+        /** The sensor token the core issued for sensorId. */
+        public String coreToken;
         public JsonNode policy;
         public String redactionKey = "";
         public String sensorId = "java-sdk";
@@ -100,7 +102,8 @@ public final class IvarFilter implements Filter {
         if (s != null && !s.isEmpty()) actor.putObject("session").put("uid", s);
         actor.put("authorizations", String.join(",", opts.roles.apply(r)));
         ev.putObject("src_endpoint").put("ip", r.getRemoteAddr());
-        ev.putObject("http_request").put("http_method", r.getMethod()).put("url_path", r.getRequestURI()).put("user_agent", String.valueOf(r.getHeader("User-Agent")));
+        ObjectNode http = ev.putObject("http_request").put("http_method", r.getMethod()).put("url_path", r.getRequestURI()).put("user_agent", String.valueOf(r.getHeader("User-Agent")));
+        BodyKeys.of(r).forEach(http.putArray("body_keys")::add);
         if (status != 0) ev.putObject("http_response").put("code", status);
         ObjectNode x = ev.putObject("ivar");
         x.put("sensor_id", opts.sensorId).put("sensor_type", "app_sdk").put("observation_point", "app_sdk").put("sensor_seq", seq.incrementAndGet());
@@ -111,7 +114,7 @@ public final class IvarFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletRequest req = BodyKeys.read((HttpServletRequest) request);
         HttpServletResponse res = (HttpServletResponse) response;
         boolean admin = opts.adminPrefixes.stream().anyMatch(p -> req.getRequestURI().startsWith(p));
         long started = System.nanoTime();
@@ -125,7 +128,7 @@ public final class IvarFilter implements Filter {
                 return;
             }
             opts.onAlert.accept("fail_open", String.valueOf(e.getMessage()));
-            chain.doFilter(request, response);
+            chain.doFilter(req, response);
             return;
         }
         long elapsed = System.nanoTime() - started;
@@ -155,7 +158,7 @@ public final class IvarFilter implements Filter {
             }
         }
         try {
-            chain.doFilter(request, response);
+            chain.doFilter(req, response);
         } finally {
             submit(event(req, "http.request", 4002, res.getStatus()));
         }
@@ -176,31 +179,63 @@ public final class IvarFilter implements Filter {
     }
 
     private void drain() {
+        boolean failing = false;
         while (true) {
-            JsonNode ev;
+            List<JsonNode> batch = new java.util.ArrayList<>();
             try {
-                ev = queue.take();
+                batch.add(queue.take());
             } catch (InterruptedException e) {
                 return;
             }
+            // Everything queued so far goes in one request, up to 500 events.
+            queue.drainTo(batch, 499);
             try {
-                JsonNode verdicts;
                 if (core != null) {
-                    verdicts = core.process(ev, Ivar.now()).get("verdicts");
+                    for (JsonNode ev : batch) {
+                        JsonNode verdicts = core.process(ev, Ivar.now()).get("verdicts");
+                        if (verdicts != null) verdicts.forEach(sensor::pushVerdict);
+                    }
                 } else {
-                    String body = IvarRuntime.JSON.writeValueAsString(Map.of("sensor_id", opts.sensorId, "events", List.of(ev)));
-                    var resp = http.send(HttpRequest.newBuilder(URI.create(opts.coreUrl.replaceAll("/$", "") + "/v1/events")).header("content-type", "application/json").POST(HttpRequest.BodyPublishers.ofString(body)).build(), java.net.http.HttpResponse.BodyHandlers.ofString());
-                    verdicts = IvarRuntime.JSON.readTree(resp.body()).get("verdicts");
+                    String body = IvarRuntime.JSON.writeValueAsString(Map.of("sensor_id", opts.sensorId, "events", batch));
+                    var req = HttpRequest.newBuilder(URI.create(opts.coreUrl.replaceAll("/$", "") + "/v1/events")).timeout(java.time.Duration.ofSeconds(2)).header("content-type", "application/json");
+                    if (opts.coreToken != null && !opts.coreToken.isEmpty()) req.header("authorization", "Bearer " + opts.coreToken);
+                    var resp = http.send(req.POST(HttpRequest.BodyPublishers.ofString(body)).build(), java.net.http.HttpResponse.BodyHandlers.ofString());
+                    if (resp.statusCode() != 200) {
+                        if (!failing) {
+                            boolean refused = resp.statusCode() == 401 || resp.statusCode() == 403;
+                            opts.onAlert.accept("sdk_fault", refused ? "the core refused this sensor's token (HTTP " + resp.statusCode() + "): check coreToken and the sensor id it is issued for" : "the core answered HTTP " + resp.statusCode());
+                        }
+                        failing = true;
+                    } else {
+                        failing = false;
+                        JsonNode verdicts = IvarRuntime.JSON.readTree(resp.body()).get("verdicts");
+                        if (verdicts != null) verdicts.forEach(sensor::pushVerdict);
+                    }
                 }
-                if (verdicts != null) verdicts.forEach(sensor::pushVerdict);
             } catch (InterruptedException e) {
                 return;
             } catch (Exception e) {
-                opts.onAlert.accept("sdk_fault", String.valueOf(e.getMessage()));
+                if (!failing) opts.onAlert.accept("sdk_fault", "the core is unreachable, events are not scored until it returns: " + e.getMessage());
+                failing = true;
             } finally {
-                pending.decrementAndGet();
+                pending.addAndGet(-batch.size());
             }
         }
+    }
+
+    /** Report a login so credential spraying and account takeover are correlated. */
+    public void reportLogin(HttpServletRequest req, boolean success, String account) {
+        ObjectNode ev = event(req, "auth.login", 3002, 0);
+        ev.put("status_id", success ? 1 : 2);
+        ((ObjectNode) ev.get("ivar")).put("target_entity", "user:" + keyedHash(opts.redactionKey, account));
+        submit(ev);
+    }
+
+    /** Report a business action such as a payout, a role change or an export. */
+    public void reportAction(HttpServletRequest req, String name, double value, long records, boolean destructive) {
+        ObjectNode ev = event(req, "business.action", 6003, 0);
+        ((ObjectNode) ev.get("ivar")).put("business_action", name).put("value_moved", value).put("records_read", records).put("destructive", destructive);
+        submit(ev);
     }
 
     /** Wait until every submitted event was scored and its verdicts applied. */
