@@ -64,7 +64,7 @@ def build_event(
         "severity_id": 1,
         "status_id": 2 if success is False else 1,
         "activity_name": activity,
-        "metadata": {"version": "1.3.0", "product": {"name": "ivar", "vendor_name": "ivar", "version": "0.1.0"}, "extensions": [{"name": "ivar", "uid": "999", "version": "1.0.0"}]},
+        "metadata": {"version": "1.3.0", "product": {"name": "ivar", "vendor_name": "ivar", "version": "0.1.1"}, "extensions": [{"name": "ivar", "uid": "999", "version": "1.0.0"}]},
         "actor": {
             "user": {"uid": keyed_hash(redaction_key, identity), "type": "human"} if identity else None,
             "session": {"uid": session} if session else None,

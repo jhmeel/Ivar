@@ -68,11 +68,23 @@ class Guardian:
         self.budget_ms = budget_ms
         self.alert = on_alert or (lambda kind, msg: log.warning("ivar %s: %s", kind, msg))
         self.sensor = LocalSensor.create(self.policy)
+        self._warm()
         self.core = None if core_url else Core.create(self.policy, redaction_key or "00")
         self.core_url = core_url
         self._q: queue.Queue = queue.Queue(maxsize=10_000)
         self._worker = threading.Thread(target=self._drain, name="ivar-scoring", daemon=True)
         self._worker.start()
+
+    def _warm(self) -> None:
+        """Run the fast path on a plain read and a write with body fields, so the
+        first real request does not pay for the WebAssembly code's first run."""
+        samples = [
+            {"activity_name": "http.request", "http_request": {"http_method": "GET", "url_path": "/"}, "src_endpoint": {"ip": "192.0.2.1"}, "ivar": {}},
+            {"activity_name": "http.request", "http_request": {"http_method": "POST", "url_path": "/login", "body_keys": ["email", "password"]},
+             "actor": {"user": {"uid": "kh_warm"}}, "src_endpoint": {"ip": "192.0.2.1"}, "ivar": {}},
+        ]
+        for i in range(200):
+            self.sensor.decide(samples[i % 2])
 
     def _event(self, info: RequestInfo, activity: str, class_uid: int, **kw: Any) -> dict:
         return build_event(

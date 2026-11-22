@@ -2,6 +2,6 @@ apiVersion: v2
 name: ivar
 description: Intent bound intrusion detection and prevention. Adds the core, the control plane, the node agent and the gateway plugin with no application change.
 type: application
-version: 0.1.0
-appVersion: "0.1.0"
+version: 0.1.1
+appVersion: "0.1.1"
 kubeVersion: ">=1.26.0-0"

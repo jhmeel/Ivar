@@ -152,34 +152,34 @@ container images in GitHub's registry under `ghcr.io/jhmeel/ivar`.
 
 | Component | Install |
 |---|---|
-| Node.js SDK | `npm install https://github.com/jhmeel/Ivar/releases/download/v0.1.0/ivar-express-0.1.0.tgz` |
-| Python SDK | `pip install https://github.com/jhmeel/Ivar/releases/download/v0.1.0/ivar-0.1.0-py3-none-any.whl` |
-| Go SDK | `go get github.com/jhmeel/ivar/sdk/go@v0.1.0` |
+| Node.js SDK | `npm install https://github.com/jhmeel/Ivar/releases/download/v0.1.1/ivar-express-0.1.1.tgz` |
+| Python SDK | `pip install https://github.com/jhmeel/Ivar/releases/download/v0.1.1/ivar-0.1.1-py3-none-any.whl` |
+| Go SDK | `go get github.com/jhmeel/ivar/sdk/go@v0.1.1` |
 | Java SDK | the jar and pom from the release, installed into your local Maven repository (below) |
 | PHP SDK | the zip from the release, through a Composer `package` repository (below) |
 | .NET SDK | the `.nupkg` from the release, added from a local folder (below) |
-| Core, control plane, connectors, sensors | `docker pull ghcr.io/jhmeel/ivar/core:v0.1.0` (also `control`, `connectors`, `sensors`) |
-| Edge filter for Envoy and Istio | `ghcr.io/jhmeel/ivar/edge-filter:v0.1.0`, or `ivar_edge_filter.wasm` from the release |
-| Linux binaries | `ivar-0.1.0-linux-x86_64.tar.gz` from the release |
+| Core, control plane, connectors, sensors | `docker pull ghcr.io/jhmeel/ivar/core:v0.1.1` (also `control`, `connectors`, `sensors`) |
+| Edge filter for Envoy and Istio | `ghcr.io/jhmeel/ivar/edge-filter:v0.1.1`, or `ivar_edge_filter.wasm` from the release |
+| Linux binaries | `ivar-0.1.1-linux-x86_64.tar.gz` from the release |
 
 Verify what you download:
 
 ```bash
-curl -LO https://github.com/jhmeel/Ivar/releases/download/v0.1.0/SHA256SUMS
+curl -LO https://github.com/jhmeel/Ivar/releases/download/v0.1.1/SHA256SUMS
 sha256sum --check --ignore-missing SHA256SUMS
 ```
 
 The Python SDK also installs straight from git, without a release:
-`pip install "ivar @ git+https://github.com/jhmeel/Ivar.git@v0.1.0#subdirectory=sdk/python"`.
+`pip install "ivar @ git+https://github.com/jhmeel/Ivar.git@v0.1.1#subdirectory=sdk/python"`.
 
 **Java**, with Maven or Gradle:
 
 ```bash
-curl -LO https://github.com/jhmeel/Ivar/releases/download/v0.1.0/ivar-java-0.1.0.jar -LO https://github.com/jhmeel/Ivar/releases/download/v0.1.0/ivar-java-0.1.0.pom
-mvn install:install-file -Dfile=ivar-java-0.1.0.jar -DpomFile=ivar-java-0.1.0.pom
+curl -LO https://github.com/jhmeel/Ivar/releases/download/v0.1.1/ivar-java-0.1.1.jar -LO https://github.com/jhmeel/Ivar/releases/download/v0.1.1/ivar-java-0.1.1.pom
+mvn install:install-file -Dfile=ivar-java-0.1.1.jar -DpomFile=ivar-java-0.1.1.pom
 ```
 
-then depend on `dev.ivar:ivar-java:0.1.0` (Gradle: add `mavenLocal()` to the
+then depend on `dev.ivar:ivar-java:0.1.1` (Gradle: add `mavenLocal()` to the
 repositories). Its own dependencies resolve from Maven Central as usual.
 
 **PHP**, in `composer.json`:
@@ -190,13 +190,13 @@ repositories). Its own dependencies resolve from Maven Central as usual.
     "type": "package",
     "package": {
       "name": "ivar/ivar-php",
-      "version": "0.1.0",
-      "dist": { "url": "https://github.com/jhmeel/Ivar/releases/download/v0.1.0/ivar-php-0.1.0.zip", "type": "zip" },
+      "version": "0.1.1",
+      "dist": { "url": "https://github.com/jhmeel/Ivar/releases/download/v0.1.1/ivar-php-0.1.1.zip", "type": "zip" },
       "require": { "php": ">=8.1", "ext-ffi": "*", "ext-json": "*" },
       "autoload": { "psr-4": { "Ivar\\": "src/" } }
     }
   }],
-  "require": { "ivar/ivar-php": "0.1.0" }
+  "require": { "ivar/ivar-php": "0.1.1" }
 }
 ```
 
@@ -204,10 +204,10 @@ repositories). Its own dependencies resolve from Maven Central as usual.
 
 ```bash
 mkdir -p packages
-curl -L -o packages/Ivar.AspNetCore.0.1.0.nupkg https://github.com/jhmeel/Ivar/releases/download/v0.1.0/Ivar.AspNetCore.0.1.0.nupkg
+curl -L -o packages/Ivar.AspNetCore.0.1.1.nupkg https://github.com/jhmeel/Ivar/releases/download/v0.1.1/Ivar.AspNetCore.0.1.1.nupkg
 dotnet new nugetconfig
 dotnet nuget add source ./packages --name ivar-release --configfile nuget.config
-dotnet add package Ivar.AspNetCore --version 0.1.0
+dotnet add package Ivar.AspNetCore --version 0.1.1
 ```
 
 The folder is added next to nuget.org, which still serves the SDK's own
@@ -281,9 +281,16 @@ policy says enforce *and* the component's own mode allows it.
 ### Run the core and the control plane
 
 Every integration talks to `ivar-core` (events, verdicts, evidence) and,
-optionally, `ivar-control` (signed policy, flags, plugins).
+optionally, `ivar-control` (signed policy, flags, plugins). The release
+download has everything these steps need: the binaries in `bin/`, a starter
+policy in `share/ivar/policy/`, the attack replay library and the console.
 
 ```bash
+curl -LO https://github.com/jhmeel/Ivar/releases/download/v0.1.1/ivar-0.1.1-linux-x86_64.tar.gz
+tar -xzf ivar-0.1.1-linux-x86_64.tar.gz && cd ivar-0.1.1-linux-x86_64
+export PATH="$PWD/bin:$PATH"
+cp share/ivar/policy/*.yaml .     # policy.yaml, openapi.yaml, time-locks.yaml, operator-decisions.yaml
+
 # Keys: one seed file per key; the key id is the file name.
 ivar-core keygen keys/policy-a.seed
 ivar-core keygen keys/policy-b.seed
@@ -295,9 +302,12 @@ head -c 32 /dev/urandom | od -An -tx1 | tr -d ' \n' > keys/redaction.hex
 ivar-core keyring keyring.json keys/policy-a.seed=policy keys/policy-b.seed=policy
 
 # Validate the policy against the attack replay library, then sign it.
-ivar-control validate --source deploy/policy/policy.yaml --library replay-library
-ivar-control build --source deploy/policy/policy.yaml --keys keys/policy-a.seed,keys/policy-b.seed --out policy.bundle
+ivar-control validate --source policy.yaml
+ivar-control build --source policy.yaml --keys keys/policy-a.seed,keys/policy-b.seed --out policy.bundle
 ```
+
+Edit `policy.yaml` and `openapi.yaml` to describe your own API before you
+sign it; the starter declares a small payments API.
 
 `core.yaml`:
 
@@ -315,9 +325,18 @@ expected_layers: [edge, app_sdk, host, network, database]
 # The operator console is served at /console/ by default; console_dir: "" turns it off.
 ```
 
+Run it from the download, with the paths in `core.yaml` pointing at the
+files above (it serves the console from `share/ivar/console`):
+
+```bash
+ivar-core serve --config core.yaml
+```
+
+or with the image, which reads them from `/etc/ivar`:
+
 ```bash
 docker run -d --name ivar-core -p 8080:8080 -v "$PWD:/etc/ivar:ro" -v ivar-evidence:/var/lib/ivar \
-  ghcr.io/jhmeel/ivar/core:v0.1.0 serve --config /etc/ivar/core.yaml
+  ghcr.io/jhmeel/ivar/core:v0.1.1 serve --config /etc/ivar/core.yaml
 ```
 
 The redaction key is shared with every sensor: payload values and
@@ -350,7 +369,7 @@ one does the same four things:
 #### Node.js (Express)
 
 ```bash
-npm install https://github.com/jhmeel/Ivar/releases/download/v0.1.0/ivar-express-0.1.0.tgz
+npm install https://github.com/jhmeel/Ivar/releases/download/v0.1.1/ivar-express-0.1.1.tgz
 ```
 
 ```js
@@ -423,7 +442,7 @@ with a cancellation window.
 #### Python (FastAPI, Starlette, any ASGI app)
 
 ```bash
-pip install https://github.com/jhmeel/Ivar/releases/download/v0.1.0/ivar-0.1.0-py3-none-any.whl
+pip install https://github.com/jhmeel/Ivar/releases/download/v0.1.1/ivar-0.1.1-py3-none-any.whl
 ```
 
 ```python
@@ -493,7 +512,7 @@ as above.
 #### Go (net/http)
 
 ```bash
-go get github.com/jhmeel/ivar/sdk/go@v0.1.0
+go get github.com/jhmeel/ivar/sdk/go@v0.1.1
 ```
 
 ```go
@@ -554,7 +573,7 @@ After installing the jar from the release (see [Installation](#installation)):
 <dependency>
   <groupId>dev.ivar</groupId>
   <artifactId>ivar-java</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
 </dependency>
 ```
 
@@ -609,7 +628,7 @@ On plain Jakarta EE register the same filter in `web.xml` or with
 Add the release as a Composer package repository (see [Installation](#installation)), then:
 
 ```bash
-composer require ivar/ivar-php:0.1.0
+composer require ivar/ivar-php:0.1.1
 ```
 
 The SDK runs the core with wasmtime through FFI: enable `ffi.enable=1` and
@@ -663,7 +682,7 @@ a small file and applied by every worker.
 With the release package added as a source (see [Installation](#installation)):
 
 ```bash
-dotnet add package Ivar.AspNetCore --version 0.1.0
+dotnet add package Ivar.AspNetCore --version 0.1.1
 ```
 
 ```csharp
@@ -984,7 +1003,8 @@ to sensors that cannot wait for a response.
 
 ## The console
 
-Every `ivar-core` serves the operator console at `/console/`. It follows the
+Every `ivar-core`, from the image or the release download, serves the
+operator console at `/console/`. It follows the
 core live, or verifies and replays an exported bundle.
 
 ### Opening it

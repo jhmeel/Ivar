@@ -61,16 +61,22 @@ impl Default for ServerConfig {
 pub const BUNDLED_CONSOLE: &str = "/usr/share/ivar/console";
 
 impl ServerConfig {
-    /// The console directory to serve, if any.
+    /// The console directory to serve, if any: the configured one, or the
+    /// copy shipped with the image or next to the binary in the release.
     pub fn console(&self) -> Option<String> {
-        self.console_with(|dir| std::path::Path::new(dir).join("index.html").is_file())
+        let beside_binary = std::env::current_exe()
+            .ok()
+            .and_then(|exe| exe.parent().map(|bin| bin.join("../share/ivar/console")))
+            .and_then(|dir| dir.canonicalize().ok())
+            .map(|dir| dir.to_string_lossy().into_owned());
+        self.console_with(beside_binary.as_deref(), |dir| std::path::Path::new(dir).join("index.html").is_file())
     }
 
-    fn console_with(&self, present: impl Fn(&str) -> bool) -> Option<String> {
+    fn console_with(&self, beside_binary: Option<&str>, present: impl Fn(&str) -> bool) -> Option<String> {
         match self.console_dir.as_deref() {
             Some("") => None,
             Some(dir) => Some(dir.to_string()),
-            None => present(BUNDLED_CONSOLE).then(|| BUNDLED_CONSOLE.to_string()),
+            None => [Some(BUNDLED_CONSOLE), beside_binary].into_iter().flatten().find(|dir| present(dir)).map(str::to_string),
         }
     }
 
@@ -127,12 +133,14 @@ mod tests {
     #[test]
     fn console_defaults_to_the_bundled_copy() {
         let mut c = ServerConfig::default();
-        assert_eq!(c.console_with(|_| true).as_deref(), Some(BUNDLED_CONSOLE), "served from the image when present");
-        assert_eq!(c.console_with(|_| false), None, "nothing to serve outside the image");
+        let release = Some("/opt/ivar/share/ivar/console");
+        assert_eq!(c.console_with(release, |_| true).as_deref(), Some(BUNDLED_CONSOLE), "served from the image when present");
+        assert_eq!(c.console_with(release, |d| d != BUNDLED_CONSOLE).as_deref(), release, "or from beside the release binary");
+        assert_eq!(c.console_with(release, |_| false), None, "nothing to serve when neither exists");
         c.console_dir = Some("/srv/console".into());
-        assert_eq!(c.console_with(|_| false).as_deref(), Some("/srv/console"), "an explicit path wins");
+        assert_eq!(c.console_with(release, |_| false).as_deref(), Some("/srv/console"), "an explicit path wins");
         c.apply_env(|k| (k == "IVAR_CONSOLE_DIR").then(String::new)).unwrap();
-        assert_eq!(c.console_with(|_| true), None, "an empty value turns it off");
+        assert_eq!(c.console_with(release, |_| true), None, "an empty value turns it off");
     }
 }
 

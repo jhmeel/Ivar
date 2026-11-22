@@ -1,6 +1,6 @@
 {
   "name": "@ivar/security-config",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "security.config.ts: the hardening configuration extended with the IVAR settings, with the Appendix A defects F1 to F9 fixed",
   "main": "dist/src/security.config.js",
   "types": "dist/src/security.config.d.ts",

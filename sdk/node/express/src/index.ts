@@ -94,6 +94,10 @@ function alertSink(opts: IvarOptions): (a: Alert) => void {
 export function ivar(opts: IvarOptions): IvarMiddleware {
   const alert = alertSink(opts);
   const budget = opts.budgetMs ?? 1;
+  // The budget is a steady state check: the first requests after start pay
+  // for the JavaScript and WebAssembly code paths compiling once.
+  const WARMUP_REQUESTS = 20;
+  let served = 0;
   const adminPrefixes = opts.adminPrefixes ?? DEFAULT_ADMIN_PREFIXES;
   const source = { bundle: opts.policyBundle, keyring: opts.policyKeyring, controlUrl: opts.controlUrl, refreshMs: opts.policyRefreshMs, stateFile: opts.policyStateFile, sensorId: opts.sensorId ?? 'express-sdk' };
   const signed = initialPolicy(source, alert);
@@ -168,7 +172,7 @@ export function ivar(opts: IvarOptions): IvarMiddleware {
       return next();
     }
     const elapsed = performance.now() - started;
-    if (elapsed > budget) alert({ kind: 'budget_exceeded', message: `local decision took ${elapsed.toFixed(3)} ms`, details: { path: req.path } });
+    if (++served > WARMUP_REQUESTS && elapsed > budget) alert({ kind: 'budget_exceeded', message: `local decision took ${elapsed.toFixed(3)} ms`, details: { path: req.path } });
 
     res.on('finish', () => report(req, { activity: 'http.request', classUid: OCSF_HTTP_ACTIVITY, status: res.statusCode }));
 

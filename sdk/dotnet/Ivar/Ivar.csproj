@@ -7,7 +7,7 @@
     <Authors>Jhmeel Mikail</Authors>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/jhmeel/Ivar</RepositoryUrl>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <Description>IVAR application SDK for ASP.NET Core: middleware and action sink over the verified WebAssembly decision core</Description>
   </PropertyGroup>
   <ItemGroup>

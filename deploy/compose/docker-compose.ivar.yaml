@@ -12,7 +12,7 @@
 # so reach it through that proxy rather than publishing port 8080.
 services:
   ivar:
-    image: ghcr.io/jhmeel/ivar/core:v0.1.0
+    image: ghcr.io/jhmeel/ivar/core:v0.1.1
     command: [serve, --config, /etc/ivar/core.yaml]
     environment:
       IVAR_SHARD: "0"

@@ -92,6 +92,7 @@ func New(opts Options) (*Middleware, error) {
 	if err != nil {
 		return nil, err
 	}
+	warm(sensor)
 	m := &Middleware{opts: opts, rt: rt, policy: policy, sensor: sensor, queue: make(chan map[string]any, 10_000), done: make(chan struct{}), idle: make(chan struct{}, 1)}
 	if opts.CoreURL == "" {
 		if m.core, err = NewCore(rt, policy, orDefault(opts.RedactionKey, "00")); err != nil {
@@ -355,4 +356,17 @@ func (m *Middleware) Guard(action, rootPublicKey string, stepKeys map[string]str
 			writeJSON(w, 202, map[string]any{"status": "held", "lock_id": d.Outcome.Lock.LockID, "release_at": d.Outcome.Lock.ReleaseAt})
 		}
 	}), nil
+}
+
+// warm runs the fast path on a plain read and a write with body fields, so
+// the first real request does not pay for the WebAssembly code's first run.
+func warm(s *LocalSensor) {
+	samples := []map[string]any{
+		{"activity_name": "http.request", "http_request": map[string]any{"http_method": "GET", "url_path": "/"}, "src_endpoint": map[string]any{"ip": "192.0.2.1"}, "ivar": map[string]any{}},
+		{"activity_name": "http.request", "http_request": map[string]any{"http_method": "POST", "url_path": "/login", "body_keys": []string{"email", "password"}},
+			"actor": map[string]any{"user": map[string]any{"uid": "kh_warm"}}, "src_endpoint": map[string]any{"ip": "192.0.2.1"}, "ivar": map[string]any{}},
+	}
+	for i := 0; i < 200; i++ {
+		_, _ = s.Decide(samples[i%len(samples)], time.Now().UnixMilli())
+	}
 }

@@ -38,7 +38,7 @@ func New(sensorID, sensorType string, classUID int, activity string, t time.Time
 		"activity_name": activity,
 		"metadata": map[string]any{
 			"version":    "1.3.0",
-			"product":    map[string]any{"name": "ivar", "vendor_name": "ivar", "version": "0.1.0"},
+			"product":    map[string]any{"name": "ivar", "vendor_name": "ivar", "version": "0.1.1"},
 			"extensions": []any{map[string]any{"name": "ivar", "uid": "999", "version": "1.0.0"}},
 		},
 		"ivar": map[string]any{

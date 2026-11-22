@@ -57,6 +57,11 @@ func main() {
 	cosign := fs.String("cosign", "", "cosign public key PEM for plugins")
 	listen := fs.String("listen", ":8090", "listen address")
 	_ = fs.Parse(os.Args[2:])
+	libraryGiven := false
+	fs.Visit(func(f *flag.Flag) { libraryGiven = libraryGiven || f.Name == "library" })
+	if !libraryGiven {
+		*library = findLibrary(*library)
+	}
 
 	rt, err := ivar.Shared()
 	if err != nil {
@@ -98,7 +103,7 @@ func main() {
 			if err := rt.Call("core.new", map[string]any{"policy": json.RawMessage(content), "redaction_key_hex": "00"}, 0, &out); err != nil {
 				log.Fatalf("the core refuses this policy: %v", err)
 			}
-			cmd := exec.Command("ivar-replay-library", *library, tmp)
+			cmd := exec.Command(besideSelf("ivar-replay-library"), *library, tmp)
 			cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
 			if err := cmd.Run(); err != nil {
 				log.Fatalf("attack replay library failed: %v", err)
@@ -178,4 +183,34 @@ func main() {
 		log.Printf("ivar control plane on %s serving policy version %d", *listen, meta.Version)
 		log.Fatal((&http.Server{Addr: *listen, Handler: srv.Handler(), ReadHeaderTimeout: 10 * time.Second}).ListenAndServe())
 	}
+}
+
+// besideSelf is the path of a release binary shipped next to this one, or
+// the bare name for a lookup on PATH.
+func besideSelf(name string) string {
+	if exe, err := os.Executable(); err == nil {
+		if p := filepath.Join(filepath.Dir(exe), name); fileExists(p) {
+			return p
+		}
+	}
+	return name
+}
+
+// findLibrary prefers a replay library in the working directory, then the
+// one in the release download (share/ivar/replay-library next to bin/).
+func findLibrary(def string) string {
+	if fileExists(def) {
+		return def
+	}
+	if exe, err := os.Executable(); err == nil {
+		if p := filepath.Join(filepath.Dir(exe), "..", "share", "ivar", "replay-library"); fileExists(p) {
+			return filepath.Clean(p)
+		}
+	}
+	return def
+}
+
+func fileExists(p string) bool {
+	_, err := os.Stat(p)
+	return err == nil
 }

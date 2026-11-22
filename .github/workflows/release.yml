@@ -110,6 +110,13 @@ jobs:
           for b in ivar-core ivar-replay-library ivar-control ivar-connector ivar-linux-agent ivar-network-sensor ivar-database-sensor \
                    ivar-log-collector ivar-ai-gateway ivar-build-runner ivar-workstation-sensor; do cp "target/release/$b" "dist/$d/bin/"; done
           cp LICENSE NOTICE "dist/$d/"
+          # Everything the README's first steps need, so a download is enough:
+          # the console the core serves, a starter policy and the attack
+          # replay library that ivar-control validate runs.
+          mkdir -p "dist/$d/share/ivar/console" "dist/$d/share/ivar/policy"
+          cp -r replay-viewer/index.html replay-viewer/favicon.svg replay-viewer/css replay-viewer/js replay-viewer/pkg replay-viewer/vendor replay-viewer/samples "dist/$d/share/ivar/console/"
+          cp deploy/policy/*.yaml "dist/$d/share/ivar/policy/"
+          cp -r replay-library "dist/$d/share/ivar/replay-library"
           tar -C dist -czf "dist/$d.tar.gz" "$d" && rm -rf "dist/$d"
           cp target/wasm32-wasip1/release/ivar_edge_filter.wasm dist/
           cp sdk/php/wasm/ivar_core.wasm dist/

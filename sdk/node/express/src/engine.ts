@@ -24,9 +24,16 @@ export class Engine {
     this.warm();
   }
 
-  /** Warm the WebAssembly code paths so the first request stays in budget. */
+  /**
+   * Warm the WebAssembly code paths so the first real request stays in
+   * budget: a plain read and a write with body fields on a declared route.
+   */
   private warm(): void {
-    for (let i = 0; i < 3; i++) this.sensor.decide(JSON.stringify({ activity_name: 'http.request', http_request: { http_method: 'GET', url_path: '/' }, ivar: {} }), Date.now());
+    const samples = [
+      { activity_name: 'http.request', http_request: { http_method: 'GET', url_path: '/' }, src_endpoint: { ip: '192.0.2.1' }, ivar: {} },
+      { activity_name: 'http.request', http_request: { http_method: 'POST', url_path: '/login', body_keys: ['email', 'password'] }, actor: { user: { uid: 'kh_warm' } }, src_endpoint: { ip: '192.0.2.1' }, ivar: {} },
+    ].map((e) => JSON.stringify(e));
+    for (let i = 0; i < 200; i++) this.sensor.decide(samples[i % samples.length], Date.now());
   }
 
   /**

@@ -2,7 +2,7 @@
 # says enforce and the component's own mode allows it.
 image:
   registry: ghcr.io/jhmeel/ivar
-  tag: "v0.1.0"
+  tag: "v0.1.1"
   pullPolicy: IfNotPresent
 
 # Secrets the chart never generates. Create them first (see NOTES.txt):

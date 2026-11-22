@@ -53,7 +53,7 @@ export function buildEvent(req: Request, opts: IvarOptions, ctx: EventContext, n
     activity_name: ctx.activity,
     metadata: {
       version: '1.3.0',
-      product: { name: 'ivar', vendor_name: 'ivar', version: '0.1.0' },
+      product: { name: 'ivar', vendor_name: 'ivar', version: '0.1.1' },
       extensions: [{ name: 'ivar', uid: '999', version: '1.0.0' }],
     },
     actor: {

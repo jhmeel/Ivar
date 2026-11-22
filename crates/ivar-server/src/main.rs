@@ -140,8 +140,10 @@ async fn serve(cfg: ServerConfig) -> anyhow::Result<()> {
     });
 
     let console = cfg.console();
-    if let Some(dir) = &console {
-        eprintln!("ivar-core: operator console at {}/console/ (from {dir})", cfg.public_url.trim_end_matches('/'));
+    match &console {
+        Some(dir) => eprintln!("ivar-core: operator console at {}/console/ (from {dir})", cfg.public_url.trim_end_matches('/')),
+        None if cfg.console_dir.is_none() => eprintln!("ivar-core: no operator console found; set console_dir to an unpacked ivar-console release to serve one at /console/"),
+        None => {}
     }
     let http = axum::serve(tokio::net::TcpListener::bind(&cfg.http_listen).await?, ivar_server::http::router_with_console(state.clone(), console.as_deref()));
     let grpc = tonic::transport::Server::builder().add_service(IngestServer::new(IngestService { state })).serve(cfg.grpc_listen.parse()?);
