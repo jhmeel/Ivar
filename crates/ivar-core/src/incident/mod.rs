@@ -12,7 +12,31 @@ pub struct IncidentTracker {
     by_entity: BTreeMap<String, String>,
 }
 
+/// Timeline entries an incident keeps: the opening ones and the most recent.
+/// A long attack linked to one incident must not grow it without limit.
+pub const MAX_TIMELINE: usize = 1_000;
+const KEEP_OPENING: usize = 50;
+
+fn push_bounded(timeline: &mut Vec<TimelineEntry>, entry: TimelineEntry) {
+    if timeline.len() >= MAX_TIMELINE {
+        timeline.remove(KEEP_OPENING);
+    }
+    timeline.push(entry);
+}
+
 impl IncidentTracker {
+    /// Rebuild from incidents saved before a restart.
+    pub fn restore(incidents: Vec<Incident>) -> Self {
+        let mut t = IncidentTracker::default();
+        for inc in incidents {
+            for e in &inc.affected_entities {
+                t.by_entity.insert(e.key(), inc.incident_id.clone());
+            }
+            t.incidents.insert(inc.incident_id.clone(), inc);
+        }
+        t
+    }
+
     pub fn get(&self, id: &str) -> Option<&Incident> {
         self.incidents.get(id)
     }
@@ -46,7 +70,7 @@ impl IncidentTracker {
         if !stage.is_empty() {
             inc.attack_stage = stage.into();
         }
-        inc.timeline.push(entry);
+        push_bounded(&mut inc.timeline, entry);
         for e in entities {
             if !inc.affected_entities.iter().any(|x| x.key() == e.key()) {
                 inc.affected_entities.push(e.clone());
@@ -60,7 +84,7 @@ impl IncidentTracker {
     pub fn link(&mut self, entities: &[EntityRef], entry: TimelineEntry) -> Option<String> {
         let id = entities.iter().find_map(|e| self.by_entity.get(&e.key()).cloned())?;
         if let Some(inc) = self.incidents.get_mut(&id) {
-            inc.timeline.push(entry);
+            push_bounded(&mut inc.timeline, entry);
         }
         Some(id)
     }

@@ -59,7 +59,7 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: "3.13" }
       - uses: actions/setup-java@v4
-        with: { distribution: temurin, java-version: "21" }
+        with: { distribution: temurin, java-version: "21", cache: maven, cache-dependency-path: sdk/java/pom.xml }
       - uses: actions/setup-dotnet@v4
         with: { dotnet-version: "8.0.x" }
       - name: Node

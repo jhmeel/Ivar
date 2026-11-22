@@ -48,6 +48,11 @@ public final class Ivar {
         public JsonNode evidence() {
             return rt.call("core.evidence", Map.of(), handle);
         }
+
+        /** Apply a newer verified policy. */
+        public void updatePolicy(JsonNode policy, long now) {
+            rt.call("core.update_policy", Map.of("policy", policy, "now_ms", now), handle);
+        }
     }
 
     /** Known attacks are blocked here with no round trip (section 7.1). */
@@ -58,6 +63,11 @@ public final class Ivar {
 
         public JsonNode decide(Object event, long now) {
             return rt.call("sensor.decide", Map.of("event", event, "now_ms", now), handle);
+        }
+
+        /** Adopt a newer verified policy, keeping cached verdicts. */
+        public void updatePolicy(JsonNode policy) {
+            rt.call("sensor.update_policy", Map.of("policy", policy), handle);
         }
 
         public void pushVerdict(JsonNode verdict) {

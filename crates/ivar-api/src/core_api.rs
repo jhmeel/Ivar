@@ -94,6 +94,17 @@ impl LocalSensor {
         }
         .to_string()
     }
+    /// Adopt a newer verified policy (PolicyContent JSON), keeping cached verdicts.
+    pub fn update_policy(&mut self, policy_json: &str) -> String {
+        let policy: PolicyContent = match serde_json::from_str(policy_json) {
+            Ok(p) => p,
+            Err(e) => return err(e),
+        };
+        match self.inner.replace_policy(&policy) {
+            Ok(()) => json!({ "ok": true, "version": policy.version }).to_string(),
+            Err(e) => err(e),
+        }
+    }
     pub fn push_verdict(&mut self, verdict_json: &str) -> bool {
         match serde_json::from_str(verdict_json) {
             Ok(v) => {

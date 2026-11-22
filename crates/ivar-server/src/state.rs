@@ -11,7 +11,7 @@ use ivar_core::evidence::{EvidenceKind, EvidenceStore};
 use ivar_core::policy::{CedarPolicy, OperatorRequest};
 use ivar_core::safeguards::ReviewOutcome;
 use ivar_core::DecisionCore;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::mpsc;
 use std::sync::{Arc, Mutex};
@@ -20,7 +20,7 @@ pub fn now_ms() -> i64 {
     std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_millis() as i64).unwrap_or(0)
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PendingApproval {
     pub request: ActionRequest,
     pub reason: String,
@@ -40,6 +40,18 @@ pub struct Metrics {
     pub events_unrouted_total: u64,
     /// Sensor requests refused for a missing or wrong token.
     pub ingest_denied_total: u64,
+}
+
+/// What an operator is working on, kept across restarts: open incidents and
+/// actions waiting for approval. Evidence and policy are durable on their own.
+#[derive(Default, Serialize, Deserialize)]
+struct OpenWork {
+    incidents: Vec<ivar_contracts::Incident>,
+    pending: BTreeMap<String, PendingApproval>,
+}
+
+fn open_work_path(policy_dir: &std::path::Path, shard: u32) -> std::path::PathBuf {
+    policy_dir.with_file_name(format!("open-work-{shard}.json"))
 }
 
 pub struct Inner {
@@ -69,6 +81,8 @@ pub struct AppState {
     pub replay_key: ivar_contracts::sign::KeyPair,
     policy_dir: Option<std::path::PathBuf>,
     pub replay_max_records: u64,
+    /// Digest of the open work last saved, to skip unchanged writes.
+    saved_work: Mutex<String>,
     /// Who may send events and act as an operator (crate::access).
     pub access: crate::access::Access,
     /// Whether any sink is configured; events are serialised for sinks only then.
@@ -167,7 +181,17 @@ impl AppState {
         let replay_key = o.evidence_key.clone();
         let mut evidence = o.evidence;
         evidence.sign_with(o.evidence_key.clone());
-        let core = DecisionCore::with_store(policy.clone(), CoreOptions { evidence_signer: Some(o.evidence_key), redaction_key: o.redaction_key.clone() }, evidence)?;
+        let mut core = DecisionCore::with_store(policy.clone(), CoreOptions { evidence_signer: Some(o.evidence_key), redaction_key: o.redaction_key.clone() }, evidence)?;
+        let saved: OpenWork = o
+            .policy_dir
+            .as_deref()
+            .and_then(|d| std::fs::read(open_work_path(d, o.shard)).ok())
+            .and_then(|b| serde_json::from_slice(&b).map_err(|e| tracing::error!(error = %e, "saved incidents could not be read; starting without them")).ok())
+            .unwrap_or_default();
+        if !saved.incidents.is_empty() || !saved.pending.is_empty() {
+            tracing::info!(incidents = saved.incidents.len(), approvals = saved.pending.len(), "restored open incidents and pending approvals");
+        }
+        core.restore_incidents(saved.incidents);
         let (out_tx, out_rx) = mpsc::channel::<Outbound>();
         let (act_tx, act_rx) = mpsc::channel::<ActionRequest>();
         let state = Arc::new(AppState {
@@ -175,7 +199,7 @@ impl AppState {
                 core,
                 policy_archive_b64: archive,
                 policy_history: history,
-                pending: BTreeMap::new(),
+                pending: saved.pending,
                 metrics: Metrics::default(),
                 cedar,
                 feed: Default::default(),
@@ -190,6 +214,7 @@ impl AppState {
             policy_dir: o.policy_dir,
             access: o.access,
             has_sinks: !o.sinks.is_empty(),
+            saved_work: Mutex::new(String::new()),
             replay_max_records: if o.replay_max_records == 0 { DEFAULT_REPLAY_MAX_RECORDS } else { o.replay_max_records },
             outbound: out_tx,
             actions: act_tx,
@@ -418,6 +443,26 @@ impl AppState {
         let mut g = self.inner.lock().expect("state");
         let opened = g.core.tick(now_ms());
         g.core.evidence_mut().sync();
+        self.save_open_work(&g);
         opened
+    }
+
+    /// Write open incidents and pending approvals when they changed, so a
+    /// restarted shard picks up where it was.
+    fn save_open_work(&self, g: &Inner) {
+        let Some(dir) = &self.policy_dir else { return };
+        let work = OpenWork { incidents: g.core.incidents().all().cloned().collect(), pending: g.pending.clone() };
+        let Ok(bytes) = serde_json::to_vec(&work) else { return };
+        let digest = ivar_core::ids::sha256_hex(&bytes);
+        let mut last = self.saved_work.lock().expect("saved work");
+        if *last == digest {
+            return;
+        }
+        let path = open_work_path(dir, self.shard);
+        let tmp = path.with_extension("tmp");
+        match std::fs::write(&tmp, &bytes).and_then(|_| std::fs::rename(&tmp, &path)) {
+            Ok(()) => *last = digest,
+            Err(e) => tracing::error!(error = %e, "open incidents could not be saved"),
+        }
     }
 }

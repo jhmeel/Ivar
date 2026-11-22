@@ -59,6 +59,10 @@ class Guardian:
         admin_prefixes: tuple[str, ...] = ("/admin",),
         on_alert: Callable[[str, str], None] | None = None,
         budget_ms: float = 1.0,
+        control_url: str | None = None,
+        policy_keyring: dict | None = None,
+        policy_refresh_s: float = 30.0,
+        policy_state_file: str | None = None,
     ) -> None:
         if mode not in ("observe", "enforce"):
             raise ValueError("mode must be observe or enforce")
@@ -74,9 +78,28 @@ class Guardian:
         self.core = None if core_url else Core.create(self.policy, redaction_key or "00")
         self.core_url = core_url
         self.core_token = core_token
+        self.refresher = None
+        if control_url or policy_state_file:
+            if not policy_keyring:
+                raise ValueError("policy_keyring is required with control_url or policy_state_file")
+            from .policy import PolicyRefresher, read_state
+            self.refresher = PolicyRefresher(self, control_url or "", policy_keyring, policy_refresh_s, policy_state_file, self.alert)
+            # A policy saved before a restart wins when it is newer and verifies.
+            saved = read_state(policy_state_file)
+            if saved:
+                self.refresher.apply(saved, "state_file")
+            if control_url:
+                self.refresher.start()
         self._q: queue.Queue = queue.Queue(maxsize=10_000)
         self._worker = threading.Thread(target=self._drain, name="ivar-scoring", daemon=True)
         self._worker.start()
+
+    def adopt_policy(self, policy: dict) -> None:
+        """Switch to a newer verified policy. Cached verdicts are kept."""
+        self.sensor.update_policy(policy)
+        if self.core is not None:
+            self.core.update_policy(policy)
+        self.policy = policy
 
     def _warm(self) -> None:
         """Run the fast path on a plain read and a write with body fields, so the

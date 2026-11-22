@@ -47,6 +47,9 @@ class Core(_Handle):
     def process(self, event: dict, now: int | None = None) -> dict[str, Any]:
         return self._call("process", {"event": event, "now_ms": now if now is not None else now_ms()})
 
+    def update_policy(self, policy: dict, now: int | None = None) -> None:
+        self._call("update_policy", {"policy": policy, "now_ms": now if now is not None else now_ms()})
+
     def evidence(self) -> list:
         return self._call("evidence")
 
@@ -69,6 +72,10 @@ class LocalSensor(_Handle):
 
     def push_verdict(self, verdict: dict) -> bool:
         return self._call("push_verdict", {"verdict": verdict})["ok"]
+
+    def update_policy(self, policy: dict) -> None:
+        """Adopt a newer verified policy, keeping cached verdicts."""
+        self._call("update_policy", {"policy": policy})
 
 
 class Sink(_Handle):

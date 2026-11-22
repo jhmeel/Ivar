@@ -48,11 +48,18 @@ public final class IvarFilter implements Filter {
         public List<String> adminPrefixes = List.of("/admin");
         public long budgetNanos = 1_000_000;
         public BiConsumer<String, String> onAlert = (k, m) -> System.err.println("[ivar] " + k + ": " + m);
+        /** Control plane to poll for newer signed policy, applied while the app runs. Needs policyKeyring. */
+        public String controlUrl;
+        /** Verifies policy from the control plane or the state file. */
+        public JsonNode policyKeyring;
+        public long policyRefreshMillis = 30_000;
+        /** Keeps the last verified policy, so a restart during a control plane outage resumes at it. */
+        public String policyStateFile;
     }
 
     final Options opts;
     final IvarRuntime rt;
-    final JsonNode policy;
+    private volatile JsonNode policy;
     final Ivar.LocalSensor sensor;
     final Ivar.Core core;
     private final BlockingQueue<JsonNode> queue = new ArrayBlockingQueue<>(10_000);
@@ -78,6 +85,79 @@ public final class IvarFilter implements Filter {
         this.worker = new Thread(this::drain, "ivar-scoring");
         worker.setDaemon(true);
         worker.start();
+        if (opts.controlUrl != null || opts.policyStateFile != null) {
+            if (opts.policyKeyring == null) throw new IllegalArgumentException("policyKeyring is required with controlUrl or policyStateFile");
+            if (opts.policyStateFile != null) {
+                try {
+                    String saved = java.nio.file.Files.readString(java.nio.file.Path.of(opts.policyStateFile)).trim();
+                    if (!saved.isEmpty()) applyPolicy(saved, "state_file");
+                } catch (IOException e) {
+                    // No saved policy yet.
+                }
+            }
+            if (opts.controlUrl != null) {
+                var refresher = java.util.concurrent.Executors.newSingleThreadScheduledExecutor(r -> {
+                    Thread t = new Thread(r, "ivar-policy");
+                    t.setDaemon(true);
+                    return t;
+                });
+                refresher.scheduleWithFixedDelay(this::refreshPolicy, 0, opts.policyRefreshMillis, TimeUnit.MILLISECONDS);
+            }
+        }
+    }
+
+    /** The verified PolicyContent in force. */
+    public JsonNode policy() {
+        return policy;
+    }
+
+    /**
+     * Poll the control plane once; true when a newer policy was applied. An
+     * unreachable control plane leaves the current policy in force.
+     */
+    public boolean refreshPolicy() {
+        try {
+            String url = opts.controlUrl.replaceAll("/$", "") + "/v1/policy/bundle?have=" + policy.path("version").asLong()
+                + "&sensor=" + java.net.URLEncoder.encode(opts.sensorId, StandardCharsets.UTF_8);
+            var res = http.send(HttpRequest.newBuilder(URI.create(url)).timeout(java.time.Duration.ofSeconds(5)).GET().build(), java.net.http.HttpResponse.BodyHandlers.ofString());
+            return res.statusCode() == 200 && applyPolicy(res.body(), "control_plane");
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /** Verify a signed bundle and adopt it when newer; anything else changes nothing. */
+    synchronized boolean applyPolicy(String archive, String source) {
+        long have = policy.path("version").asLong();
+        JsonNode next;
+        try {
+            next = Ivar.verifyPolicyBundle(rt, archive.trim(), opts.policyKeyring, have);
+        } catch (RuntimeException e) {
+            opts.onAlert.accept("policy_rejected", "signed policy from " + source + " refused, current policy kept: " + e.getMessage());
+            return false;
+        }
+        long version = next.path("version").asLong();
+        if (version <= have) return false;
+        try {
+            sensor.updatePolicy(next);
+            if (core != null) core.updatePolicy(next, Ivar.now());
+        } catch (RuntimeException e) {
+            opts.onAlert.accept("policy_rejected", "policy " + version + " refused by the engine, current policy kept: " + e.getMessage());
+            return false;
+        }
+        policy = next;
+        if (opts.policyStateFile != null) {
+            try {
+                var target = java.nio.file.Path.of(opts.policyStateFile);
+                var tmp = java.nio.file.Path.of(opts.policyStateFile + ".tmp");
+                java.nio.file.Files.writeString(tmp, archive.trim());
+                java.nio.file.Files.move(tmp, target, java.nio.file.StandardCopyOption.REPLACE_EXISTING, java.nio.file.StandardCopyOption.ATOMIC_MOVE);
+            } catch (IOException e) {
+                opts.onAlert.accept("policy_state", "policy " + version + " applied but not saved: " + e.getMessage());
+            }
+        }
+        opts.onAlert.accept("policy_applied", "policy " + version + " applied from " + source);
+        return true;
     }
 
     /** Matches ivar_core::redact::keyed_hash. */

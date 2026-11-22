@@ -80,6 +80,22 @@ async fn call(f: &Fixture, method: &str, uri: &str, body: Value, operator: Optio
 }
 
 #[tokio::test]
+async fn open_incidents_survive_a_restart() {
+    let dir = tempfile::tempdir().unwrap();
+    let id = {
+        let f = Fixture { state: start(dir.path()), policy_key: KeyPair::ed25519_from_seed("policy-1", [1; 32]), _dir: tempfile::tempdir().unwrap() };
+        let tool_call = json!({"activity_name": "ai.tool_call", "actor": {"user": {"uid": "support-bot", "type": "agent"}}, "ivar": {"sensor_id": "aigw-1", "sensor_type": "ai_gateway", "sensor_seq": 1, "attributes": {"tool": "export_all_customers"}}});
+        call(&f, "POST", "/v1/events", json!({"sensor_id": "aigw-1", "events": [tool_call]}), None).await;
+        f.state.tick();
+        let (_, incidents) = call(&f, "GET", "/v1/incidents", json!(null), Some("analyst")).await;
+        incidents[0]["incident_id"].as_str().unwrap().to_string()
+    };
+    let f = Fixture { state: start(dir.path()), policy_key: KeyPair::ed25519_from_seed("policy-1", [1; 32]), _dir: tempfile::tempdir().unwrap() };
+    let (_, incidents) = call(&f, "GET", "/v1/incidents", json!(null), Some("analyst")).await;
+    assert_eq!(incidents[0]["incident_id"], id.as_str(), "the restarted shard still has the incident: {incidents}");
+}
+
+#[tokio::test]
 async fn a_replay_too_large_for_the_shard_is_refused_not_attempted() {
     let dir = tempfile::tempdir().unwrap();
     let f = Fixture { state: start_with(dir.path(), 1), policy_key: KeyPair::ed25519_from_seed("policy-1", [1; 32]), _dir: dir };

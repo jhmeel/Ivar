@@ -54,7 +54,7 @@ jobs:
       - uses: actions/setup-go@v5
         with: { go-version: "1.24.7" }
       - uses: actions/setup-java@v4
-        with: { distribution: temurin, java-version: "21" }
+        with: { distribution: temurin, java-version: "21", cache: maven, cache-dependency-path: sdk/java/pom.xml }
       - uses: actions/setup-dotnet@v4
         with: { dotnet-version: "8.0.x" }
       - run: cd sdk/node/express && npm ci && npm test
@@ -64,7 +64,8 @@ jobs:
       - run: cd sdk/go && go test ./...
       - run: cd go && go vet ./... && go test ./...
       - run: cd deploy/helm/chartcheck && go test ./...
-      - run: cd sdk/java && mvn -q -B verify
+      # Maven Central rate limits shared runners; the cache and one retry ride that out.
+      - run: cd sdk/java && (mvn -q -B verify || (sleep 30 && mvn -q -B verify))
       - run: cd sdk/dotnet && dotnet test Ivar.Tests
       - run: pip install wasmtime==36.0.0 && cd sdk/php && IVAR_WASMTIME_LIB=$(python -c 'import wasmtime,os;print(os.path.join(os.path.dirname(wasmtime.__file__),"linux-x86_64","_libwasmtime.so"))') php -d ffi.enable=1 tests/run.php
   e2e:

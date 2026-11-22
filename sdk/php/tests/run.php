@@ -74,4 +74,31 @@ sort($times);
 printf("php local decision p99 %.3f ms\n", $times[495]);
 check('latency', $times[495] < 5);
 
+// Live policy: a newer signed bundle from the control plane is used from the
+// next request on; a forged one is refused; the saved policy survives.
+(function () use ($req) {
+    $data = __DIR__ . '/../../testdata/policy';
+    $keyring = file_get_contents("$data/keyring.json");
+    $v1 = Ivar::verifyPolicyBundle(trim(file_get_contents("$data/v1.bundle")), $keyring);
+    $dir = sys_get_temp_dir() . '/ivar-cp-' . uniqid();
+    mkdir($dir);
+    file_put_contents("$dir/serve", "$data/v2.bundle");
+    file_put_contents("$dir/router.php", '<?php readfile(trim(file_get_contents(__DIR__ . "/serve")));');
+    $port = 20000 + random_int(0, 20000);
+    $server = proc_open([PHP_BINARY, '-S', "127.0.0.1:$port", "$dir/router.php"], [1 => ['file', '/dev/null', 'w'], 2 => ['file', '/dev/null', 'w']], $pipes);
+    for ($i = 0; $i < 50 && !@fsockopen('127.0.0.1', $port); $i++) usleep(100000);
+    $alerts = new ArrayObject();
+    $opts = fn (array $extra = []) => $extra + ['mode' => 'enforce', 'policy' => $v1, 'policy_keyring' => $keyring, 'policy_state_file' => "$dir/policy.state", 'policy_refresh_s' => 0, 'on_alert' => function ($k) use ($alerts) { $alerts[] = $k; }];
+    $decoy = fn (Guardian $g) => $g->inspect($req('/v2-decoy', '198.51.100.4'))['status'];
+    check('policy: v1 has no such decoy', $decoy(new Guardian(['mode' => 'enforce', 'policy' => $v1, 'on_alert' => fn () => null])) !== 403);
+    $g = new Guardian($opts(['control_url' => "http://127.0.0.1:$port"]));
+    check('policy: a newer signed policy from the control plane is used', json_decode($g->policy(), true)['version'] === 2 && $decoy($g) === 403);
+    file_put_contents("$dir/serve", "$data/forged-v3.bundle");
+    $g = new Guardian($opts(['control_url' => "http://127.0.0.1:$port"]));
+    check('policy: a forged bundle is refused and the saved policy kept', json_decode($g->policy(), true)['version'] === 2 && in_array('policy_rejected', $alerts->getArrayCopy(), true));
+    $g = new Guardian($opts());
+    check('policy: the saved policy is used without the control plane', json_decode($g->policy(), true)['version'] === 2);
+    proc_terminate($server);
+})();
+
 exit($failures === 0 ? 0 : 1);

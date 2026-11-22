@@ -105,6 +105,16 @@ func (s *LocalSensor) Decide(event any, now int64) (*LocalResult, error) {
 	return &out, err
 }
 
+// UpdatePolicy adopts a newer verified policy, keeping cached verdicts.
+func (s *LocalSensor) UpdatePolicy(policy json.RawMessage) error {
+	return s.r.Call("sensor.update_policy", map[string]any{"policy": policy}, s.h, nil)
+}
+
+// UpdatePolicy applies a newer verified policy to the embedded core.
+func (c *Core) UpdatePolicy(policy json.RawMessage, now int64) error {
+	return c.r.Call("core.update_policy", map[string]any{"policy": policy, "now_ms": now}, c.h, nil)
+}
+
 func (s *LocalSensor) PushVerdict(v Verdict) error {
 	return s.r.Call("sensor.push_verdict", map[string]any{"verdict": v}, s.h, nil)
 }

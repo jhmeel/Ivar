@@ -715,6 +715,28 @@ app.MapPost("/payouts", async (HttpContext ctx, Payout p) =>
 app.Run();
 ```
 
+#### Policy updates without a restart
+
+Point an SDK at the control plane and it polls for newer signed policy,
+verifies it against the keyring (a forged, older or expired bundle is
+refused with a `policy_rejected` alert and the current policy stays), and
+applies it while the application runs. Cached verdicts carry over. The last
+verified policy is saved to a state file, so a restart during a control
+plane outage resumes at it.
+
+| SDK | Control plane | Keyring | Poll period | State file |
+|---|---|---|---|---|
+| Node.js | `controlUrl` | `policyKeyring` | `policyRefreshMs` | `policyStateFile` |
+| Python | `control_url` | `policy_keyring` | `policy_refresh_s` | `policy_state_file` |
+| Go | `ControlURL` | `PolicyKeyring` | `PolicyRefresh` | `PolicyStateFile` |
+| Java | `controlUrl` | `policyKeyring` | `policyRefreshMillis` | `policyStateFile` |
+| .NET | `ControlUrl` | `PolicyKeyringJson` | `PolicyRefresh` | `PolicyStateFile` |
+| PHP | `control_url` | `policy_keyring` | `policy_refresh_s` | `policy_state_file` |
+
+PHP serves each request from a fresh process, so it checks the control
+plane at most once per period across all workers and keeps the result in
+the state file; set `policy_state_file` there.
+
 ### Gateways and the edge
 
 The edge filter is a Proxy-Wasm module (`ivar_edge_filter.wasm`, also the
@@ -1215,9 +1237,10 @@ per second on average and, at four times average, 28,000 at peak.
   shard's memory. On a busy shard, replays need a short local retention or
   a larger limit with memory to match; replay from state snapshots is not
   built yet.
-* Learned baselines and open incidents live in memory. A restarted shard
-  keeps its evidence and policy but relearns behaviour, so run shards as a
-  StatefulSet and roll them one at a time.
+* Learned baselines live in memory. A restarted shard keeps its evidence,
+  policy, open incidents and pending approvals (saved every ten seconds)
+  but relearns behaviour, so run shards as a StatefulSet and roll them one
+  at a time.
 
 ## Specification traceability
 

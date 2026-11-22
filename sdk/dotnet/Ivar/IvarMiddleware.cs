@@ -33,6 +33,13 @@ public sealed class IvarOptions
     public string[] AdminPrefixes { get; set; } = ["/admin"];
     public TimeSpan Budget { get; set; } = TimeSpan.FromMilliseconds(1);
     public Action<string, string> OnAlert { get; set; } = (k, m) => Console.Error.WriteLine($"[ivar] {k}: {m}");
+    /// <summary>Control plane to poll for newer signed policy, applied while the app runs. Needs PolicyKeyringJson.</summary>
+    public string? ControlUrl { get; set; }
+    /// <summary>Verifies policy from the control plane or the state file.</summary>
+    public string? PolicyKeyringJson { get; set; }
+    public TimeSpan PolicyRefresh { get; set; } = TimeSpan.FromSeconds(30);
+    /// <summary>Keeps the last verified policy, so a restart during a control plane outage resumes at it.</summary>
+    public string? PolicyStateFile { get; set; }
 }
 
 public sealed class IvarGuardian
@@ -40,7 +47,10 @@ public sealed class IvarGuardian
     public const string IntentHeader = "Ivar-Intent";
     public IvarOptions Options { get; }
     internal readonly IvarRuntime Rt = IvarRuntime.Shared;
-    internal readonly string PolicyJson;
+    private volatile string _policyJson;
+    private readonly object _policyLock = new();
+    /// <summary>The verified PolicyContent in force, as JSON.</summary>
+    public string PolicyJson => _policyJson;
     public LocalSensor Sensor { get; }
     private readonly Core? _core;
     private readonly Channel<JsonNode> _queue = Channel.CreateBounded<JsonNode>(new BoundedChannelOptions(10_000) { FullMode = BoundedChannelFullMode.DropOldest });
@@ -52,12 +62,95 @@ public sealed class IvarGuardian
     {
         if (options.Mode is not ("observe" or "enforce")) throw new ArgumentException("mode must be observe or enforce");
         Options = options;
-        PolicyJson = options.PolicyJson ?? IvarApi.DefaultPolicy(Rt);
-        Sensor = new LocalSensor(Rt, PolicyJson);
-        if (options.CoreUrl is null) _core = new Core(Rt, PolicyJson, string.IsNullOrEmpty(options.RedactionKey) ? "00" : options.RedactionKey);
+        _policyJson = options.PolicyJson ?? IvarApi.DefaultPolicy(Rt);
+        Sensor = new LocalSensor(Rt, _policyJson);
+        if (options.CoreUrl is null) _core = new Core(Rt, _policyJson, string.IsNullOrEmpty(options.RedactionKey) ? "00" : options.RedactionKey);
         var warm = new JsonObject { ["activity_name"] = "http.request", ["http_request"] = new JsonObject { ["http_method"] = "GET", ["url_path"] = "/" }, ["ivar"] = new JsonObject() };
         for (var i = 0; i < 200; i++) Sensor.Decide(warm, IvarApi.Now());
         _ = Task.Run(DrainAsync);
+        if (options.ControlUrl is not null || options.PolicyStateFile is not null)
+        {
+            if (options.PolicyKeyringJson is null) throw new ArgumentException("PolicyKeyringJson is required with ControlUrl or PolicyStateFile");
+            if (options.PolicyStateFile is not null && File.Exists(options.PolicyStateFile))
+            {
+                var saved = File.ReadAllText(options.PolicyStateFile).Trim();
+                if (saved.Length > 0) ApplyPolicy(saved, "state_file");
+            }
+            if (options.ControlUrl is not null) _ = Task.Run(RefreshLoopAsync);
+        }
+    }
+
+    private static long VersionOf(string policyJson) => JsonNode.Parse(policyJson)?["version"]?.GetValue<long>() ?? 0;
+
+    private async Task RefreshLoopAsync()
+    {
+        using var timer = new PeriodicTimer(Options.PolicyRefresh);
+        do await RefreshPolicyAsync(); while (await timer.WaitForNextTickAsync());
+    }
+
+    /// <summary>Poll the control plane once; true when a newer policy was applied.
+    /// An unreachable control plane leaves the current policy in force.</summary>
+    public async Task<bool> RefreshPolicyAsync()
+    {
+        try
+        {
+            var url = $"{Options.ControlUrl!.TrimEnd('/')}/v1/policy/bundle?have={VersionOf(_policyJson)}&sensor={Uri.EscapeDataString(Options.SensorId)}";
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            using var res = await _http.GetAsync(url, cts.Token);
+            if (res.StatusCode != System.Net.HttpStatusCode.OK) return false;
+            return ApplyPolicy(await res.Content.ReadAsStringAsync(cts.Token), "control_plane");
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>Verify a signed bundle and adopt it when newer; anything else changes nothing.</summary>
+    internal bool ApplyPolicy(string archive, string source)
+    {
+        lock (_policyLock)
+        {
+            var have = VersionOf(_policyJson);
+            string next;
+            try
+            {
+                next = IvarApi.VerifyPolicyBundle(Rt, archive.Trim(), Options.PolicyKeyringJson!, have);
+            }
+            catch (IvarException e)
+            {
+                Options.OnAlert("policy_rejected", $"signed policy from {source} refused, current policy kept: {e.Message}");
+                return false;
+            }
+            var version = VersionOf(next);
+            if (version <= have) return false;
+            try
+            {
+                Sensor.UpdatePolicy(next);
+                _core?.UpdatePolicy(next, IvarApi.Now());
+            }
+            catch (IvarException e)
+            {
+                Options.OnAlert("policy_rejected", $"policy {version} refused by the engine, current policy kept: {e.Message}");
+                return false;
+            }
+            _policyJson = next;
+            if (Options.PolicyStateFile is not null)
+            {
+                try
+                {
+                    var tmp = Options.PolicyStateFile + ".tmp";
+                    File.WriteAllText(tmp, archive.Trim());
+                    File.Move(tmp, Options.PolicyStateFile, overwrite: true);
+                }
+                catch (IOException e)
+                {
+                    Options.OnAlert("policy_state", $"policy {version} applied but not saved: {e.Message}");
+                }
+            }
+            Options.OnAlert("policy_applied", $"policy {version} applied from {source}");
+            return true;
+        }
     }
 
     public JsonObject Event(HttpContext ctx, string activity, int classUid, int status = 0, JsonObject? ext = null)

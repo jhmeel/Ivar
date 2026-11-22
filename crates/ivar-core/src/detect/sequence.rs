@@ -48,6 +48,38 @@ impl Window {
     }
 }
 
+/// Failed logins across every source, with running counts per source and per
+/// account, so a surge spread thin over many addresses is visible without
+/// rescanning the window on every event.
+#[derive(Default)]
+struct Surge {
+    items: VecDeque<(i64, String, String)>,
+    by_source: BTreeMap<String, u32>,
+    by_account: BTreeMap<String, u32>,
+}
+
+impl Surge {
+    fn push(&mut self, now: i64, source: &str, account: &str, window_ms: i64) {
+        self.items.push_back((now, source.to_string(), account.to_string()));
+        *self.by_source.entry(source.to_string()).or_default() += 1;
+        *self.by_account.entry(account.to_string()).or_default() += 1;
+        while let Some((t, s, a)) = self.items.front().cloned() {
+            if now - t <= window_ms {
+                break;
+            }
+            self.items.pop_front();
+            for (map, key) in [(&mut self.by_source, s), (&mut self.by_account, a)] {
+                if let Some(n) = map.get_mut(&key) {
+                    *n -= 1;
+                    if *n == 0 {
+                        map.remove(&key);
+                    }
+                }
+            }
+        }
+    }
+}
+
 fn distinct(q: &VecDeque<(i64, String)>) -> usize {
     q.iter().map(|(_, v)| v.as_str()).collect::<BTreeSet<_>>().len()
 }
@@ -62,6 +94,9 @@ pub struct SequenceDetector {
     agent_hosts: Window,
     renames: Window,
     spraying_sources: BTreeMap<String, i64>,
+    failed_everywhere: Surge,
+    stuffing_sources: Window,
+    refused_objects: Window,
 }
 
 impl SequenceDetector {
@@ -69,6 +104,8 @@ impl SequenceDetector {
         for w in [&mut self.missing_routes, &mut self.failed_logins, &mut self.failed_by_account, &mut self.signups, &mut self.internal_hosts, &mut self.agent_hosts, &mut self.renames] {
             w.evict(before);
         }
+        self.stuffing_sources.evict(before);
+        self.refused_objects.evict(before);
         self.spraying_sources.retain(|_, t| *t >= before);
     }
 
@@ -115,6 +152,27 @@ impl Detector for SequenceDetector {
                         out.extend(finding(ctx, ev, "route_scan_burst", actors.clone(), format!("{src} probed {n} missing routes")));
                     }
                 }
+                // Object enumeration (broken object level authorisation): one
+                // caller refused many different objects on the same route.
+                let refused = ev.http_response.as_ref().map(|r| matches!(r.code, 401 | 403 | 404)).unwrap_or(false);
+                if refused && !undeclared {
+                    if let Some(req) = &ev.http_request {
+                        let caller = ev
+                            .actor
+                            .as_ref()
+                            .and_then(|a| a.session.as_ref().map(|s| s.uid.clone()).filter(|s| !s.is_empty()).or_else(|| a.user.as_ref().map(|u| u.uid.clone()).filter(|u| !u.is_empty())))
+                            .unwrap_or_else(|| src.clone());
+                        let route = if ext.declared_route.is_empty() { req.url_path.rsplit_once('/').map(|(p, _)| p.to_string()).unwrap_or_default() } else { ext.declared_route.clone() };
+                        if !caller.is_empty() {
+                            let key = format!("{caller} {} {route}", req.http_method);
+                            let w = Self::window_ms(ctx, "object_enumeration", 120);
+                            let n = distinct(self.refused_objects.push(&key, now, &req.url_path, w));
+                            if n as u64 >= ctx.rules.param_u64("object_enumeration", "distinct_objects", 10) && self.refused_objects.fire_once(&key) {
+                                out.extend(finding(ctx, ev, "object_enumeration", actors.clone(), format!("{caller} was refused {n} different objects on {} {route}", req.http_method)));
+                            }
+                        }
+                    }
+                }
             }
             v::AUTH_LOGIN => {
                 let targets = target_entities(ev);
@@ -138,6 +196,25 @@ impl Detector for SequenceDetector {
                     }
                     if !account.is_empty() {
                         self.failed_by_account.push(&account, now, &src, w2);
+                    }
+                    // Distributed stuffing: few failures per address and per
+                    // account, many across them. While the surge lasts, every
+                    // address that fails a login is part of it.
+                    if !src.is_empty() {
+                        let ws = Self::window_ms(ctx, "auth_stuffing_distributed", 300);
+                        self.failed_everywhere.push(now, &src, &account, ws);
+                        let f = &self.failed_everywhere;
+                        let surge = f.items.len() as u64 >= ctx.rules.param_u64("auth_stuffing_distributed", "failures", 50)
+                            && f.by_source.len() as u64 >= ctx.rules.param_u64("auth_stuffing_distributed", "distinct_sources", 20)
+                            && f.by_account.len() as u64 >= ctx.rules.param_u64("auth_stuffing_distributed", "distinct_accounts", 20);
+                        if surge {
+                            self.spraying_sources.insert(src.clone(), now);
+                            self.stuffing_sources.push(&src, now, &account, ws);
+                            if self.stuffing_sources.fire_once(&src) {
+                                let (n, sources, accounts) = (f.items.len(), f.by_source.len(), f.by_account.len());
+                                out.extend(finding(ctx, ev, "auth_stuffing_distributed", actors.clone(), format!("{src} is one of {sources} addresses behind {n} failed logins across {accounts} accounts")));
+                            }
+                        }
                     }
                 } else if ev.status_id == 1 {
                     let need = ctx.rules.param_u64("login_after_failures", "failures", 5) as usize;

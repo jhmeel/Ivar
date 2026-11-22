@@ -22,15 +22,20 @@ final class Guardian
     private static int $seq = 0;
 
     /**
-     * @param array{mode?:string, core_url?:?string, core_token?:string, policy?:?string, redaction_key?:string, sensor_id?:string, admin_prefixes?:list<string>, budget_ms?:float, on_alert?:?callable, verdict_cache?:?VerdictCache, embedded?:bool} $options
+     * @param array{mode?:string, core_url?:?string, core_token?:string, policy?:?string, redaction_key?:string, sensor_id?:string, admin_prefixes?:list<string>, budget_ms?:float, on_alert?:?callable, verdict_cache?:?VerdictCache, embedded?:bool, control_url?:?string, policy_keyring?:?string, policy_refresh_s?:int, policy_state_file?:?string} $options
+     *
+     * With control_url, policy_keyring and policy_state_file, newer signed
+     * policy from the control plane is fetched at most once per
+     * policy_refresh_s across every PHP worker, verified, saved to the state
+     * file, and used from the next request on.
      */
     public function __construct(private array $options = [])
     {
-        $this->options += ['mode' => 'observe', 'core_url' => null, 'core_token' => '', 'policy' => null, 'redaction_key' => '', 'sensor_id' => 'php-sdk', 'admin_prefixes' => ['/admin'], 'budget_ms' => 1.0, 'on_alert' => null, 'verdict_cache' => null, 'embedded' => false];
+        $this->options += ['mode' => 'observe', 'core_url' => null, 'core_token' => '', 'policy' => null, 'redaction_key' => '', 'sensor_id' => 'php-sdk', 'admin_prefixes' => ['/admin'], 'budget_ms' => 1.0, 'on_alert' => null, 'verdict_cache' => null, 'embedded' => false, 'control_url' => null, 'policy_keyring' => null, 'policy_refresh_s' => 30, 'policy_state_file' => null];
         if (!in_array($this->options['mode'], ['observe', 'enforce'], true)) {
             throw new \InvalidArgumentException('mode must be observe or enforce');
         }
-        $this->policy = $this->options['policy'] ?? Ivar::defaultPolicy();
+        $this->policy = $this->resolvePolicy($this->options['policy'] ?? Ivar::defaultPolicy());
         $this->policyView = json_decode($this->policy, false, 512, JSON_THROW_ON_ERROR);
         $this->sensor = Ivar::sensor($this->policy);
         if ($this->options['embedded'] || $this->options['core_url'] === null) {
@@ -40,6 +45,79 @@ final class Guardian
         foreach ($this->options['verdict_cache']->all() as $v) {
             $this->sensor->pushVerdict(['verdict' => $v]);
         }
+    }
+
+    /** The verified PolicyContent in force, as JSON. */
+    public function policy(): string
+    {
+        return $this->policy;
+    }
+
+    private static function versionOf(string $policy): int
+    {
+        return (int) (json_decode($policy, true)['version'] ?? 0);
+    }
+
+    /**
+     * The newest verified policy among the configured one, the state file and,
+     * when due, the control plane. Anything that fails verification is
+     * refused with an alert and the policy in hand is kept.
+     */
+    private function resolvePolicy(string $policy): string
+    {
+        $o = $this->options;
+        if ($o['control_url'] === null && $o['policy_state_file'] === null) {
+            return $policy;
+        }
+        if ($o['policy_keyring'] === null) {
+            throw new \InvalidArgumentException('policy_keyring is required with control_url or policy_state_file');
+        }
+        $state = $o['policy_state_file'];
+        if ($state !== null && is_readable($state) && ($saved = trim((string) file_get_contents($state))) !== '') {
+            $policy = $this->adopt($policy, $saved, 'state_file', false);
+        }
+        if ($o['control_url'] !== null) {
+            // One worker fetches per period; the rest read the state file.
+            $stamp = ($state ?? sys_get_temp_dir() . '/ivar-policy-' . md5($o['control_url'])) . '.checked';
+            $last = @filemtime($stamp);
+            if ($last === false || time() - $last >= $o['policy_refresh_s']) {
+                @touch($stamp);
+                $url = rtrim($o['control_url'], '/') . '/v1/policy/bundle?' . http_build_query(['have' => self::versionOf($policy), 'sensor' => $o['sensor_id']]);
+                $ctx = stream_context_create(['http' => ['timeout' => 2, 'ignore_errors' => true]]);
+                $body = @file_get_contents($url, false, $ctx);
+                $status = isset($http_response_header[0]) && preg_match('#^HTTP/\S+ (\d{3})#', $http_response_header[0], $m) ? (int) $m[1] : 0;
+                if ($body !== false && $status === 200) {
+                    $policy = $this->adopt($policy, $body, 'control_plane', true);
+                }
+            }
+        }
+        return $policy;
+    }
+
+    private function adopt(string $current, string $archive, string $source, bool $save): string
+    {
+        $have = self::versionOf($current);
+        try {
+            $next = Ivar::verifyPolicyBundle(trim($archive), $this->options['policy_keyring'], $have);
+        } catch (IvarException $e) {
+            $this->alert('policy_rejected', "signed policy from $source refused, current policy kept: " . $e->getMessage());
+            return $current;
+        }
+        $version = self::versionOf($next);
+        if ($version <= $have) {
+            return $current;
+        }
+        $state = $this->options['policy_state_file'];
+        if ($save && $state !== null) {
+            $tmp = $state . '.' . getmypid() . '.tmp';
+            if (@file_put_contents($tmp, trim($archive)) === false || !@rename($tmp, $state)) {
+                $this->alert('policy_state', "policy $version applied but not saved");
+            }
+        }
+        if ($source === 'control_plane') {
+            $this->alert('policy_applied', "policy $version applied from $source");
+        }
+        return $next;
     }
 
     public function mode(): string

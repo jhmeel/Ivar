@@ -75,6 +75,7 @@ pub fn default_rules() -> Vec<DetectionRule> {
         // Initial access
         rule("engine_alert", "signature", Signatures, "T1190", "initial_access", 0.80, 3, json!({})),
         rule("auth_spray", "credential.spray", SequenceCorrelation, "T1110.003", "initial_access", 0.57, 3, json!({"failures": 10, "distinct_accounts": 5, "window_secs": 600})),
+        rule("auth_stuffing_distributed", "credential.stuffing", SequenceCorrelation, "T1110.004", "initial_access", 0.60, 3, json!({"failures": 50, "distinct_sources": 20, "distinct_accounts": 20, "window_secs": 300})),
         rule("login_after_failures", "credential.spray_success", SequenceCorrelation, "T1110", "initial_access", 0.35, 3, json!({"failures": 5, "window_secs": 600})),
         rule("signup_flood", "abuse.signup_flood", SequenceCorrelation, "T1136", "initial_access", 0.60, 2, json!({"signups": 20, "window_secs": 600})),
         rule("sim_swap_sensitive_action", "identity.sim_swap", BehaviourBaselines, "T1451", "initial_access", 0.60, 3, json!({"window_secs": 172800, "actions": ["password_reset", "payout", "login"]})),
@@ -98,6 +99,7 @@ pub fn default_rules() -> Vec<DetectionRule> {
         rule("new_admin_account", "privesc.new_admin", BehaviourBaselines, "T1136.001", "privilege_escalation", 0.70, 4, json!({})),
         rule("app_self_granted_role", "privesc.self_grant", PositiveSecurity, "T1098.003", "privilege_escalation", 0.95, 5, json!({"critical_positive_security": true})),
         rule("new_app_secret", "privesc.new_app_secret", BehaviourBaselines, "T1098.001", "privilege_escalation", 0.60, 3, json!({})),
+        rule("object_enumeration", "privesc.object_enumeration", SequenceCorrelation, "API1:2023", "data_theft", 0.75, 4, json!({"distinct_objects": 10, "window_secs": 120})),
         rule("cross_tenant_access", "privesc.other_user_records", PositiveSecurity, "T1078", "privilege_escalation", 0.85, 4, json!({})),
         // Lateral movement
         rule("new_service_path", "lateral.new_service_path", DeclaredIntentDrift, "T1021", "lateral_movement", 0.40, 3, json!({})),

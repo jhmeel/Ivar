@@ -78,6 +78,7 @@ pub fn handle(input: &[u8]) -> String {
         "core.tick" => with(handle, |o| match o { Object::Core(c) => c.tick(n(&a, "now_ms")), _ => wrong("core") }),
         "sensor.new" => api::LocalSensor::new(&j(&a, "policy")).map(|c| store(Object::Sensor(c))),
         "sensor.decide" => with(handle, |o| match o { Object::Sensor(c) => c.decide(&j(&a, "event"), n(&a, "now_ms")), _ => wrong("sensor") }),
+        "sensor.update_policy" => with(handle, |o| match o { Object::Sensor(c) => c.update_policy(&j(&a, "policy")), _ => wrong("sensor") }),
         "sensor.push_verdict" => with(handle, |o| match o { Object::Sensor(c) => json!({ "ok": c.push_verdict(&j(&a, "verdict")) }).to_string(), _ => wrong("sensor") }),
         "sink.new" => api::Sink::new(s(&a, "root_public_key"), &j(&a, "step_keys"), &j(&a, "invariants"), s(&a, "default_mode"), &j(&a, "modes")).map(|c| store(Object::Sink(c))),
         "sink.guard" => with(handle, |o| match o { Object::Sink(c) => c.guard(&j(&a, "request"), n(&a, "now_ms")), _ => wrong("sink") }),

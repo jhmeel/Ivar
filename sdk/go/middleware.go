@@ -10,7 +10,9 @@ import (
 	"log"
 	"net/http"
 	"net/netip"
+	"os"
 	"strings"
+	"sync"
 	"sync/atomic"
 	"time"
 )
@@ -38,6 +40,16 @@ type Options struct {
 	AdminPrefixes  []string
 	Budget         time.Duration
 	OnAlert        func(kind, message string)
+	// ControlURL is the control plane to poll for newer signed policy, applied
+	// while the application runs. Needs PolicyKeyring.
+	ControlURL string
+	// PolicyKeyring verifies policy from the control plane or the state file.
+	PolicyKeyring json.RawMessage
+	// PolicyRefresh is the poll period; 30 seconds when zero.
+	PolicyRefresh time.Duration
+	// PolicyStateFile keeps the last verified policy, so a restart during a
+	// control plane outage resumes at it.
+	PolicyStateFile string
 }
 
 // Middleware is the net/http IVAR sensor.
@@ -45,8 +57,9 @@ type Middleware struct {
 	trusted []netip.Prefix
 	opts    Options
 	rt      *Runtime
-	policy  json.RawMessage
-	sensor  *LocalSensor
+	policyMu sync.RWMutex
+	policy   json.RawMessage
+	sensor   *LocalSensor
 	core    *Core
 	queue   chan map[string]any
 	seq     atomic.Uint64
@@ -109,6 +122,17 @@ func New(opts Options) (*Middleware, error) {
 	if opts.CoreURL == "" {
 		if m.core, err = NewCore(rt, policy, orDefault(opts.RedactionKey, "00")); err != nil {
 			return nil, err
+		}
+	}
+	if opts.ControlURL != "" || opts.PolicyStateFile != "" {
+		if len(opts.PolicyKeyring) == 0 {
+			return nil, fmt.Errorf("ivar: PolicyKeyring is required with ControlURL or PolicyStateFile")
+		}
+		if saved, err := os.ReadFile(opts.PolicyStateFile); err == nil && len(saved) > 0 {
+			m.applyPolicy(string(saved), "state_file")
+		}
+		if opts.ControlURL != "" {
+			go m.refreshLoop()
 		}
 	}
 	go m.drain()
@@ -338,7 +362,7 @@ func (m *Middleware) Guard(action, rootPublicKey string, stepKeys map[string]str
 		Invariants    json.RawMessage   `json:"invariants"`
 		IntentBinding map[string]string `json:"intent_binding"`
 	}
-	if err := json.Unmarshal(m.policy, &pol); err != nil {
+	if err := json.Unmarshal(m.Policy(), &pol); err != nil {
 		return nil, err
 	}
 	modes := map[string]string{}

@@ -218,6 +218,11 @@ impl<S: EvidenceStore> DecisionCore<S> {
     pub fn incidents(&self) -> &IncidentTracker {
         &self.incidents
     }
+    /// Reinstate incidents saved before a restart, so they stay open and keep
+    /// collecting what their entities do next.
+    pub fn restore_incidents(&mut self, incidents: Vec<ivar_contracts::Incident>) {
+        self.incidents = IncidentTracker::restore(incidents);
+    }
     pub fn evidence(&self) -> &S {
         &self.evidence
     }

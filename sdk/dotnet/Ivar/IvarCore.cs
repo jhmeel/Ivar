@@ -64,6 +64,8 @@ public sealed class Core(IvarRuntime rt, string policyJson, string redactionKeyH
 {
     public JsonNode Process(JsonNode ev, long now) => Rt.Call("core.process", new JsonObject { ["event"] = ev.DeepClone(), ["now_ms"] = now }, Handle);
     public JsonNode Evidence() => Rt.Call("core.evidence", null, Handle);
+    /// <summary>Apply a newer verified policy.</summary>
+    public void UpdatePolicy(string policyJson, long now) => Rt.Call("core.update_policy", new JsonObject { ["policy"] = policyJson, ["now_ms"] = now }, Handle);
 }
 
 /// <summary>Known attacks are blocked here with no round trip (section 7.1).</summary>
@@ -71,6 +73,8 @@ public sealed class LocalSensor(IvarRuntime rt, string policyJson)
     : IvarHandle(rt, "sensor.new", new JsonObject { ["policy"] = policyJson })
 {
     public JsonNode Decide(JsonNode ev, long now) => Rt.Call("sensor.decide", new JsonObject { ["event"] = ev.DeepClone(), ["now_ms"] = now }, Handle);
+    /// <summary>Adopt a newer verified policy, keeping cached verdicts.</summary>
+    public void UpdatePolicy(string policyJson) => Rt.Call("sensor.update_policy", new JsonObject { ["policy"] = policyJson }, Handle);
     public void PushVerdict(JsonNode verdict) => Rt.Call("sensor.push_verdict", new JsonObject { ["verdict"] = verdict.DeepClone() }, Handle);
 }
 

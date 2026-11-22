@@ -56,6 +56,15 @@ impl SensorPolicy {
         }
     }
 
+    /// Adopt a newer verified policy, keeping the verdicts already cached so
+    /// enforcement does not lapse while the next ones arrive.
+    pub fn replace_policy(&mut self, p: &PolicyContent) -> Result<(), String> {
+        let mut next = Self::try_from_policy(p)?;
+        next.verdicts = std::mem::take(&mut self.verdicts);
+        *self = next;
+        Ok(())
+    }
+
     /// Whether a core verdict applies to the entity's later requests. Level 3
     /// blocks only the request it judged (reversal none, per request), so it
     /// never carries over; containment (level 4) holds until it expires or

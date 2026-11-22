@@ -1,0 +1,14 @@
+{
+  "keys": {
+    "policy-test": [
+      {
+        "key_id": "policy-test",
+        "alg": "ed25519",
+        "bytes": "66be7e332c7a453332bd9d0a7f7db055f5c5ef1a06ada66d98b39fb6810c473a"
+      },
+      [
+        "policy"
+      ]
+    ]
+  }
+}
