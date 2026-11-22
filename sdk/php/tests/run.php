@@ -53,7 +53,7 @@ check('other sources are unaffected', $next->inspect(['identity' => 'someone-els
 $steps = ['authenticated_session' => str_repeat('22', 32), 'ledger_entry' => str_repeat('33', 32), 'payout_instruction' => str_repeat('44', 32)];
 $keys = array_map(fn ($s) => Ivar::stepPublicKey($s), $steps);
 $chain = function (string $id, int $limit) use ($steps): array {
-    $m = Ivar::mintIntent(str_repeat('11', 32), $id, 'payout', 'ses_1', ['amount' => $limit]);
+    $m = Ivar::mintIntent(str_repeat('11', 32), $id . '-' . getmypid() . '-' . hrtime(true), 'payout', 'ses_1', ['amount' => $limit]);
     $t = $m['token'];
     foreach ($steps as $step => $seed) $t = Ivar::attestStep($seed, $step, $t, $m['root_public_key']);
     return [$t, $m['root_public_key']];
@@ -62,6 +62,8 @@ $chain = function (string $id, int $limit) use ($steps): array {
 $guard = $g->guard('payout', $root, $keys, 'enforce');
 check('stolen credential without a chain is refused', $guard->check($req('/payouts', '10.0.0.1'), null, 100)['status'] === 403);
 check('full chain executes', $guard->check($req('/payouts', '10.0.0.1'), $t1, 100)['status'] === 200);
+$other = new Guardian(['mode' => 'enforce', 'policy' => $enforce, 'on_alert' => $quiet, 'verdict_cache' => $vc]);
+check('an intent used in one PHP request cannot be replayed in the next', $other->guard('payout', $root, $keys, 'enforce')->check($req('/payouts', '10.0.0.1'), $t1, 100)['status'] === 403);
 check('large payout is held', $guard->check($req('/payouts', '10.0.0.1'), $chain('i2', 100000)[0], 60000)['status'] === 202);
 
 $times = [];

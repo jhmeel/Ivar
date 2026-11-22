@@ -37,9 +37,13 @@ fn fired(out: &ivar_core::engine::EngineOutput, rule: &str) -> bool {
 fn a_session_walking_other_customers_accounts_is_stopped() {
     let mut core = core();
     let (mut stopped, mut rule) = (None, false);
+    let mut sensor = ivar_core::sensor::SensorPolicy::try_from_policy(core.policy()).unwrap();
     for k in 0..60 {
         let out = core.process(read("ses-enum", "198.51.100.9", &format!("u{k}"), 403, 1_000 + k * 50, k as u64 + 1), 1_000 + k * 50);
         rule |= fired(&out, "object_enumeration");
+        for v in out.verdicts.iter().cloned() {
+            sensor.push_verdict(v);
+        }
         if acted(&out) && stopped.is_none() {
             stopped = Some(k);
         }
@@ -47,6 +51,10 @@ fn a_session_walking_other_customers_accounts_is_stopped() {
     assert!(rule, "the enumeration rule fired");
     let k = stopped.expect("enumerating 60 accounts is acted on");
     assert!(k < 15, "acted on after {k} refused objects");
+    // The core judges after the response; what it decided must still stop
+    // the session's next request at the sensor.
+    let next = read("ses-enum", "198.51.100.9", "u7", 0, 5_000, 99);
+    assert!(matches!(sensor.decide(&next, 5_000), ivar_core::sensor::LocalDecision::Cached(_)), "the session's next request is refused at the sensor");
 }
 
 #[test]

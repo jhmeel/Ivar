@@ -26,6 +26,12 @@ pub struct SensorPolicy {
     /// Verdicts pushed by the core: entity key to verdict.
     verdicts: BTreeMap<String, Verdict>,
     pub enforce: bool,
+    /// Opt in (`refuse_undeclared_routes`): with declared routes, a request
+    /// whose method and path match none of them is refused at the sensor,
+    /// except under `undeclared_route_exempt` prefixes (health checks,
+    /// static files).
+    refuse_undeclared: bool,
+    undeclared_exempt: Vec<String>,
 }
 
 impl SensorPolicy {
@@ -46,6 +52,13 @@ impl SensorPolicy {
             .map(|a| a.iter().filter_map(|x| x.as_str().map(String::from)).collect())
             .unwrap_or_default();
         let enforce = p.settings.get("detection_mode").and_then(|v| v.as_str()) == Some("enforce");
+        let refuse_undeclared = p.settings.get("refuse_undeclared_routes").and_then(|v| v.as_bool()).unwrap_or(false);
+        let undeclared_exempt = p
+            .settings
+            .get("undeclared_route_exempt")
+            .and_then(|v| v.as_array())
+            .map(|a| a.iter().filter_map(|x| x.as_str().map(String::from)).collect())
+            .unwrap_or_default();
         SensorPolicy {
             policy_version: p.policy_version.clone(),
             decoy_routes,
@@ -53,6 +66,8 @@ impl SensorPolicy {
             block_alerts,
             verdicts: BTreeMap::new(),
             enforce,
+            refuse_undeclared,
+            undeclared_exempt,
         }
     }
 
@@ -65,15 +80,16 @@ impl SensorPolicy {
         Ok(())
     }
 
-    /// Whether a core verdict applies to the entity's later requests. Level 3
-    /// blocks only the request it judged (reversal none, per request), so it
-    /// never carries over; containment (level 4) holds until it expires or
-    /// is reversed; throttles and challenges carry over only while they have
-    /// an expiry, so no response short of containment is open ended.
+    /// Whether a core verdict applies to the entity's later requests.
+    /// Containment (level 4) holds until it expires or is reversed. Blocks,
+    /// challenges and throttles from the core carry over only while they
+    /// have an expiry (the core gives blocks and challenges a bounded one,
+    /// since it judges after the response), so no response short of
+    /// containment is open ended.
     fn carries_over(v: &Verdict, now: i64) -> bool {
         match v.decision.as_str() {
             "contain" => v.expires_at == 0 || v.expires_at > now,
-            "throttle" | "challenge" => v.expires_at > now,
+            "throttle" | "challenge" | "block" => v.expires_at > now,
             _ => false,
         }
     }
@@ -121,7 +137,11 @@ impl SensorPolicy {
             if let Some(decoy) = self.decoy_routes.get(path) {
                 return LocalDecision::Block(self.verdict("block", &format!("decoy_route:{decoy}"), entity, ev, now));
             }
-            if let Some(route) = self.declared.match_route(&req.http_method, &req.url_path) {
+            let declared = self.declared.match_route(&req.http_method, &req.url_path);
+            if declared.is_none() && self.refuse_undeclared && !self.declared.routes.is_empty() && !self.undeclared_exempt.iter().any(|x| path.starts_with(x.as_str())) {
+                return LocalDecision::Block(self.verdict("block", "undeclared_route", entity, ev, now));
+            }
+            if let Some(route) = declared {
                 let roles = ev.actor.as_ref().map(|a| a.authorizations.clone()).unwrap_or_default();
                 let privileged_write = req.body_keys.iter().any(|k| route.privileged_properties.contains(k))
                     && !route.roles.iter().any(|r| r != "self" && roles.split(',').any(|x| x.trim() == r));

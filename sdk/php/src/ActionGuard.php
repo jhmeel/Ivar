@@ -8,8 +8,40 @@ namespace Ivar;
 final class ActionGuard
 {
     /** @param \Closure(string,string):void $alert */
-    public function __construct(private Guardian $g, private string $action, private Handle $sink, private \Closure $alert)
+    /**
+     * PHP serves each request from a fresh process, so what the sink
+     * remembers (intents already used, consequence totals, held actions) is
+     * kept in $stateFile, read and written under an exclusive lock.
+     */
+    public function __construct(private Guardian $g, private string $action, private Handle $sink, private \Closure $alert, private ?string $stateFile = null)
     {
+    }
+
+    /** Run $fn with the sink's shared state loaded, and save it afterwards. */
+    private function withState(callable $fn): array
+    {
+        if ($this->stateFile === null) {
+            return $fn();
+        }
+        $fh = fopen($this->stateFile, 'c+');
+        if ($fh === false || !flock($fh, LOCK_EX)) {
+            throw new IvarException('sink state unavailable');
+        }
+        try {
+            $saved = stream_get_contents($fh);
+            if ($saved !== false && trim($saved) !== '') {
+                $this->sink->restore(['state' => $saved]);
+            }
+            $out = $fn();
+            ftruncate($fh, 0);
+            rewind($fh);
+            fwrite($fh, $this->sink->raw('state'));
+            fflush($fh);
+            return $out;
+        } finally {
+            flock($fh, LOCK_UN);
+            fclose($fh);
+        }
     }
 
     /** @return array{action:string,status:int,body?:array} */
@@ -20,7 +52,7 @@ final class ActionGuard
             'business' => $r['tenant'] ?? '', 'value_moved' => $value, 'records_read' => $records, 'destructive' => $destructive, 'intent_token' => $intentToken,
         ];
         try {
-            $d = $this->sink->guard(['request' => $req, 'now_ms' => Ivar::now()]);
+            $d = $this->withState(fn () => $this->sink->guard(['request' => $req, 'now_ms' => Ivar::now()]));
         } catch (\Throwable $e) {
             ($this->alert)('sdk_fault', 'action sink failed closed: ' . $e->getMessage());
             return ['action' => 'unavailable', 'status' => 503, 'body' => ['error' => 'action check unavailable']];

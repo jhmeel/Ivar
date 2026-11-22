@@ -46,6 +46,26 @@ impl Sink {
             Err(e) => err(e),
         }
     }
+    /// What the sink remembers (consumed intents, consequence totals, held
+    /// actions), as JSON, for a host that keeps it between processes.
+    pub fn state(&self) -> String {
+        serde_json::to_string(&self.inner.state()).unwrap_or_else(err)
+    }
+
+    /// Take up state from an earlier `state`.
+    pub fn restore(&mut self, state_json: &str) -> String {
+        if state_json.trim().is_empty() {
+            return serde_json::json!({ "ok": true }).to_string();
+        }
+        match serde_json::from_str(state_json) {
+            Ok(st) => {
+                self.inner.restore(st);
+                serde_json::json!({ "ok": true }).to_string()
+            }
+            Err(e) => err(e),
+        }
+    }
+
     pub fn release_due(&mut self, now_ms: f64) -> String {
         serde_json::to_string(&self.inner.release_due(now_ms as i64)).unwrap_or_else(err)
     }

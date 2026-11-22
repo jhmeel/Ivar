@@ -44,6 +44,15 @@ pub struct SinkDecision {
     pub open_incident: bool,
 }
 
+/// What a sink remembers between calls: intents already used, the running
+/// totals behind consequence limits, and actions held by a time lock.
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
+pub struct SinkState {
+    pub consumed: Vec<(String, i64)>,
+    pub ledgers: serde_json::Value,
+    pub locks: TimeLockQueue,
+}
+
 pub struct ActionSink {
     verifier: IntentVerifier,
     invariants: InvariantEngine,
@@ -53,6 +62,19 @@ pub struct ActionSink {
 }
 
 impl ActionSink {
+    /// Export what this sink remembers, for a host that serves each request
+    /// from a fresh process and keeps the state itself.
+    pub fn state(&self) -> SinkState {
+        SinkState { consumed: self.verifier.consumed(), ledgers: self.invariants.export_ledgers(), locks: self.locks.clone() }
+    }
+
+    /// Take up state exported by an earlier `state`.
+    pub fn restore(&mut self, s: SinkState) {
+        self.verifier.restore_consumed(s.consumed);
+        self.invariants.import_ledgers(s.ledgers);
+        self.locks = s.locks;
+    }
+
     pub fn new(verifier: IntentVerifier, invariants: InvariantEngine, default_mode: IntentBindingMode, modes: BTreeMap<String, IntentBindingMode>) -> Self {
         ActionSink { verifier, invariants, locks: TimeLockQueue::default(), default_mode, modes }
     }

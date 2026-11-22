@@ -20,6 +20,12 @@ final class Handle
         return $this->rt->call("{$this->kind}.$op", $args[0] ?? [], $this->handle);
     }
 
+    /** The raw JSON answer to an operation, for state passed through untouched. */
+    public function raw(string $op, array $args = []): string
+    {
+        return $this->rt->callRaw("{$this->kind}.$op", $args, $this->handle);
+    }
+
     public function close(): void
     {
         $this->rt->call('free', [], $this->handle);

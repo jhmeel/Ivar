@@ -46,3 +46,23 @@ fn sensors_refuse_a_broken_declared_section() {
     p.declared = json!({"routes": [{"method": 7}]});
     assert!(ivar_core::sensor::SensorPolicy::try_from_policy(&p).is_err());
 }
+
+#[test]
+fn undeclared_routes_and_methods_are_refused_only_when_opted_in() {
+    use ivar_core::sensor::{ocsf_class as c, EventBuilder, LocalDecision, SensorPolicy};
+    let api = "openapi: 3.0.3\npaths:\n  /accounts/{uid}:\n    get: {}\n";
+    let req = |method: &str, path: &str| EventBuilder::new(c::HTTP_ACTIVITY, ivar_core::detect::vocabulary::HTTP_REQUEST, 1, "sdk-1", "app_sdk", 1).src_ip("198.51.100.7").http(method, path, &[], 0).build();
+    let mut p = ivar_core::policy::spec_default_policy(0);
+    p.declared = ivar_core::declare::compile_openapi("api.yaml", api).unwrap().to_value();
+    p.settings.insert("detection_mode".into(), serde_json::json!("enforce"));
+    let lenient = SensorPolicy::try_from_policy(&p).unwrap();
+    assert!(matches!(lenient.decide(&req("DELETE", "/accounts/u1"), 1), LocalDecision::Forward), "off by default");
+
+    p.settings.insert("refuse_undeclared_routes".into(), serde_json::json!(true));
+    p.settings.insert("undeclared_route_exempt".into(), serde_json::json!(["/healthz"]));
+    let strict = SensorPolicy::try_from_policy(&p).unwrap();
+    assert!(matches!(strict.decide(&req("DELETE", "/accounts/u1"), 1), LocalDecision::Block(_)), "undeclared method");
+    assert!(matches!(strict.decide(&req("GET", "/internal/debug"), 1), LocalDecision::Block(_)), "undeclared path");
+    assert!(matches!(strict.decide(&req("GET", "/accounts/u1"), 1), LocalDecision::Forward), "declared");
+    assert!(matches!(strict.decide(&req("GET", "/healthz"), 1), LocalDecision::Forward), "exempt prefix");
+}

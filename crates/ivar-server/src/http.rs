@@ -368,6 +368,9 @@ async fn evidence(State(s): S, h: HeaderMap, Query(q): Query<From>) -> Response 
     let mut res = Json(json!(recs)).into_response();
     res.headers_mut().insert("x-ivar-next-seq", next.into());
     res.headers_mut().insert("x-ivar-head-seq", head.into());
+    // With several shards no one shard sees a sensor's whole sequence, so a
+    // reader must not infer unobserved gaps from jumps in it.
+    res.headers_mut().insert("x-ivar-shards", s.shards.into());
     res
 }
 

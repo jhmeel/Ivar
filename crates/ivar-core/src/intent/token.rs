@@ -163,13 +163,30 @@ pub struct IntentVerifier {
     /// Step name to the public key that must attest it.
     step_keys: BTreeMap<String, String>,
     revoked: BTreeSet<String>,
-    consumed: BTreeSet<String>,
+    /// Intents already used, with the time each expires. An expired intent
+    /// is refused on its own, so it is forgotten then and the set stays
+    /// bounded by the intents still live.
+    consumed: BTreeMap<String, i64>,
+    next_prune: i64,
     last_intent_id: Option<String>,
 }
 
+/// How long a consumed intent with no expiry of its own is remembered.
+const CONSUMED_DEFAULT_MS: i64 = 24 * 3_600_000;
+
 impl IntentVerifier {
     pub fn new(root_public_hex: &str, step_keys: BTreeMap<String, String>) -> Self {
-        IntentVerifier { root_public_hex: root_public_hex.into(), step_keys, revoked: BTreeSet::new(), consumed: BTreeSet::new(), last_intent_id: None }
+        IntentVerifier { root_public_hex: root_public_hex.into(), step_keys, revoked: BTreeSet::new(), consumed: BTreeMap::new(), next_prune: 0, last_intent_id: None }
+    }
+
+    /// Consumed intents and their expiry, for a sink that keeps its state
+    /// outside the process (PHP serves every request from a fresh one).
+    pub fn consumed(&self) -> Vec<(String, i64)> {
+        self.consumed.iter().map(|(k, v)| (k.clone(), *v)).collect()
+    }
+
+    pub fn restore_consumed(&mut self, entries: Vec<(String, i64)>) {
+        self.consumed.extend(entries);
     }
 
     pub fn revoke(&mut self, revocation_id_hex: &str) {
@@ -180,9 +197,16 @@ impl IntentVerifier {
     pub fn verify_and_consume(&mut self, r: &VerifyRequest) -> Result<IntentClaims, IntentError> {
         let claims = self.verify(r)?;
         let key = format!("{}:{}", r.action, self.last_intent_id.take().unwrap_or_default());
-        if !self.consumed.insert(key) {
+        let now = r.now_ms;
+        if now >= self.next_prune {
+            self.consumed.retain(|_, expires| *expires > now);
+            self.next_prune = now + 10_000;
+        }
+        if self.consumed.get(&key).is_some_and(|expires| *expires > now) {
             return Err(IntentError::Replayed);
         }
+        let expires = if claims.expiry > 0 { claims.expiry } else { now + CONSUMED_DEFAULT_MS };
+        self.consumed.insert(key, expires);
         Ok(claims)
     }
 

@@ -777,8 +777,10 @@ http_filters:
 
 with `ivar_core` and `ivar_control` clusters pointing at the core and the
 control plane. The filter fetches a signed bundle from the control plane;
-until one verifies, admin routes fail closed and public routes fail open
-within the budget.
+until one verifies, admin routes fail closed. Public routes pass for the
+first ten seconds after Envoy starts, so a rolling restart does not
+throttle customers, then fail open within the budget. Set
+`policy_bundle_base64` to start enforcing from the first request.
 
 #### Istio
 
@@ -985,7 +987,7 @@ curl -X POST http://ivar-core:8080/v1/events -H 'content-type: application/json'
   "events": [{
     "class_uid": 6003, "category_uid": 6, "activity_name": "business.action", "time": 1795000000000,
     "actor": { "user": { "uid": "kh_9f2c...", "type": "human" } },
-    "src_endpoint": { "ip": "10.1.2.3" },
+    "src_endpoint": { "ip": "10.1.1.3" },
     "ivar": { "sensor_id": "billing-batch", "sensor_type": "app_sdk", "observation_point": "app_sdk",
               "sensor_seq": 42, "business_action": "refund", "value_moved": 1200 }
   }]
@@ -1126,7 +1128,10 @@ frame (`scripts/export-replay.cjs`). Any incident exports the same way.
 * **Policy.** `ivar-control validate` loads the policy in the core and runs
   the attack replay library; `ivar-control build` signs it. Reference
   `operator-decisions.yaml` from `policy.yaml`; the build refuses
-  unconfirmed decisions.
+  unconfirmed decisions. Once every route is declared, set
+  `refuse_undeclared_routes: true` to refuse any method and path outside
+  the declarations at the SDK or edge, with `undeclared_route_exempt` for
+  prefixes such as health checks.
 * **Sensor tokens.** Without them anyone who can reach the core can send
   events and frame an address. Issue one token per sensor or application;
   each is bound to the sensor ids it may speak for, and only its SHA-256 is

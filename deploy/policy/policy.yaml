@@ -12,6 +12,10 @@ settings:
   ai_autonomy: advise
   evidence_retention_days: 400
   fail_open_budget_pct: 0.1
+  # Positive security, opt in: refuse any request whose method and path
+  # match no declared route, except under these prefixes.
+  refuse_undeclared_routes: false
+  undeclared_route_exempt: ["/healthz", "/static/"]
 time_locks_file: time-locks.yaml
 intent_binding:
   payout: enforce

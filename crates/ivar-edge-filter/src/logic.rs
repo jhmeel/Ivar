@@ -45,7 +45,15 @@ pub struct EdgeLogic {
     last_heartbeat: i64,
     redactor: Redactor,
     seq: u64,
+    /// When the filter started; see STARTUP_GRACE_MS.
+    started_at: i64,
 }
+
+/// A filter that has just started has no verified policy until its first
+/// fetch from the control plane. For this long, public routes pass instead
+/// of counting against the fail open budget, so a rolling restart does not
+/// throttle customers; admin routes still fail closed.
+pub const STARTUP_GRACE_MS: i64 = 10_000;
 
 
 
@@ -82,6 +90,7 @@ impl EdgeLogic {
             policy_label: String::new(),
             redactor,
             seq: 0,
+            started_at: now,
             cfg,
         };
         if !logic.cfg.policy_bundle_base64.is_empty() {
@@ -165,7 +174,11 @@ impl EdgeLogic {
 
     fn decide(&mut self, ev: &SecurityEvent, now: i64, admin: bool, route: &str, request_id: &str) -> EdgeAction {
         let Some(sensor) = self.sensor.as_ref() else {
-            // No verified policy yet: admin routes fail closed, the rest within the fail open budget.
+            // No verified policy yet: admin routes fail closed; the rest pass
+            // while the first fetch is due, then within the fail open budget.
+            if !admin && now - self.started_at < STARTUP_GRACE_MS {
+                return EdgeAction::Continue;
+            }
             return self.failure(route, request_id, admin);
         };
         let (verdict, _local) = match sensor.decide(ev, now) {
@@ -377,9 +390,13 @@ mod tests {
     #[test]
     fn no_policy_fails_open_within_budget_and_admin_fails_closed() {
         let mut l = EdgeLogic::new(EdgeConfig { mode: "enforce".into(), ..Default::default() }, 0);
-        assert!(matches!(l.on_request_headers(&req("/admin/users"), 1), EdgeAction::Respond { status: 503, .. }));
-        assert_eq!(l.on_request_headers(&req("/pay"), 1), EdgeAction::Continue);
-        assert!(matches!(l.on_request_headers(&req("/pay"), 1), EdgeAction::Respond { status: 429, .. }));
+        assert!(matches!(l.on_request_headers(&req("/admin/users"), 1), EdgeAction::Respond { status: 503, .. }), "admin fails closed, even at startup");
+        for _ in 0..50 {
+            assert_eq!(l.on_request_headers(&req("/pay"), 1), EdgeAction::Continue, "public routes pass while the first policy fetch is due");
+        }
+        let after = STARTUP_GRACE_MS + 1;
+        assert_eq!(l.on_request_headers(&req("/pay"), after), EdgeAction::Continue);
+        assert!(matches!(l.on_request_headers(&req("/pay"), after), EdgeAction::Respond { status: 429, .. }), "then within the fail open budget");
         assert_eq!(l.reinspection(), vec!["r1"]);
     }
 

@@ -81,6 +81,8 @@ pub fn handle(input: &[u8]) -> String {
         "sensor.update_policy" => with(handle, |o| match o { Object::Sensor(c) => c.update_policy(&j(&a, "policy")), _ => wrong("sensor") }),
         "sensor.push_verdict" => with(handle, |o| match o { Object::Sensor(c) => json!({ "ok": c.push_verdict(&j(&a, "verdict")) }).to_string(), _ => wrong("sensor") }),
         "sink.new" => api::Sink::new(s(&a, "root_public_key"), &j(&a, "step_keys"), &j(&a, "invariants"), s(&a, "default_mode"), &j(&a, "modes")).map(|c| store(Object::Sink(c))),
+        "sink.state" => with(handle, |o| match o { Object::Sink(c) => c.state(), _ => wrong("sink") }),
+        "sink.restore" => with(handle, |o| match o { Object::Sink(c) => c.restore(s(&a, "state")), _ => wrong("sink") }),
         "sink.guard" => with(handle, |o| match o { Object::Sink(c) => c.guard(&j(&a, "request"), n(&a, "now_ms")), _ => wrong("sink") }),
         "sink.cancel" => with(handle, |o| match o { Object::Sink(c) => c.cancel(s(&a, "lock_id"), s(&a, "owner"), &j(&a, "request")), _ => wrong("sink") }),
         "sink.release_due" => with(handle, |o| match o { Object::Sink(c) => c.release_due(n(&a, "now_ms")), _ => wrong("sink") }),

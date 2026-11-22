@@ -92,6 +92,22 @@ fn challengeable(ev: &SecurityEvent) -> bool {
 /// Distinct accounts behind one address that mark it as shared.
 pub const CROWDED_ADDRESS_ACCOUNTS: usize = 10;
 const MAX_TRACKED_ADDRESSES: usize = 200_000;
+/// How long a core block or challenge holds for the entity's later requests.
+/// The core judges after the response, so a verdict that covered only the
+/// request it judged would change nothing; it carries as long as a throttle.
+pub const CORE_VERDICT_CARRY_MS: i64 = 15 * 60_000;
+
+/// A block reached only because a critical positive security rule fired is
+/// the one the sensor already enforced on that request, so it stays per
+/// request: carrying it would punish a session twice for one refused write.
+fn carried_expiry(decision: Decision, rung: &crate::response::Rung, now: i64, repeats: u32, enforced_inline: bool) -> i64 {
+    match decision {
+        Decision::Block if enforced_inline => rung.expires_at(now, repeats),
+        Decision::Block | Decision::Challenge => now + CORE_VERDICT_CARRY_MS,
+        _ => rung.expires_at(now, repeats),
+    }
+}
+
 /// Per entity state untouched for this long (event time) is forgotten, so
 /// memory follows active customers, not every customer ever seen.
 pub const ENTITY_IDLE_MS: i64 = 90 * 24 * 3_600_000;
@@ -457,7 +473,7 @@ impl<S: EvidenceStore> DecisionCore<S> {
                 reasons,
                 sources,
                 policy_version: self.policy.policy_version.clone(),
-                expires_at: rung.expires_at(now, repeats),
+                expires_at: carried_expiry(decision, rung, now, repeats, a.risk.critical_positive_security),
                 mode: mode.into(),
                 evidence_ids: evidence_ids.clone(),
                 time: now,

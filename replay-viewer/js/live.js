@@ -17,8 +17,12 @@ const WINDOW = 50_000;
 /** Evidence pages fetched per poll while catching up. */
 const PAGES_PER_POLL = 4;
 
-/** Turn sealed evidence records into replay frames (see crates/ivar-replay frames.rs). */
-export function recordsToFrames(records) {
+/**
+ * Turn sealed evidence records into replay frames (see crates/ivar-replay
+ * frames.rs). Gaps in a sensor's sequence are inferred only from a single
+ * shard: with several, each holds part of every sensor's sequence.
+ */
+export function recordsToFrames(records, { inferGaps = true } = {}) {
   const frames = [];
   const lastSeq = new Map();
   let current = { sensor: '', seq: 0 };
@@ -29,7 +33,7 @@ export function recordsToFrames(records) {
       const sensor = x.sensor_id ?? '';
       const seq = x.sensor_seq ?? 0;
       const prev = lastSeq.get(sensor);
-      if (prev !== undefined && seq > prev + 1) {
+      if (inferGaps && prev !== undefined && seq > prev + 1) {
         frames.push({ index: 0, time: p.time ?? r.time, sensor_time: p.time ?? r.time, clock_skew_ms: 0, sensor_id: sensor, sensor_seq: prev + 1, kind: 'gap', evidence_ids: [], payload: { unobserved: `sequence ${prev + 1} to ${seq - 1} missing from ${sensor}` }, counterfactual: false, hops_us: {}, elapsed_ms: 0 });
       }
       if (seq) lastSeq.set(sensor, Math.max(prev ?? 0, seq));
@@ -89,6 +93,7 @@ export class LiveSource {
     if (keepRaw) {
       this.lastRaw = text;
       this.lastHeadSeq = Number(res.headers.get('x-ivar-head-seq') ?? NaN);
+      this.shards = Number(res.headers.get('x-ivar-shards') ?? 1);
     }
     let body;
     try {
@@ -134,7 +139,7 @@ export class LiveSource {
         if (all.length > WINDOW) all = all.slice(all.length - WINDOW);
         this.records = all;
         const incidents = await this.get('/v1/incidents').catch(() => []);
-        this.onUpdate({ records: all, frames: recordsToFrames(all), head: this.head, incidents, fresh: fresh.length, verifiedFrom: all[0]?.seq });
+        this.onUpdate({ records: all, frames: recordsToFrames(all, { inferGaps: !(this.shards > 1) }), head: this.head, incidents, fresh: fresh.length, verifiedFrom: all[0]?.seq });
       } else this.onUpdate(null);
     } catch (e) {
       this.onError(e);

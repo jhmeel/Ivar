@@ -31,7 +31,7 @@ final class Guardian
      */
     public function __construct(private array $options = [])
     {
-        $this->options += ['mode' => 'observe', 'core_url' => null, 'core_token' => '', 'policy' => null, 'redaction_key' => '', 'sensor_id' => 'php-sdk', 'admin_prefixes' => ['/admin'], 'budget_ms' => 1.0, 'on_alert' => null, 'verdict_cache' => null, 'embedded' => false, 'control_url' => null, 'policy_keyring' => null, 'policy_refresh_s' => 30, 'policy_state_file' => null];
+        $this->options += ['mode' => 'observe', 'core_url' => null, 'core_token' => '', 'policy' => null, 'redaction_key' => '', 'sensor_id' => 'php-sdk', 'admin_prefixes' => ['/admin'], 'budget_ms' => 1.0, 'on_alert' => null, 'verdict_cache' => null, 'embedded' => false, 'control_url' => null, 'policy_keyring' => null, 'policy_refresh_s' => 30, 'policy_state_file' => null, 'sink_state_dir' => null];
         if (!in_array($this->options['mode'], ['observe', 'enforce'], true)) {
             throw new \InvalidArgumentException('mode must be observe or enforce');
         }
@@ -256,6 +256,8 @@ final class Guardian
             $modes[$action] = $intentBinding;
         }
         $invariants = json_encode($this->policyView->invariants ?? [], JSON_THROW_ON_ERROR);
-        return new ActionGuard($this, $action, Ivar::sink($rootPublicKey, $stepKeys, $invariants, $modes[$action] ?? 'observe', $modes), fn ($k, $m) => $this->alert($k, $m));
+        $state = $this->options['sink_state_dir'] ?? sys_get_temp_dir();
+        $file = rtrim($state, '/') . '/ivar-sink-' . substr(hash('sha256', $action . '|' . $rootPublicKey), 0, 16) . '.json';
+        return new ActionGuard($this, $action, Ivar::sink($rootPublicKey, $stepKeys, $invariants, $modes[$action] ?? 'observe', $modes), fn ($k, $m) => $this->alert($k, $m), $file);
     }
 }

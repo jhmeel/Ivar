@@ -37,6 +37,19 @@ pub struct InvariantEngine {
     ledgers: BTreeMap<String, Ledger>,
 }
 
+impl InvariantEngine {
+    /// The running totals, for a sink that keeps its state outside the process.
+    pub fn export_ledgers(&self) -> serde_json::Value {
+        serde_json::to_value(&self.ledgers).unwrap_or_default()
+    }
+
+    pub fn import_ledgers(&mut self, v: serde_json::Value) {
+        if let Ok(l) = serde_json::from_value(v) {
+            self.ledgers = l;
+        }
+    }
+}
+
 pub struct Measured<'a> {
     pub action: &'a str,
     pub identity: &'a str,
