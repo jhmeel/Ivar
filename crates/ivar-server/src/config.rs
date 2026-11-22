@@ -41,6 +41,12 @@ pub struct ServerConfig {
     /// Base URL of every shard, by shard number, so events another shard
     /// owns are forwarded to it rather than dropped.
     pub shard_peers: Vec<String>,
+    /// Size in MiB at which the active evidence segment is sealed and a new
+    /// one started. Sealed segments never change and can be archived.
+    pub evidence_segment_mb: u64,
+    /// The most evidence records a replay may load (default 500,000). A
+    /// replay re-executes the shard's local chain from its first record.
+    pub replay_max_records: u64,
 }
 
 impl Default for ServerConfig {
@@ -57,6 +63,8 @@ impl Default for ServerConfig {
             public_url: "https://ivar.internal".into(),
             shard: 0,
             shards: 1,
+            evidence_segment_mb: 1024,
+            replay_max_records: 0,
             sinks: SinkConfig::default(),
             responders: vec![],
             ai_config: None,

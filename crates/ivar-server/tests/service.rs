@@ -38,6 +38,10 @@ fn fixture() -> Fixture {
 
 /// A core over `dir`, configured with policy version 1.
 fn start(dir: &std::path::Path) -> Arc<AppState> {
+    start_with(dir, 0)
+}
+
+fn start_with(dir: &std::path::Path, replay_max_records: u64) -> Arc<AppState> {
     let policy_key = KeyPair::ed25519_from_seed("policy-1", [1; 32]);
     let evidence_key = KeyPair::ed25519_from_seed("evidence-0", [2; 32]);
     let action_key = KeyPair::ed25519_from_seed("action-0", [3; 32]);
@@ -58,6 +62,7 @@ fn start(dir: &std::path::Path) -> Arc<AppState> {
         shards: 1,
         policy_dir: Some(dir.join("policies")),
         access: Default::default(),
+        replay_max_records,
     })
     .unwrap()
 }
@@ -72,6 +77,19 @@ async fn call(f: &Fixture, method: &str, uri: &str, body: Value, operator: Optio
     let status = res.status();
     let bytes = res.into_body().collect().await.unwrap().to_bytes();
     (status, serde_json::from_slice(&bytes).unwrap_or(Value::String(String::from_utf8_lossy(&bytes).to_string())))
+}
+
+#[tokio::test]
+async fn a_replay_too_large_for_the_shard_is_refused_not_attempted() {
+    let dir = tempfile::tempdir().unwrap();
+    let f = Fixture { state: start_with(dir.path(), 1), policy_key: KeyPair::ed25519_from_seed("policy-1", [1; 32]), _dir: dir };
+    let tool_call = json!({"activity_name": "ai.tool_call", "actor": {"user": {"uid": "support-bot", "type": "agent"}}, "ivar": {"sensor_id": "aigw-1", "sensor_type": "ai_gateway", "sensor_seq": 1, "attributes": {"tool": "export_all_customers"}}});
+    call(&f, "POST", "/v1/events", json!({"sensor_id": "aigw-1", "events": [tool_call]}), None).await;
+    let (_, incidents) = call(&f, "GET", "/v1/incidents", json!(null), Some("analyst")).await;
+    let id = incidents[0]["incident_id"].as_str().unwrap().to_string();
+    let (s, body) = call(&f, "GET", &format!("/v1/incidents/{id}/replay"), json!(null), Some("analyst")).await;
+    assert_eq!(s, StatusCode::UNPROCESSABLE_ENTITY, "{body}");
+    assert!(body["error"].as_str().unwrap().contains("replay_max_records"));
 }
 
 #[tokio::test]

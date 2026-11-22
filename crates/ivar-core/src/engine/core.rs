@@ -61,6 +61,8 @@ pub struct DecisionCore<S: EvidenceStore = MemoryEvidenceStore> {
     /// threshold. An address carrying many accounts is a proxy, gateway or
     /// shared network, and is never contained (section 11.1).
     accounts_by_ip: BTreeMap<String, BTreeSet<String>>,
+    /// Event time of the next idle sweep.
+    next_sweep: i64,
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -90,6 +92,11 @@ fn challengeable(ev: &SecurityEvent) -> bool {
 /// Distinct accounts behind one address that mark it as shared.
 pub const CROWDED_ADDRESS_ACCOUNTS: usize = 10;
 const MAX_TRACKED_ADDRESSES: usize = 200_000;
+/// Per entity state untouched for this long (event time) is forgotten, so
+/// memory follows active customers, not every customer ever seen.
+pub const ENTITY_IDLE_MS: i64 = 90 * 24 * 3_600_000;
+/// How often, in event time, idle state is swept.
+const SWEEP_EVERY_MS: i64 = 3_600_000;
 
 fn established(ev: &SecurityEvent) -> bool {
     let ext = ev.ext();
@@ -140,6 +147,7 @@ impl<S: EvidenceStore> DecisionCore<S> {
             signer: opts.evidence_signer,
             containments: BTreeMap::new(),
             accounts_by_ip: BTreeMap::new(),
+            next_sweep: 0,
             declared,
             graph,
             cedar,
@@ -221,7 +229,7 @@ impl<S: EvidenceStore> DecisionCore<S> {
     }
 
     fn seal(&mut self, kind: EvidenceKind, now: i64, hint: &str, payload: serde_json::Value) -> String {
-        self.evidence.append(self.signer.as_ref(), kind, now, hint, payload).evidence_id
+        self.evidence.append(self.signer.as_ref(), kind, now, hint, payload)
     }
 
     fn mode(&self) -> &'static str {
@@ -247,6 +255,18 @@ impl<S: EvidenceStore> DecisionCore<S> {
     }
 
     fn process_inner(&mut self, mut ev: SecurityEvent, now: i64, recorded: Option<String>) -> EngineOutput {
+        if now >= self.next_sweep {
+            // On a fixed event time schedule, never the wall clock, so a
+            // replay of the same evidence forgets exactly what the live core did.
+            if self.next_sweep > 0 {
+                let before = now - ENTITY_IDLE_MS;
+                for d in self.detectors.iter_mut() {
+                    d.evict_idle(before);
+                }
+                self.budget.active_users(now);
+            }
+            self.next_sweep = (now / SWEEP_EVERY_MS + 1) * SWEEP_EVERY_MS;
+        }
         self.redactor.apply(&mut ev, None, now);
         let ext = ev.ext();
         self.tamper.seen(&ext.sensor_id, now);
@@ -270,7 +290,7 @@ impl<S: EvidenceStore> DecisionCore<S> {
 
         let evidence_id = match recorded {
             Some(id) => id,
-            None => self.seal(EvidenceKind::Event, now, "", serde_json::to_value(&ev).unwrap_or_default()),
+            None => self.seal(EvidenceKind::Event, now, "", crate::evidence::compact(serde_json::to_value(&ev).unwrap_or_default())),
         };
         if let Some(e) = ev.ivar.as_mut() {
             e.evidence_id = evidence_id.clone();

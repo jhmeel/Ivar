@@ -7,5 +7,5 @@
 mod record;
 mod store;
 
-pub use record::{CustodyEntry, EvidenceKind, EvidenceRecord};
+pub use record::{compact, CustodyEntry, EvidenceKind, EvidenceRecord};
 pub use store::{verify_chain, ChainError, EvidenceStore, MemoryEvidenceStore, GENESIS_HASH};

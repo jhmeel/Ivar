@@ -52,6 +52,9 @@ pub trait Detector: Send {
     fn name(&self) -> &'static str;
     fn method(&self) -> DetectionMethodName;
     fn detect(&mut self, ctx: &DetectContext, ev: &SecurityEvent) -> Vec<Finding>;
+    /// Forget per entity state last touched before `before` (event time).
+    /// Called on a fixed event time schedule, so a replay forgets the same.
+    fn evict_idle(&mut self, _before: i64) {}
 }
 
 /// Build a finding for a catalog rule. Returns None when the rule is unknown

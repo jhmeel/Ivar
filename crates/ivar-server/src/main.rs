@@ -10,7 +10,7 @@ use ivar_contracts::sign::{KeyPair, Keyring};
 use ivar_server::config::{read_seed, ServerConfig};
 use ivar_server::grpc::{pb::ingest_server::IngestServer, IngestService};
 use ivar_server::responders::Responders;
-use ivar_server::state::{now_ms, AppState, StartOptions};
+use ivar_server::state::{AppState, StartOptions};
 use ivar_server::store::FileEvidenceStore;
 use std::path::Path;
 use std::time::Duration;
@@ -89,12 +89,22 @@ async fn main() -> anyhow::Result<()> {
             println!("{token}");
             Ok(())
         }
+        Some("evidence") => {
+            // The auditor's check: every record, link and signature, offline.
+            let (Some("verify"), Some(file)) = (args.get(2).map(String::as_str), args.get(3)) else {
+                anyhow::bail!("usage: ivar-core evidence verify <data_dir/evidence-N.jsonl> [keyring.json]");
+            };
+            let ring: Option<Keyring> = args.get(4).map(|k| std::fs::read_to_string(k).map_err(anyhow::Error::from).and_then(|t| Ok(serde_json::from_str(&t)?))).transpose()?;
+            let (first, count, head) = ivar_server::store::verify_evidence(Path::new(file), ring.as_ref())?;
+            println!("ok: {count} records from sequence {first}, head {head}{}", if ring.is_some() { ", every signature valid" } else { " (signatures not checked: pass a keyring)" });
+            Ok(())
+        }
         Some("serve") => {
             let cfg_path = args.iter().position(|a| a == "--config").and_then(|i| args.get(i + 1)).cloned().unwrap_or_else(|| "/etc/ivar/core.yaml".into());
             serve(ServerConfig::load(&cfg_path)?).await
         }
         _ => {
-            eprintln!("usage: ivar-core serve --config <path> | ivar-core health [host:port] | ivar-core keygen <path> | ivar-core keyring <out.json> <seed>=<role>[+<role>] ... | ivar-core token sensor|proxy ...");
+            eprintln!("usage: ivar-core serve --config <path> | ivar-core health [host:port] | ivar-core keygen <path> | ivar-core keyring <out.json> <seed>=<role>[+<role>] ... | ivar-core token sensor|proxy ... | ivar-core evidence verify <evidence.jsonl> [keyring.json]");
             std::process::exit(2);
         }
     }
@@ -125,7 +135,7 @@ async fn serve(cfg: ServerConfig) -> anyhow::Result<()> {
     let action_key = KeyPair::ed25519_from_seed(&format!("action-{}", cfg.shard), read_seed(&cfg.action_key_seed_file)?);
     let redaction_key = hex::decode(std::fs::read_to_string(&cfg.redaction_key_hex_file)?.trim())?;
     let bundle = std::fs::read_to_string(&cfg.policy_bundle)?;
-    let evidence = FileEvidenceStore::open(&Path::new(&cfg.data_dir).join(format!("evidence-{}.jsonl", cfg.shard)))?;
+    let evidence = FileEvidenceStore::open_with(&Path::new(&cfg.data_dir).join(format!("evidence-{}.jsonl", cfg.shard)), cfg.evidence_segment_mb.max(1) << 20)?;
     let sinks = ivar_server::sinks::build(&cfg.sinks, Some(action_key.clone()), &cfg.public_url);
     let responders = Responders::start(&cfg.responders, action_key)?;
     let peers = cfg.shard_peers.iter().map(|p| p.trim_end_matches('/').to_string()).collect::<Vec<_>>();
@@ -153,6 +163,7 @@ async fn serve(cfg: ServerConfig) -> anyhow::Result<()> {
         shards: cfg.shards,
         policy_dir: Some(Path::new(&cfg.data_dir).join(format!("policies-{}", cfg.shard))),
         access,
+        replay_max_records: cfg.replay_max_records,
     })?;
 
     // Tamper monitoring: a sensor silent for 60 seconds raises an alert.
@@ -160,7 +171,7 @@ async fn serve(cfg: ServerConfig) -> anyhow::Result<()> {
     tokio::spawn(async move {
         loop {
             tokio::time::sleep(Duration::from_secs(10)).await;
-            let opened = ticker.inner.lock().expect("state").core.tick(now_ms());
+            let opened = ticker.tick();
             for id in opened {
                 ticker.emit(ivar_server::sinks::Outbound::Alert { kind: "tamper".into(), message: format!("sensor silent, incident {id}") });
             }

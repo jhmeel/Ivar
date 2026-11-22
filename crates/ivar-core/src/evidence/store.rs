@@ -25,7 +25,25 @@ pub trait EvidenceStore {
     fn put(&mut self, record: EvidenceRecord);
     fn records(&self) -> Vec<EvidenceRecord>;
 
-    fn append(&mut self, signer: Option<&KeyPair>, kind: EvidenceKind, time: i64, incident_hint: &str, payload: serde_json::Value) -> EvidenceRecord {
+    /// Up to `limit` records starting at sequence `from` (sequences start at 1).
+    fn records_from(&self, from: u64, limit: usize) -> Vec<EvidenceRecord> {
+        self.records().into_iter().filter(|r| r.seq >= from).take(limit).collect()
+    }
+
+    /// Make every record put so far durable. A store that is durable on put
+    /// needs nothing here; one that batches writes syncs them now. Called
+    /// before any verdict or action that cites the records is released.
+    fn sync(&mut self) {}
+
+    /// True when the store holds the evidence key and signs records itself
+    /// when it syncs (in parallel, off the per event path). Records are then
+    /// appended unsigned and are signed before they are written.
+    fn signs_on_sync(&self) -> bool {
+        false
+    }
+
+    /// Seal a record and return its evidence id.
+    fn append(&mut self, signer: Option<&KeyPair>, kind: EvidenceKind, time: i64, incident_hint: &str, payload: serde_json::Value) -> String {
         let (seq, prev) = self.head();
         let seq = seq + 1;
         let input = EvidenceRecord::digest_input(seq, time, kind, &prev, &payload);
@@ -38,11 +56,12 @@ pub trait EvidenceStore {
             incident_hint: incident_hint.into(),
             payload,
             prev_hash: prev,
-            signature: signer.map(|k| sign_bytes(k, hash.as_bytes())),
+            signature: if self.signs_on_sync() { None } else { signer.map(|k| sign_bytes(k, hash.as_bytes())) },
             hash,
         };
-        self.put(record.clone());
-        record
+        let id = record.evidence_id.clone();
+        self.put(record);
+        id
     }
 }
 

@@ -35,6 +35,7 @@ fn start(dir: &std::path::Path, access: Access, shard: u32, shards: u32) -> Arc<
         shards,
         policy_dir: None,
         access,
+        replay_max_records: 0,
     })
     .unwrap()
 }

@@ -30,6 +30,18 @@ impl Window {
         self.items.get(key).map(|q| q.iter().filter(|(t, _)| now - t <= window_ms).count()).unwrap_or(0)
     }
 
+    /// Drop keys whose newest value is older than `before`: past every window.
+    fn evict(&mut self, before: i64) {
+        let fired = &mut self.fired;
+        self.items.retain(|k, q| {
+            let keep = q.back().map(|(t, _)| *t >= before).unwrap_or(false);
+            if !keep {
+                fired.remove(k);
+            }
+            keep
+        });
+    }
+
     /// Fire once per key until the window empties.
     fn fire_once(&mut self, key: &str) -> bool {
         self.fired.insert(key.to_string())
@@ -53,6 +65,13 @@ pub struct SequenceDetector {
 }
 
 impl SequenceDetector {
+    fn evict(&mut self, before: i64) {
+        for w in [&mut self.missing_routes, &mut self.failed_logins, &mut self.failed_by_account, &mut self.signups, &mut self.internal_hosts, &mut self.agent_hosts, &mut self.renames] {
+            w.evict(before);
+        }
+        self.spraying_sources.retain(|_, t| *t >= before);
+    }
+
     fn window_ms(ctx: &DetectContext, rule: &str, default_secs: u64) -> i64 {
         ctx.rules.param_u64(rule, "window_secs", default_secs) as i64 * SECOND_MS
     }
@@ -68,6 +87,9 @@ fn is_internal(ip: &str) -> bool {
 }
 
 impl Detector for SequenceDetector {
+    fn evict_idle(&mut self, before: i64) {
+        self.evict(before);
+    }
     fn name(&self) -> &'static str {
         "sequence_correlation"
     }

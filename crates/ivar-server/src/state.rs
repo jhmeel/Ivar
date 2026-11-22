@@ -7,7 +7,7 @@ use crate::store::FileEvidenceStore;
 use ivar_contracts::sign::{verify_policy, Keyring};
 use ivar_contracts::{ActionReceipt, ActionRequest, EntityRef, PolicyBundle, PolicyContent, SecurityEvent, Verdict};
 use ivar_core::engine::{CoreOptions, ReviewedAction};
-use ivar_core::evidence::EvidenceKind;
+use ivar_core::evidence::{EvidenceKind, EvidenceStore};
 use ivar_core::policy::{CedarPolicy, OperatorRequest};
 use ivar_core::safeguards::ReviewOutcome;
 use ivar_core::DecisionCore;
@@ -53,6 +53,9 @@ pub struct Inner {
     pub feed: crate::feed::VerdictFeed,
 }
 
+/// Records a replay may load unless configured otherwise.
+pub const DEFAULT_REPLAY_MAX_RECORDS: u64 = 500_000;
+
 pub struct AppState {
     pub inner: Mutex<Inner>,
     pub keyring: Keyring,
@@ -65,8 +68,11 @@ pub struct AppState {
     /// deployment keyring lists it with the evidence and replay roles.
     pub replay_key: ivar_contracts::sign::KeyPair,
     policy_dir: Option<std::path::PathBuf>,
+    pub replay_max_records: u64,
     /// Who may send events and act as an operator (crate::access).
     pub access: crate::access::Access,
+    /// Whether any sink is configured; events are serialised for sinks only then.
+    has_sinks: bool,
     outbound: mpsc::Sender<Outbound>,
     actions: mpsc::Sender<ActionRequest>,
 }
@@ -110,6 +116,9 @@ pub struct StartOptions {
     /// pushed is never silently replaced by the older bundle in the config.
     pub policy_dir: Option<std::path::PathBuf>,
     pub access: crate::access::Access,
+    /// The most evidence records a replay may load; past it a replay is
+    /// refused rather than risk the shard's memory. 0: the default.
+    pub replay_max_records: u64,
 }
 
 /// Verified bundles kept in `dir`, as (version, archive, content).
@@ -156,7 +165,9 @@ impl AppState {
         }
         let cedar = CedarPolicy::parse(&policy.cedar_policies).map_err(|e| anyhow::anyhow!(e.to_string()))?;
         let replay_key = o.evidence_key.clone();
-        let core = DecisionCore::with_store(policy.clone(), CoreOptions { evidence_signer: Some(o.evidence_key), redaction_key: o.redaction_key.clone() }, o.evidence)?;
+        let mut evidence = o.evidence;
+        evidence.sign_with(o.evidence_key.clone());
+        let core = DecisionCore::with_store(policy.clone(), CoreOptions { evidence_signer: Some(o.evidence_key), redaction_key: o.redaction_key.clone() }, evidence)?;
         let (out_tx, out_rx) = mpsc::channel::<Outbound>();
         let (act_tx, act_rx) = mpsc::channel::<ActionRequest>();
         let state = Arc::new(AppState {
@@ -178,6 +189,8 @@ impl AppState {
             replay_key,
             policy_dir: o.policy_dir,
             access: o.access,
+            has_sinks: !o.sinks.is_empty(),
+            replay_max_records: if o.replay_max_records == 0 { DEFAULT_REPLAY_MAX_RECORDS } else { o.replay_max_records },
             outbound: out_tx,
             actions: act_tx,
         });
@@ -212,6 +225,7 @@ impl AppState {
     fn record_receipt(&self, req: &ActionRequest, receipt: ActionReceipt) {
         let mut g = self.inner.lock().expect("state");
         g.core.record_evidence(EvidenceKind::ActionReceipt, receipt.time, serde_json::to_value(&receipt).unwrap_or_default());
+        g.core.evidence_mut().sync();
         drop(g);
         let revokes = ["session.revoke", "user.lock", "user.suspend", "oauth_grant.revoke", "api_key.suspend", "agent.suspend"];
         if receipt.result == "done" && revokes.contains(&req.action.as_str()) {
@@ -221,17 +235,19 @@ impl AppState {
         }
     }
 
-    fn dispatch(&self, actions: &[ReviewedAction], g: &mut Inner) {
-        for a in actions {
+    /// Sort reviewed actions into those to execute now and those that wait
+    /// for an operator. Nothing leaves until the caller has synced evidence.
+    fn plan(&self, reviewed: &[ReviewedAction], g: &mut Inner, execute: &mut Vec<ActionRequest>, outbound: &mut Vec<Outbound>) {
+        for a in reviewed {
             let req = a.planned.request.clone();
             match &a.review {
                 ReviewOutcome::Allowed | ReviewOutcome::Downgraded { .. } if !a.planned.needs_approval => {
                     g.metrics.actions_total += 1;
-                    let _ = self.actions.send(req);
+                    execute.push(req);
                 }
                 ReviewOutcome::NeedsApproval { reason } => {
                     let url = format!("{}/v1/approvals/{}", self.public_url, req.action_request_id);
-                    self.emit(Outbound::ApprovalNeeded { action_request: serde_json::to_value(&req).unwrap_or_default(), approve_url: url });
+                    outbound.push(Outbound::ApprovalNeeded { action_request: serde_json::to_value(&req).unwrap_or_default(), approve_url: url });
                     g.pending.insert(req.action_request_id.clone(), PendingApproval { request: req, reason: reason.clone(), approvers: BTreeSet::new() });
                 }
                 _ => {}
@@ -265,33 +281,52 @@ impl AppState {
         let started = std::time::Instant::now();
         let mut verdicts = Vec::new();
         let mut accepted = 0;
+        // Everything the batch decides is released only after its evidence is
+        // durable: one sync per batch instead of one per record.
+        let mut outbound = Vec::new();
+        let mut actions = Vec::new();
         let mut g = self.inner.lock().expect("state");
         for ev in events {
             if crate::shard_of(&ev, self.shards) != self.shard {
                 continue;
             }
             accepted += 1;
-            let ocsf = serde_json::to_value(&ev).unwrap_or_default();
+            let ocsf = self.has_sinks.then(|| serde_json::to_value(&ev).unwrap_or_default());
             let now = now_ms();
             let out = g.core.process(ev, now);
             g.metrics.events_total += 1;
             for v in &out.verdicts {
                 *g.metrics.verdicts_by_decision.entry(v.decision.clone()).or_insert(0) += 1;
                 g.feed.push(v);
-                if v.decision != "record" {
-                    self.emit(Outbound::Verdict { verdict: serde_json::to_value(v).unwrap_or_default() });
+                if v.decision != "record" && self.has_sinks {
+                    outbound.push(Outbound::Verdict { verdict: serde_json::to_value(v).unwrap_or_default() });
                 }
             }
-            for id in &out.incidents {
-                if let Some(i) = g.core.incidents().get(id) {
-                    self.emit(Outbound::Incident { incident: serde_json::to_value(i).unwrap_or_default() });
+            if self.has_sinks {
+                for id in &out.incidents {
+                    if let Some(i) = g.core.incidents().get(id) {
+                        outbound.push(Outbound::Incident { incident: serde_json::to_value(i).unwrap_or_default() });
+                    }
                 }
             }
-            self.emit(Outbound::Event { ocsf });
-            self.dispatch(&out.actions, &mut g);
+            if let Some(ocsf) = ocsf {
+                outbound.push(Outbound::Event { ocsf });
+            }
+            self.plan(&out.actions, &mut g, &mut actions, &mut outbound);
             verdicts.extend(out.verdicts.into_iter().filter(|v| v.decision != "record"));
         }
+        // Judging is done; durability happens off the lock, and nothing this
+        // batch decided leaves before its evidence is on disk.
+        let commit = g.core.evidence_mut().commit();
         g.metrics.ingest_micros_total += started.elapsed().as_micros() as u64;
+        drop(g);
+        commit.wait();
+        for item in outbound {
+            self.emit(item);
+        }
+        for req in actions {
+            let _ = self.actions.send(req);
+        }
         (accepted, verdicts)
     }
 
@@ -332,6 +367,7 @@ impl AppState {
         action.approval = Some(ivar_contracts::Approval { approved_by: operator.into(), approvers: approvers.into_iter().collect(), approved_at: now_ms() });
         action.evidence_captured_first = true;
         g.core.record_evidence(EvidenceKind::ActionRequest, now_ms(), serde_json::json!({ "approved": action }));
+        g.core.evidence_mut().sync();
         g.metrics.actions_total += 1;
         let _ = self.actions.send(action);
         Ok("approved".into())
@@ -351,6 +387,7 @@ impl AppState {
         };
         let cedar = CedarPolicy::parse(&p.cedar_policies).map_err(|e| e.to_string())?;
         g.core.update_policy(p.clone(), now_ms()).map_err(|e| e.to_string())?;
+        g.core.evidence_mut().sync();
         g.cedar = cedar;
         g.policy_archive_b64 = archive_b64.trim().to_string();
         let v = p.version;
@@ -371,6 +408,16 @@ impl AppState {
             self.emit(Outbound::TimeLock { lock: lock.clone(), cancel_url: url });
         }
         let mut g = self.inner.lock().expect("state");
-        g.core.record_sink(&subject, &decision, open, now_ms())
+        let incident = g.core.record_sink(&subject, &decision, open, now_ms());
+        g.core.evidence_mut().sync();
+        incident
+    }
+
+    /// Periodic work: tamper detection for silent sensors. Returns incidents opened.
+    pub fn tick(&self) -> Vec<String> {
+        let mut g = self.inner.lock().expect("state");
+        let opened = g.core.tick(now_ms());
+        g.core.evidence_mut().sync();
+        opened
     }
 }

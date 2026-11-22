@@ -15,6 +15,7 @@ data:
     redaction_key_hex_file: /etc/ivar/keys/redaction.hex
     public_url: {{ .Values.core.publicUrl }}
     expected_layers: {{ toJson .Values.core.expectedLayers }}
+    evidence_segment_mb: {{ .Values.core.evidenceSegmentMb | default 1024 }}
     {{- if not .Values.core.console.enabled }}
     console_dir: ""
     {{- end }}

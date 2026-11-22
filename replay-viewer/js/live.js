@@ -12,6 +12,11 @@ import init, { verifyEvidenceChain } from '../pkg/ivar_wasm.js';
 
 let ready;
 
+/** Records the console keeps and shows: the most recent window of the chain. */
+const WINDOW = 50_000;
+/** Evidence pages fetched per poll while catching up. */
+const PAGES_PER_POLL = 4;
+
 /** Turn sealed evidence records into replay frames (see crates/ivar-replay frames.rs). */
 export function recordsToFrames(records) {
   const frames = [];
@@ -62,10 +67,6 @@ export class LiveSource {
     this.onError = onError;
     this.intervalMs = intervalMs;
     this.records = [];
-    // The exact JSON text of every record batch: the hash chain covers those
-    // bytes, and re serialising parsed JSON in JavaScript rewrites numbers
-    // (0.0 becomes 0), so verification always runs on the text as received.
-    this.rawParts = [];
     this.timer = null;
     this.polls = 0;
   }
@@ -85,7 +86,10 @@ export class LiveSource {
   async get(path, keepRaw = false) {
     const res = await fetch(`${this.base}${path}`, { headers: this.headers, credentials: 'same-origin' });
     const text = await res.text();
-    if (keepRaw) this.lastRaw = text;
+    if (keepRaw) {
+      this.lastRaw = text;
+      this.lastHeadSeq = Number(res.headers.get('x-ivar-head-seq') ?? NaN);
+    }
     let body;
     try {
       body = JSON.parse(text);
@@ -100,21 +104,37 @@ export class LiveSource {
     if (this.busy) return;
     this.busy = true;
     try {
-      const from = this.records.length ? this.records[this.records.length - 1].seq + 1 : 0;
-      const fresh = await this.get(`/v1/evidence?from_seq=${from}`, true);
+      if (this.next === undefined) {
+        // Start at the most recent window, not the start of a shard's history.
+        await this.get('/v1/evidence?from_seq=0&limit=1', true);
+        const head = Number.isFinite(this.lastHeadSeq) ? this.lastHeadSeq : 0;
+        this.next = Math.max(1, head - WINDOW + 1);
+      }
+      let fresh = [];
+      // Catch up a few pages per poll; the rest follows on the next ones.
+      for (let page = 0; page < PAGES_PER_POLL; page++) {
+        const batch = await this.get(`/v1/evidence?from_seq=${this.next}`, true);
+        if (!batch.length) break;
+        // Verify on the exact text received: the hash chain covers those bytes,
+        // and re serialising parsed JSON in JavaScript rewrites numbers.
+        const out = JSON.parse(verifyEvidenceChain(this.lastRaw));
+        if (out.error) throw new Error(`evidence chain does not verify: ${out.error}`);
+        const prev = fresh[fresh.length - 1] ?? this.records[this.records.length - 1];
+        if (prev && (batch[0].seq !== prev.seq + 1 || batch[0].prev_hash !== prev.hash)) {
+          throw new Error(`evidence chain does not verify: record ${batch[0].seq} does not follow record ${prev.seq}`);
+        }
+        fresh = fresh.concat(batch);
+        this.head = out.head;
+        this.next = batch[batch.length - 1].seq + 1;
+        if (!(this.lastHeadSeq >= this.next)) break;
+      }
       this.polls += 1;
       if (fresh.length || this.polls === 1) {
-        const all = this.records.concat(fresh);
-        const inner = this.lastRaw.trim().replace(/^\[/, '').replace(/\]$/, '').trim();
-        const parts = inner ? [...this.rawParts, inner] : this.rawParts;
-        // Re verify the whole chain: a record that does not link halts the view.
-        const out = JSON.parse(verifyEvidenceChain(`[${parts.join(',')}]`));
-        if (out.error) throw new Error(`evidence chain does not verify: ${out.error}`);
+        let all = this.records.concat(fresh);
+        if (all.length > WINDOW) all = all.slice(all.length - WINDOW);
         this.records = all;
-        this.rawParts = parts;
-        this.head = out.head;
         const incidents = await this.get('/v1/incidents').catch(() => []);
-        this.onUpdate({ records: all, frames: recordsToFrames(all), head: out.head, incidents, fresh: fresh.length });
+        this.onUpdate({ records: all, frames: recordsToFrames(all), head: this.head, incidents, fresh: fresh.length, verifiedFrom: all[0]?.seq });
       } else this.onUpdate(null);
     } catch (e) {
       this.onError(e);

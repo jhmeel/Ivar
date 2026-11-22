@@ -13,7 +13,6 @@ use axum::response::{IntoResponse, Response};
 use axum::routing::{get, post};
 use axum::{Json, Router};
 use ivar_contracts::{EntityRef, SecurityEvent};
-use ivar_core::evidence::EvidenceStore;
 use ivar_replay::{build_replay, ReplayRequest};
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -286,10 +285,19 @@ async fn replay(State(s): S, h: HeaderMap, Path(id): Path<String>, Query(q): Que
         let Some(inc) = g.core.incidents().get(&id) else { return err(StatusCode::NOT_FOUND, "unknown incident") };
         let keys: BTreeSet<String> = inc.affected_entities.iter().map(|e| e.key()).collect();
         let first = g.policy_history.values().next().cloned().expect("policy history");
-        (g.core.evidence().records(), g.policy_history.clone(), keys, first)
+        (g.core.evidence().reader(), g.policy_history.clone(), keys, first)
     };
+    let held = records.head().saturating_sub(records.first_seq()) + 1;
+    if held > s.replay_max_records {
+        return err(
+            StatusCode::UNPROCESSABLE_ENTITY,
+            &format!("a replay re-executes this shard's evidence from its first record, and it holds {held} (the limit is {}); raise replay_max_records with memory to match, or keep fewer sealed segments on the shard's volume", s.replay_max_records),
+        );
+    }
     let st = s.clone();
     let result = tokio::task::spawn_blocking(move || {
+        // Read outside the shard lock: ingest carries on while a replay loads.
+        let records = records.records_from(1, usize::MAX);
         let later: BTreeMap<u64, _> = history.iter().filter(|(v, _)| **v != live.version).map(|(k, v)| (*k, v.clone())).collect();
         let cf = q.counterfactual_policy_version.and_then(|v| history.get(&v).cloned());
         let layers: Vec<&str> = st.expected_layers.iter().map(String::as_str).collect();
@@ -340,15 +348,27 @@ async fn approve(State(s): S, h: HeaderMap, Path(id): Path<String>) -> Response 
 struct From {
     #[serde(default)]
     from_seq: u64,
+    limit: Option<usize>,
 }
 
+/// Records returned per evidence page unless the client asks for fewer.
+const EVIDENCE_PAGE: usize = 5_000;
+
+/// One page of evidence from `from_seq`, oldest first. `X-Ivar-Next-Seq`
+/// names the next page's start and `X-Ivar-Head-Seq` the newest record, so a
+/// client follows the chain page by page; reading never holds the shard lock.
 async fn evidence(State(s): S, h: HeaderMap, Query(q): Query<From>) -> Response {
     if let Err(r) = authorize(&s, &h, "read", "evidence") {
         return r;
     }
-    let g = s.inner.lock().expect("state");
-    let recs: Vec<_> = g.core.evidence().records().into_iter().filter(|r| r.seq >= q.from_seq).collect();
-    Json(json!(recs)).into_response()
+    let reader = s.inner.lock().expect("state").core.evidence().reader();
+    let limit = q.limit.unwrap_or(EVIDENCE_PAGE).clamp(1, EVIDENCE_PAGE);
+    let (recs, head) = tokio::task::spawn_blocking(move || (reader.records_from(q.from_seq, limit), reader.head())).await.unwrap_or_default();
+    let next = recs.last().map(|r| r.seq + 1).unwrap_or(q.from_seq.max(1));
+    let mut res = Json(json!(recs)).into_response();
+    res.headers_mut().insert("x-ivar-next-seq", next.into());
+    res.headers_mut().insert("x-ivar-head-seq", head.into());
+    res
 }
 
 async fn metrics(State(s): S) -> Response {

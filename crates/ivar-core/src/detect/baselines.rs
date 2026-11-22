@@ -10,6 +10,7 @@ use std::collections::{BTreeMap, BTreeSet};
 
 #[derive(Default)]
 struct Profile {
+    last: i64,
     devices: BTreeSet<String>,
     remote_tools: BTreeSet<String>,
     workflows_changed: u64,
@@ -29,6 +30,10 @@ impl BaselineDetector {
 }
 
 impl Detector for BaselineDetector {
+    fn evict_idle(&mut self, before: i64) {
+        self.profiles.retain(|_, p| p.last >= before);
+        self.sim_swaps.retain(|_, t| *t >= before);
+    }
     fn name(&self) -> &'static str {
         "behaviour_baselines"
     }
@@ -70,6 +75,7 @@ impl Detector for BaselineDetector {
         let Some(subject) = Self::subject(ev) else { return out };
         let known = self.profiles.contains_key(&subject);
         let profile = self.profiles.entry(subject.clone()).or_default();
+        profile.last = ctx.now;
         if let Some(device) = ext.attributes.get("device_id") {
             if known && !profile.devices.contains(device) && ev.activity_name == v::AUTH_LOGIN && ev.status_id == 1 {
                 out.extend(finding(ctx, ev, "new_device", actors.clone(), format!("{subject} signed in from a new device")));

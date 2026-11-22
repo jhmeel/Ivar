@@ -52,8 +52,8 @@ pub fn actor_entities(ev: &SecurityEvent) -> Vec<EntityRef> {
             out.push(EntityRef::actor("host", &dev.hostname));
         }
     }
-    out.sort_by_key(|e| e.key());
-    out.dedup_by_key(|e| e.key());
+    out.sort_by_cached_key(|e| e.key());
+    out.dedup_by(|a, b| a.r#type == b.r#type && a.id == b.id && a.role == b.role);
     out
 }
 

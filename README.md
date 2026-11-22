@@ -52,6 +52,7 @@ bulk exports only execute with a valid intent chain behind them.
 - [The live test, replayed](#the-live-test-replayed)
 - [Repository layout](#repository-layout)
 - [Operating IVAR](#operating-ivar)
+- [Running at scale](#running-at-scale)
 - [Specification traceability](#specification-traceability)
 - [Verification status](#verification-status)
 - [Contributing](#contributing)
@@ -1104,9 +1105,119 @@ frame (`scripts/export-replay.cjs`). Any incident exports the same way.
   the attack replay library; `ivar-control build` signs it. Reference
   `operator-decisions.yaml` from `policy.yaml`; the build refuses
   unconfirmed decisions.
-* **Operators.** The core's operator routes trust `X-Ivar-Operator`,
-  `X-Ivar-Roles` and `X-Ivar-Hardware-2fa` from the staff SSO proxy in front
-  of it. Do not expose those routes without that proxy.
+* **Sensor tokens.** Without them anyone who can reach the core can send
+  events and frame an address. Issue one token per sensor or application;
+  each is bound to the sensor ids it may speak for, and only its SHA-256 is
+  stored:
+
+  ```bash
+  ivar-core token sensor /etc/ivar/access/sensor-tokens.json shop-api 'shop-*'
+  ```
+
+  Set `sensor_tokens_file` in the core config and pass the printed token to
+  the SDK (`coreToken`, `core_token`, `CoreToken`) or the edge filter
+  (`core_token`). A batch naming a sensor id outside the token's patterns is
+  refused whole.
+* **Operators.** The operator routes (evidence, replays, approvals) take
+  the operator from `X-Ivar-Operator`, `X-Ivar-Roles` and
+  `X-Ivar-Hardware-2fa`, set by your staff SSO proxy. The core believes
+  them only alongside the proxy's own secret in `X-Ivar-Proxy-Token`:
+
+  ```bash
+  ivar-core token proxy /etc/ivar/access/proxy-token.sha256
+  ```
+
+  Set `operator_proxy_token_file`, and configure the proxy to send the
+  printed token. The core logs a warning at startup while either control is
+  off. In Helm, put both files in the `secrets.access` Secret.
+* **Shards.** Each shard owns the entities that hash to it and keeps its
+  own evidence chain. List every shard in `shard_peers`, in shard order:
+  events that reach the wrong shard are forwarded to their owner, so a
+  plain load balancer can sit in front. The Helm chart fills this in.
+* **Evidence.** The chain is written in segments (`evidence_segment_mb`,
+  1024 by default). A sealed segment never changes again; ship it to
+  write-once storage (S3 Object Lock, Azure immutable blobs) and remove it
+  from the volume. Auditors check every record and signature offline:
+
+  ```bash
+  ivar-core evidence verify /var/lib/ivar/evidence-0.jsonl /etc/ivar/keyring.json
+  ```
+
+## Running at scale
+
+IVAR scales by shard. A decision on one entity needs only that entity's
+state, so each shard judges its share on its own and adding shards adds
+capacity in proportion. The application SDKs and the edge filter decide
+inline from cached verdicts and never wait for the core, so core load does
+not add latency to customer requests.
+
+### Measured capacity
+
+On a 4 vCPU Intel Xeon (2.1 GHz) virtual machine with local SSD:
+
+| Path | Result |
+|---|---|
+| SDK inline decision | p99 0.02 ms (Node), 0.52 ms (Java), checked in the SDK test suites |
+| One shard, judging and signed evidence synced to disk before each verdict is released | 24,000 to 30,000 events per second |
+| Same, over HTTP in batches of 500 | 26,000 to 30,000 events per second |
+| Three shards on the same machine, forwarding between them | 32,500 events per second combined, every event judged exactly once, none unrouted (CPU bound: about 8,000 events per second per vCPU) |
+| Evidence | 875 bytes per event on disk, about 180 bytes after gzip |
+| Memory | about 100 MB per shard plus about 500 bytes per active user |
+| Restart | seconds: only the active segment is re-verified |
+
+Run the shard benchmark on your own hardware before sizing:
+
+```bash
+cargo run --release -p ivar-server --example ingest_bench -- 400000 500 4 50000
+IVAR_BENCH_HEAP=1 cargo run --release -p ivar-server --example ingest_bench -- 1000000 500 4 1000000
+```
+
+The arguments are events, batch size, concurrent senders and distinct
+users.
+
+### What makes it hold
+
+* **Group commit off the lock.** Judging holds the shard lock; signing,
+  writing and syncing evidence happen on a writer thread, and one sync
+  covers every batch waiting. A request still gets its verdicts only after
+  its evidence is on disk.
+* **Parallel signing.** Every record keeps its own ed25519 signature,
+  computed across all cores at commit.
+* **Compact records.** Event payloads drop fields that hold their default.
+  Nothing is lost: the event reads back identical.
+* **Bounded memory.** Evidence is read back from disk through a sparse
+  index (one offset per 256 records), never held in memory. Per user state
+  untouched for 90 days of event time is forgotten, on a schedule driven by
+  event time so a replay forgets the same.
+* **Paged reads.** `/v1/evidence` returns pages of up to 5,000 records with
+  `X-Ivar-Next-Seq` and `X-Ivar-Head-Seq`, read outside the shard lock. The
+  console follows the most recent 50,000 records and verifies each page
+  against the one before.
+
+### Sizing example
+
+A bank serving 300 million requests a day, each seen by the edge filter and
+the application SDK, sends the core 600 million events a day: about 7,000
+per second on average and, at four times average, 28,000 at peak.
+
+| | |
+|---|---|
+| Shards | 3 on 4 vCPU each: peak fits in two, the third is headroom and failover |
+| Memory | 10 million customers active in 90 days, about 1.7 GB of state per shard; set a 4 GiB limit |
+| Evidence | about 525 GB a day across shards; keep three days locally (about 550 GB per shard volume) and archive sealed segments, about 105 GB a day after gzip |
+| Sensors | SDK and edge outbox defaults absorb a core outage of minutes; raise `max_outbox` for longer |
+
+### Known limits
+
+* A replay re-executes the shard's local evidence from its first record, so
+  its cost grows with what the shard holds. Past `replay_max_records`
+  (500,000 by default) the core refuses a replay rather than risk the
+  shard's memory. On a busy shard, replays need a short local retention or
+  a larger limit with memory to match; replay from state snapshots is not
+  built yet.
+* Learned baselines and open incidents live in memory. A restarted shard
+  keeps its evidence and policy but relearns behaviour, so run shards as a
+  StatefulSet and roll them one at a time.
 
 ## Specification traceability
 
@@ -1168,8 +1279,10 @@ Not verified here, so test them in your environment before relying on them:
   was available).
 * The sensors image could not be built in this environment because its
   package mirror was unreachable; its binaries build in the shared stage.
-* No load test at production-scale, no external security review, and the
-  indicator network has not had the legal review section 17 requires.
+* Capacity was measured on one 4 vCPU machine (see
+  [Running at scale](#running-at-scale)), not on a multi-node cluster at
+  production volume. No external security review yet, and the indicator
+  network has not had the legal review section 17 requires.
 
 ## Contributing
 

@@ -14,6 +14,7 @@ const MIN_SAMPLES: f64 = 30.0;
 
 #[derive(Default, Clone)]
 struct Stats {
+    last: i64,
     n: f64,
     mean: [f64; FEATURES],
     m2: [f64; FEATURES],
@@ -59,6 +60,9 @@ fn features(ev: &SecurityEvent) -> [f64; FEATURES] {
 }
 
 impl Detector for MlDetector {
+    fn evict_idle(&mut self, before: i64) {
+        self.stats.retain(|_, s| s.last >= before);
+    }
     fn name(&self) -> &'static str {
         "machine_learning"
     }
@@ -71,6 +75,7 @@ impl Detector for MlDetector {
         };
         let x = features(ev);
         let stats = self.stats.entry(subject.clone()).or_default();
+        stats.last = ctx.now;
         let score = stats.score(&x);
         if ctx.baselines_may_learn {
             stats.update(&x);
@@ -81,5 +86,20 @@ impl Detector for MlDetector {
                 .collect();
         }
         vec![]
+    }
+}
+
+#[cfg(test)]
+mod eviction {
+    use super::*;
+
+    #[test]
+    fn idle_entities_are_forgotten_active_ones_kept() {
+        let mut d = MlDetector::default();
+        d.stats.insert("idle".into(), Stats { last: 1_000, ..Default::default() });
+        d.stats.insert("active".into(), Stats { last: 9_000, ..Default::default() });
+        d.evict_idle(5_000);
+        assert!(!d.stats.contains_key("idle"));
+        assert!(d.stats.contains_key("active"));
     }
 }
