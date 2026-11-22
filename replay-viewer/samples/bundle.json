@@ -2,12 +2,12 @@
   "contract": "ivar.v1",
   "bundle_version": 1,
   "incident_id": "inc_sample",
-  "engine_version": "ivar-core/0.1.1",
+  "engine_version": "ivar-core/0.1.2",
   "policy_version": "default-1",
   "plugin_versions": {},
   "counterfactual": false,
   "counterfactual_policy": null,
-  "evidence_chain_head": "c26013dfc7cd386049e99f339545fce819f93f1b9c6212c789773b957f0ef6b2",
+  "evidence_chain_head": "095d3085e2d97bb5c9b51afa88e0be95fa56ddc52185db1b5c4bd94265c2f447",
   "frames": [
     {
       "index": 0,
@@ -18,88 +18,52 @@
       "sensor_seq": 1,
       "kind": "event",
       "evidence_ids": [
-        "evd_PEGEP8W8NA"
+        "evd_B8Q1CSH91F"
       ],
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251600280,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_2bbca21a3a0a12e4cc0dd79e",
-            "name": "",
-            "type": "user",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "user"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "auth.login",
         "ivar": {
           "sensor_id": "app-sdk-1",
           "sensor_type": "app_sdk",
           "observation_point": "app_sdk",
           "sensor_seq": 1,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "271",
             "hop_decide_us": "92",
             "hop_enforce_us": "1240",
             "hop_ingest_us": "187",
             "hop_sensor_us": "43"
-          },
-          "value_moved": 0.0,
-          "records_read": 0,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          }
         }
       },
       "counterfactual": false,
@@ -121,88 +85,52 @@
       "sensor_seq": 2,
       "kind": "event",
       "evidence_ids": [
-        "evd_R2EF9N12ZY"
+        "evd_XK51WKMT2A"
       ],
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251600680,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_ce8146cc02eb11855c60c89f",
-            "name": "",
-            "type": "user",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "user"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "auth.login",
         "ivar": {
           "sensor_id": "app-sdk-1",
           "sensor_type": "app_sdk",
           "observation_point": "app_sdk",
           "sensor_seq": 2,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "282",
             "hop_decide_us": "94",
             "hop_enforce_us": "1280",
             "hop_ingest_us": "194",
             "hop_sensor_us": "46"
-          },
-          "value_moved": 0.0,
-          "records_read": 0,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          }
         }
       },
       "counterfactual": false,
@@ -224,88 +152,52 @@
       "sensor_seq": 3,
       "kind": "event",
       "evidence_ids": [
-        "evd_C57KE5KTT8"
+        "evd_FGX455KP9N"
       ],
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251601080,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_5eaccbd9ab7829f910fba757",
-            "name": "",
-            "type": "user",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "user"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "auth.login",
         "ivar": {
           "sensor_id": "app-sdk-1",
           "sensor_type": "app_sdk",
           "observation_point": "app_sdk",
           "sensor_seq": 3,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "293",
             "hop_decide_us": "96",
             "hop_enforce_us": "1320",
             "hop_ingest_us": "201",
             "hop_sensor_us": "49"
-          },
-          "value_moved": 0.0,
-          "records_read": 0,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          }
         }
       },
       "counterfactual": false,
@@ -327,88 +219,52 @@
       "sensor_seq": 4,
       "kind": "event",
       "evidence_ids": [
-        "evd_DTR0YYEQ87"
+        "evd_TJAS5FKMTG"
       ],
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251601480,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_6cd27282397e5a3c333e5aa8",
-            "name": "",
-            "type": "user",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "user"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "auth.login",
         "ivar": {
           "sensor_id": "app-sdk-1",
           "sensor_type": "app_sdk",
           "observation_point": "app_sdk",
           "sensor_seq": 4,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "304",
             "hop_decide_us": "98",
             "hop_enforce_us": "1360",
             "hop_ingest_us": "208",
             "hop_sensor_us": "52"
-          },
-          "value_moved": 0.0,
-          "records_read": 0,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          }
         }
       },
       "counterfactual": false,
@@ -430,88 +286,52 @@
       "sensor_seq": 5,
       "kind": "event",
       "evidence_ids": [
-        "evd_Q9WR0076W3"
+        "evd_AVXFYXN25R"
       ],
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251601880,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_26eeb06423b1b4bfe3fe5c99",
-            "name": "",
-            "type": "user",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "user"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "auth.login",
         "ivar": {
           "sensor_id": "app-sdk-1",
           "sensor_type": "app_sdk",
           "observation_point": "app_sdk",
           "sensor_seq": 5,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "315",
             "hop_decide_us": "100",
             "hop_enforce_us": "1400",
             "hop_ingest_us": "215",
             "hop_sensor_us": "55"
-          },
-          "value_moved": 0.0,
-          "records_read": 0,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          }
         }
       },
       "counterfactual": false,
@@ -533,88 +353,52 @@
       "sensor_seq": 6,
       "kind": "event",
       "evidence_ids": [
-        "evd_5G9JW0MNVS"
+        "evd_Q5MSYY4EM1"
       ],
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251602280,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_f8053adca5bd8cd980740cb6",
-            "name": "",
-            "type": "user",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "user"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "auth.login",
         "ivar": {
           "sensor_id": "app-sdk-1",
           "sensor_type": "app_sdk",
           "observation_point": "app_sdk",
           "sensor_seq": 6,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "326",
             "hop_decide_us": "102",
             "hop_enforce_us": "1440",
             "hop_ingest_us": "222",
             "hop_sensor_us": "58"
-          },
-          "value_moved": 0.0,
-          "records_read": 0,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          }
         }
       },
       "counterfactual": false,
@@ -636,88 +420,52 @@
       "sensor_seq": 7,
       "kind": "event",
       "evidence_ids": [
-        "evd_04M9AJJA5G"
+        "evd_GM0GP3FC6D"
       ],
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251603180,
         "severity_id": 1,
         "status_id": 1,
         "status": "Success",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_f8053adca5bd8cd980740cb6",
-            "name": "",
-            "type": "user",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "user"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "auth.login",
         "ivar": {
           "sensor_id": "app-sdk-1",
           "sensor_type": "app_sdk",
           "observation_point": "app_sdk",
           "sensor_seq": 7,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "337",
             "hop_decide_us": "104",
             "hop_enforce_us": "1480",
             "hop_ingest_us": "229",
             "hop_sensor_us": "61"
-          },
-          "value_moved": 0.0,
-          "records_read": 0,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          }
         }
       },
       "counterfactual": false,
@@ -739,71 +487,44 @@
       "sensor_seq": 8,
       "kind": "event",
       "evidence_ids": [
-        "evd_HV7S7KSN40"
+        "evd_5C5QP1VP1E"
       ],
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251604050,
         "severity_id": 1,
         "status_id": 1,
-        "status": "",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_c167259a675300c6662ea2f4",
-            "name": "",
-            "type": "service",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "service"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "db.query",
         "ivar": {
           "sensor_id": "db-1",
           "sensor_type": "database",
           "observation_point": "database",
           "sensor_seq": 8,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "348",
             "hop_decide_us": "106",
@@ -813,16 +534,7 @@
             "operation": "SELECT",
             "table": "persons"
           },
-          "value_moved": 0.0,
-          "records_read": 100,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          "records_read": 100
         }
       },
       "counterfactual": false,
@@ -844,7 +556,7 @@
       "sensor_seq": 8,
       "kind": "risk",
       "evidence_ids": [
-        "evd_HV7S7KSN40"
+        "evd_5C5QP1VP1E"
       ],
       "payload": {
         "entity": {
@@ -856,7 +568,7 @@
         "fast_score": 0.15000000000000002,
         "slow_score": 0.15000000000000002,
         "contributing_findings": [
-          "fnd_PZA23WRP9Y"
+          "fnd_NBHS72NEMV"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
@@ -878,7 +590,7 @@
       "sensor_seq": 8,
       "kind": "risk",
       "evidence_ids": [
-        "evd_HV7S7KSN40"
+        "evd_5C5QP1VP1E"
       ],
       "payload": {
         "entity": {
@@ -890,7 +602,7 @@
         "fast_score": 0.15000000000000002,
         "slow_score": 0.15000000000000002,
         "contributing_findings": [
-          "fnd_PZA23WRP9Y"
+          "fnd_NBHS72NEMV"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
@@ -912,11 +624,11 @@
       "sensor_seq": 8,
       "kind": "finding",
       "evidence_ids": [
-        "evd_VD17G8CGKY",
-        "evd_HV7S7KSN40"
+        "evd_DGH3HX4H2K",
+        "evd_5C5QP1VP1E"
       ],
       "payload": {
-        "finding_id": "fnd_PZA23WRP9Y",
+        "finding_id": "fnd_NBHS72NEMV",
         "rule": "undeclared_edge",
         "rule_family": "drift.edge",
         "technique": "T1078",
@@ -924,7 +636,7 @@
         "confidence": 0.3,
         "severity": 2,
         "evidence_ids": [
-          "evd_HV7S7KSN40"
+          "evd_5C5QP1VP1E"
         ],
         "entities": [
           {
@@ -944,7 +656,7 @@
         "deception_hit": false,
         "attack_stage": "privilege_escalation",
         "explanation": "trust edge edg_556ZH62X9E is used but never declared",
-        "source_event": "evd_HV7S7KSN40"
+        "source_event": "evd_5C5QP1VP1E"
       },
       "counterfactual": false,
       "hops_us": {},
@@ -959,12 +671,12 @@
       "sensor_seq": 8,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_0NQ9ZBST4R",
-        "evd_HV7S7KSN40",
-        "evd_VD17G8CGKY"
+        "evd_HK0JWX03MM",
+        "evd_5C5QP1VP1E",
+        "evd_DGH3HX4H2K"
       ],
       "payload": {
-        "verdict_id": "vrd_03DXJEV945",
+        "verdict_id": "vrd_3XQWMZM0EV",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -982,8 +694,8 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_HV7S7KSN40",
-          "evd_VD17G8CGKY"
+          "evd_5C5QP1VP1E",
+          "evd_DGH3HX4H2K"
         ],
         "time": 1795251604300,
         "ladder_level": 0
@@ -1001,12 +713,12 @@
       "sensor_seq": 8,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_V9VM8RYHRN",
-        "evd_HV7S7KSN40",
-        "evd_VD17G8CGKY"
+        "evd_83HZRXYHXX",
+        "evd_5C5QP1VP1E",
+        "evd_DGH3HX4H2K"
       ],
       "payload": {
-        "verdict_id": "vrd_0X334BR4JW",
+        "verdict_id": "vrd_FCBD0C1QB1",
         "decision": "record",
         "entity": {
           "type": "service",
@@ -1024,8 +736,8 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_HV7S7KSN40",
-          "evd_VD17G8CGKY"
+          "evd_5C5QP1VP1E",
+          "evd_DGH3HX4H2K"
         ],
         "time": 1795251604300,
         "ladder_level": 0
@@ -1043,71 +755,44 @@
       "sensor_seq": 9,
       "kind": "event",
       "evidence_ids": [
-        "evd_A72GEQ4QRD"
+        "evd_ZYQDE2MQKG"
       ],
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251605050,
         "severity_id": 1,
         "status_id": 1,
-        "status": "",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_c167259a675300c6662ea2f4",
-            "name": "",
-            "type": "service",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "service"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "db.query",
         "ivar": {
           "sensor_id": "db-1",
           "sensor_type": "database",
           "observation_point": "database",
           "sensor_seq": 9,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "359",
             "hop_decide_us": "108",
@@ -1117,16 +802,7 @@
             "operation": "SELECT",
             "table": "persons"
           },
-          "value_moved": 0.0,
-          "records_read": 100,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          "records_read": 100
         }
       },
       "counterfactual": false,
@@ -1148,7 +824,7 @@
       "sensor_seq": 9,
       "kind": "risk",
       "evidence_ids": [
-        "evd_A72GEQ4QRD"
+        "evd_ZYQDE2MQKG"
       ],
       "payload": {
         "entity": {
@@ -1160,7 +836,7 @@
         "fast_score": 0.14994224885512342,
         "slow_score": 0.14999982808859547,
         "contributing_findings": [
-          "fnd_PZA23WRP9Y"
+          "fnd_NBHS72NEMV"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
@@ -1182,7 +858,7 @@
       "sensor_seq": 9,
       "kind": "risk",
       "evidence_ids": [
-        "evd_A72GEQ4QRD"
+        "evd_ZYQDE2MQKG"
       ],
       "payload": {
         "entity": {
@@ -1194,7 +870,7 @@
         "fast_score": 0.14994224885512342,
         "slow_score": 0.14999982808859547,
         "contributing_findings": [
-          "fnd_PZA23WRP9Y"
+          "fnd_NBHS72NEMV"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
@@ -1216,11 +892,11 @@
       "sensor_seq": 9,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_3A2J7AX1DZ",
-        "evd_A72GEQ4QRD"
+        "evd_AM979ZKPSD",
+        "evd_ZYQDE2MQKG"
       ],
       "payload": {
-        "verdict_id": "vrd_BVHNXGEZ8F",
+        "verdict_id": "vrd_Q28R58Q4Z2",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -1236,7 +912,7 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_A72GEQ4QRD"
+          "evd_ZYQDE2MQKG"
         ],
         "time": 1795251605300,
         "ladder_level": 0
@@ -1254,11 +930,11 @@
       "sensor_seq": 9,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_KXNESF8QD1",
-        "evd_A72GEQ4QRD"
+        "evd_3PZNJ9A5YX",
+        "evd_ZYQDE2MQKG"
       ],
       "payload": {
-        "verdict_id": "vrd_DZVXRM59JW",
+        "verdict_id": "vrd_BMJSSE7RJB",
         "decision": "record",
         "entity": {
           "type": "service",
@@ -1274,7 +950,7 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_A72GEQ4QRD"
+          "evd_ZYQDE2MQKG"
         ],
         "time": 1795251605300,
         "ladder_level": 0
@@ -1292,71 +968,44 @@
       "sensor_seq": 10,
       "kind": "event",
       "evidence_ids": [
-        "evd_YSPAN25YXN"
+        "evd_SEJC2H4WTC"
       ],
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251606050,
         "severity_id": 1,
         "status_id": 1,
-        "status": "",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_c167259a675300c6662ea2f4",
-            "name": "",
-            "type": "service",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "service"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "db.query",
         "ivar": {
           "sensor_id": "db-1",
           "sensor_type": "database",
           "observation_point": "database",
           "sensor_seq": 10,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "370",
             "hop_decide_us": "110",
@@ -1366,16 +1015,7 @@
             "operation": "SELECT",
             "table": "persons"
           },
-          "value_moved": 0.0,
-          "records_read": 100,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          "records_read": 100
         }
       },
       "counterfactual": false,
@@ -1397,7 +1037,7 @@
       "sensor_seq": 10,
       "kind": "risk",
       "evidence_ids": [
-        "evd_YSPAN25YXN"
+        "evd_SEJC2H4WTC"
       ],
       "payload": {
         "entity": {
@@ -1409,7 +1049,7 @@
         "fast_score": 0.1498845199448784,
         "slow_score": 0.14999965617738775,
         "contributing_findings": [
-          "fnd_PZA23WRP9Y"
+          "fnd_NBHS72NEMV"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
@@ -1431,7 +1071,7 @@
       "sensor_seq": 10,
       "kind": "risk",
       "evidence_ids": [
-        "evd_YSPAN25YXN"
+        "evd_SEJC2H4WTC"
       ],
       "payload": {
         "entity": {
@@ -1443,7 +1083,7 @@
         "fast_score": 0.1498845199448784,
         "slow_score": 0.14999965617738775,
         "contributing_findings": [
-          "fnd_PZA23WRP9Y"
+          "fnd_NBHS72NEMV"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
@@ -1465,11 +1105,11 @@
       "sensor_seq": 10,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_S102ZHDXHG",
-        "evd_YSPAN25YXN"
+        "evd_YHS9BD7WRQ",
+        "evd_SEJC2H4WTC"
       ],
       "payload": {
-        "verdict_id": "vrd_GZFVXPCFG1",
+        "verdict_id": "vrd_ZXYNX1515N",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -1485,7 +1125,7 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_YSPAN25YXN"
+          "evd_SEJC2H4WTC"
         ],
         "time": 1795251606300,
         "ladder_level": 0
@@ -1503,11 +1143,11 @@
       "sensor_seq": 10,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_BNT29YYETA",
-        "evd_YSPAN25YXN"
+        "evd_6CPN8K6M6Q",
+        "evd_SEJC2H4WTC"
       ],
       "payload": {
-        "verdict_id": "vrd_RFZ0WQW08E",
+        "verdict_id": "vrd_6A5B46AFVJ",
         "decision": "record",
         "entity": {
           "type": "service",
@@ -1523,7 +1163,7 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_YSPAN25YXN"
+          "evd_SEJC2H4WTC"
         ],
         "time": 1795251606300,
         "ladder_level": 0
@@ -1541,71 +1181,44 @@
       "sensor_seq": 11,
       "kind": "event",
       "evidence_ids": [
-        "evd_1S1FPY6DQ7"
+        "evd_8WK8DSYFP9"
       ],
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251607050,
         "severity_id": 1,
         "status_id": 1,
-        "status": "",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_c167259a675300c6662ea2f4",
-            "name": "",
-            "type": "service",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "service"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "db.query",
         "ivar": {
           "sensor_id": "db-1",
           "sensor_type": "database",
           "observation_point": "database",
           "sensor_seq": 11,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "381",
             "hop_decide_us": "112",
@@ -1615,16 +1228,7 @@
             "operation": "SELECT",
             "table": "persons"
           },
-          "value_moved": 0.0,
-          "records_read": 100,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          "records_read": 100
         }
       },
       "counterfactual": false,
@@ -1646,7 +1250,7 @@
       "sensor_seq": 11,
       "kind": "risk",
       "evidence_ids": [
-        "evd_1S1FPY6DQ7"
+        "evd_8WK8DSYFP9"
       ],
       "payload": {
         "entity": {
@@ -1658,7 +1262,7 @@
         "fast_score": 0.14982681326070457,
         "slow_score": 0.14999948426637721,
         "contributing_findings": [
-          "fnd_PZA23WRP9Y"
+          "fnd_NBHS72NEMV"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
@@ -1680,7 +1284,7 @@
       "sensor_seq": 11,
       "kind": "risk",
       "evidence_ids": [
-        "evd_1S1FPY6DQ7"
+        "evd_8WK8DSYFP9"
       ],
       "payload": {
         "entity": {
@@ -1692,7 +1296,7 @@
         "fast_score": 0.14982681326070457,
         "slow_score": 0.14999948426637721,
         "contributing_findings": [
-          "fnd_PZA23WRP9Y"
+          "fnd_NBHS72NEMV"
         ],
         "independent_sources": 1,
         "has_high_confidence_source": false,
@@ -1714,11 +1318,11 @@
       "sensor_seq": 11,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_H9DV4QRFGM",
-        "evd_1S1FPY6DQ7"
+        "evd_8EC0RN0H9E",
+        "evd_8WK8DSYFP9"
       ],
       "payload": {
-        "verdict_id": "vrd_NNH8SWGS8Z",
+        "verdict_id": "vrd_59NQ0KNWRK",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -1734,7 +1338,7 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_1S1FPY6DQ7"
+          "evd_8WK8DSYFP9"
         ],
         "time": 1795251607300,
         "ladder_level": 0
@@ -1752,11 +1356,11 @@
       "sensor_seq": 11,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_AC9MTZ9ZAB",
-        "evd_1S1FPY6DQ7"
+        "evd_CJMAP2YENS",
+        "evd_8WK8DSYFP9"
       ],
       "payload": {
-        "verdict_id": "vrd_WVX815QPKZ",
+        "verdict_id": "vrd_Z4AE1EX800",
         "decision": "record",
         "entity": {
           "type": "service",
@@ -1772,7 +1376,7 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_1S1FPY6DQ7"
+          "evd_8WK8DSYFP9"
         ],
         "time": 1795251607300,
         "ladder_level": 0
@@ -1790,71 +1394,44 @@
       "sensor_seq": 12,
       "kind": "event",
       "evidence_ids": [
-        "evd_E3WNZ81D86"
+        "evd_7KMHKC7MB1"
       ],
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251608050,
         "severity_id": 1,
         "status_id": 1,
-        "status": "",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_c167259a675300c6662ea2f4",
-            "name": "",
-            "type": "service",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "service"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "db.query",
         "ivar": {
           "sensor_id": "db-1",
           "sensor_type": "database",
           "observation_point": "database",
           "sensor_seq": 12,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "392",
             "hop_decide_us": "114",
@@ -1864,16 +1441,7 @@
             "operation": "SELECT",
             "table": "persons"
           },
-          "value_moved": 0.0,
-          "records_read": 60000,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          "records_read": 60000
         }
       },
       "counterfactual": false,
@@ -1895,7 +1463,7 @@
       "sensor_seq": 12,
       "kind": "risk",
       "evidence_ids": [
-        "evd_E3WNZ81D86"
+        "evd_7KMHKC7MB1"
       ],
       "payload": {
         "entity": {
@@ -1907,9 +1475,9 @@
         "fast_score": 1.0,
         "slow_score": 1.0,
         "contributing_findings": [
-          "fnd_7K4KP6Z4B5",
-          "fnd_DPR42WVMKK",
-          "fnd_PZA23WRP9Y"
+          "fnd_0JGTSQJJA0",
+          "fnd_8S5PEBF8WF",
+          "fnd_NBHS72NEMV"
         ],
         "independent_sources": 2,
         "has_high_confidence_source": true,
@@ -1931,7 +1499,7 @@
       "sensor_seq": 12,
       "kind": "risk",
       "evidence_ids": [
-        "evd_E3WNZ81D86"
+        "evd_7KMHKC7MB1"
       ],
       "payload": {
         "entity": {
@@ -1943,9 +1511,9 @@
         "fast_score": 1.0,
         "slow_score": 1.0,
         "contributing_findings": [
-          "fnd_7K4KP6Z4B5",
-          "fnd_DPR42WVMKK",
-          "fnd_PZA23WRP9Y"
+          "fnd_0JGTSQJJA0",
+          "fnd_8S5PEBF8WF",
+          "fnd_NBHS72NEMV"
         ],
         "independent_sources": 2,
         "has_high_confidence_source": true,
@@ -1967,11 +1535,11 @@
       "sensor_seq": 12,
       "kind": "finding",
       "evidence_ids": [
-        "evd_Q3GRMH801Y",
-        "evd_E3WNZ81D86"
+        "evd_NWJJEVNGVK",
+        "evd_7KMHKC7MB1"
       ],
       "payload": {
-        "finding_id": "fnd_DPR42WVMKK",
+        "finding_id": "fnd_0JGTSQJJA0",
         "rule": "bulk_read_anomaly",
         "rule_family": "exfil.bulk_read",
         "technique": "T1530",
@@ -1979,7 +1547,7 @@
         "confidence": 0.7,
         "severity": 4,
         "evidence_ids": [
-          "evd_E3WNZ81D86"
+          "evd_7KMHKC7MB1"
         ],
         "entities": [
           {
@@ -1999,7 +1567,7 @@
         "deception_hit": false,
         "attack_stage": "data_theft",
         "explanation": "bulk read far above the usage profile of edg_556ZH62X9E",
-        "source_event": "evd_E3WNZ81D86"
+        "source_event": "evd_7KMHKC7MB1"
       },
       "counterfactual": false,
       "hops_us": {},
@@ -2014,11 +1582,11 @@
       "sensor_seq": 12,
       "kind": "finding",
       "evidence_ids": [
-        "evd_SARRDBQ4CA",
-        "evd_E3WNZ81D86"
+        "evd_CH863Q9217",
+        "evd_7KMHKC7MB1"
       ],
       "payload": {
-        "finding_id": "fnd_7K4KP6Z4B5",
+        "finding_id": "fnd_8S5PEBF8WF",
         "rule": "invariant_breach",
         "rule_family": "consequence.per_identity_records",
         "technique": "T1657",
@@ -2026,7 +1594,7 @@
         "confidence": 1.0,
         "severity": 5,
         "evidence_ids": [
-          "evd_E3WNZ81D86"
+          "evd_7KMHKC7MB1"
         ],
         "entities": [
           {
@@ -2046,7 +1614,7 @@
         "deception_hit": false,
         "attack_stage": "impact",
         "explanation": "consequence invariant breached (per_identity_records: 60400 of 10000)",
-        "source_event": "evd_E3WNZ81D86"
+        "source_event": "evd_7KMHKC7MB1"
       },
       "counterfactual": false,
       "hops_us": {},
@@ -2061,11 +1629,11 @@
       "sensor_seq": 12,
       "kind": "action_request",
       "evidence_ids": [
-        "evd_E9VGS1H33S"
+        "evd_STJ98XA8WS"
       ],
       "payload": {
         "request": {
-          "action_request_id": "act_6VKDBF8XE3",
+          "action_request_id": "act_NA976DAA74",
           "target": {
             "type": "ip",
             "id": "198.51.100.7",
@@ -2081,11 +1649,11 @@
           },
           "reversal_method": "ip.unban",
           "evidence_ids": [
-            "evd_E3WNZ81D86",
-            "evd_Q3GRMH801Y",
-            "evd_SARRDBQ4CA"
+            "evd_7KMHKC7MB1",
+            "evd_NWJJEVNGVK",
+            "evd_CH863Q9217"
           ],
-          "verdict_id": "vrd_1T8HTM1XN9",
+          "verdict_id": "vrd_SCD5XS4P2G",
           "confidence_class": "two_source_high",
           "evidence_captured_first": false,
           "time": 1795251608300,
@@ -2108,13 +1676,13 @@
       "sensor_seq": 12,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_2JY943B4Y7",
-        "evd_E3WNZ81D86",
-        "evd_Q3GRMH801Y",
-        "evd_SARRDBQ4CA"
+        "evd_MQ8EERBTKQ",
+        "evd_7KMHKC7MB1",
+        "evd_NWJJEVNGVK",
+        "evd_CH863Q9217"
       ],
       "payload": {
-        "verdict_id": "vrd_1T8HTM1XN9",
+        "verdict_id": "vrd_SCD5XS4P2G",
         "decision": "contain",
         "entity": {
           "type": "ip",
@@ -2134,9 +1702,9 @@
         "expires_at": 1795255208300,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_E3WNZ81D86",
-          "evd_Q3GRMH801Y",
-          "evd_SARRDBQ4CA"
+          "evd_7KMHKC7MB1",
+          "evd_NWJJEVNGVK",
+          "evd_CH863Q9217"
         ],
         "time": 1795251608300,
         "ladder_level": 4
@@ -2154,11 +1722,11 @@
       "sensor_seq": 12,
       "kind": "action_request",
       "evidence_ids": [
-        "evd_GM81DXQ5ZT"
+        "evd_VTHA1ZHD6A"
       ],
       "payload": {
         "request": {
-          "action_request_id": "act_PRM5S6Y6BN",
+          "action_request_id": "act_7QQA6P699M",
           "target": {
             "type": "service",
             "id": "kh_c167259a675300c6662ea2f4",
@@ -2174,11 +1742,11 @@
           },
           "reversal_method": "trust_edge.restore",
           "evidence_ids": [
-            "evd_E3WNZ81D86",
-            "evd_Q3GRMH801Y",
-            "evd_SARRDBQ4CA"
+            "evd_7KMHKC7MB1",
+            "evd_NWJJEVNGVK",
+            "evd_CH863Q9217"
           ],
-          "verdict_id": "vrd_D3FST2ZGQ4",
+          "verdict_id": "vrd_TN1S83B9TW",
           "confidence_class": "two_source_high",
           "evidence_captured_first": false,
           "time": 1795251608300,
@@ -2201,13 +1769,13 @@
       "sensor_seq": 12,
       "kind": "verdict",
       "evidence_ids": [
-        "evd_02A3E6T6WN",
-        "evd_E3WNZ81D86",
-        "evd_Q3GRMH801Y",
-        "evd_SARRDBQ4CA"
+        "evd_M9FZ692MPM",
+        "evd_7KMHKC7MB1",
+        "evd_NWJJEVNGVK",
+        "evd_CH863Q9217"
       ],
       "payload": {
-        "verdict_id": "vrd_D3FST2ZGQ4",
+        "verdict_id": "vrd_TN1S83B9TW",
         "decision": "contain",
         "entity": {
           "type": "service",
@@ -2227,9 +1795,9 @@
         "expires_at": 1795255208300,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_E3WNZ81D86",
-          "evd_Q3GRMH801Y",
-          "evd_SARRDBQ4CA"
+          "evd_7KMHKC7MB1",
+          "evd_NWJJEVNGVK",
+          "evd_CH863Q9217"
         ],
         "time": 1795251608300,
         "ladder_level": 4
@@ -2254,745 +1822,466 @@
   "evidence": [
     {
       "seq": 1,
-      "evidence_id": "evd_PEGEP8W8NA",
+      "evidence_id": "evd_B8Q1CSH91F",
       "time": 1795251600400,
       "kind": "event",
       "incident_hint": "",
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251600280,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_2bbca21a3a0a12e4cc0dd79e",
-            "name": "",
-            "type": "user",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "user"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "auth.login",
         "ivar": {
           "sensor_id": "app-sdk-1",
           "sensor_type": "app_sdk",
           "observation_point": "app_sdk",
           "sensor_seq": 1,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "271",
             "hop_decide_us": "92",
             "hop_enforce_us": "1240",
             "hop_ingest_us": "187",
             "hop_sensor_us": "43"
-          },
-          "value_moved": 0.0,
-          "records_read": 0,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          }
         }
       },
       "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
-      "hash": "bc2e7c732943c63387057c023c3118df0d4c45b19d881604a5459a27d67c996e",
+      "hash": "05361037b37cffc018b366d5a9c19561d3c67853a35116a63f176b919408566f",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "9LzJqjCKtAvGpkC7qncXDFKg37rFdnV2OB2QGbVWJtrIowlKXhSvKKEwb4zsdb6Hq/QORyKhXBr6hEYeVNYTBA=="
+        "sig": "3YZChmC0yWU+z0tfFjcVKB3V23CE48MzePBtCA4QNcKFF+16SoUndsQXqjH5udeYeS2yCVkbwUZKgCW30mI3Bg=="
       }
     },
     {
       "seq": 2,
-      "evidence_id": "evd_R2EF9N12ZY",
+      "evidence_id": "evd_XK51WKMT2A",
       "time": 1795251600800,
       "kind": "event",
       "incident_hint": "",
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251600680,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_ce8146cc02eb11855c60c89f",
-            "name": "",
-            "type": "user",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "user"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "auth.login",
         "ivar": {
           "sensor_id": "app-sdk-1",
           "sensor_type": "app_sdk",
           "observation_point": "app_sdk",
           "sensor_seq": 2,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "282",
             "hop_decide_us": "94",
             "hop_enforce_us": "1280",
             "hop_ingest_us": "194",
             "hop_sensor_us": "46"
-          },
-          "value_moved": 0.0,
-          "records_read": 0,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          }
         }
       },
-      "prev_hash": "bc2e7c732943c63387057c023c3118df0d4c45b19d881604a5459a27d67c996e",
-      "hash": "6076de28c4694de2483a890f4cc4b915bc2cb814e120d83fc6949fa495aac297",
+      "prev_hash": "05361037b37cffc018b366d5a9c19561d3c67853a35116a63f176b919408566f",
+      "hash": "765206cf0e98d3657f28a313cde0852ed648715c3385310ea1ed3002b7dba43f",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "flqtg+IL61zga/pMxnGy97TJD5CuY2abUOlyYn9NE1H70u2FB9mvh05ybnEwU3IkMTpCCKA6BOeonz6kkqQ+AQ=="
+        "sig": "3EMtJ6jscYixcc9pNun5hyiA2vXY5Cphmvc38edCscSKJRv+NIA9gHjMShOQ2w63sBmsHEp6GpfDiVgj0LwqBg=="
       }
     },
     {
       "seq": 3,
-      "evidence_id": "evd_C57KE5KTT8",
+      "evidence_id": "evd_FGX455KP9N",
       "time": 1795251601200,
       "kind": "event",
       "incident_hint": "",
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251601080,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_5eaccbd9ab7829f910fba757",
-            "name": "",
-            "type": "user",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "user"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "auth.login",
         "ivar": {
           "sensor_id": "app-sdk-1",
           "sensor_type": "app_sdk",
           "observation_point": "app_sdk",
           "sensor_seq": 3,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "293",
             "hop_decide_us": "96",
             "hop_enforce_us": "1320",
             "hop_ingest_us": "201",
             "hop_sensor_us": "49"
-          },
-          "value_moved": 0.0,
-          "records_read": 0,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          }
         }
       },
-      "prev_hash": "6076de28c4694de2483a890f4cc4b915bc2cb814e120d83fc6949fa495aac297",
-      "hash": "cfc638b365e188d4f3abe115cd10feecfa236037c2e21f7eca8844a6322c55ee",
+      "prev_hash": "765206cf0e98d3657f28a313cde0852ed648715c3385310ea1ed3002b7dba43f",
+      "hash": "41128e54d158d901c8d7055a9baf3ff25835375e33674fa09734a66683bbcf4a",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "Im5KOC6QRQm9EtRgcCL0go7n8WO35rBscu+tLMIITFeIdDt7gyfOsK+DeHHi2UZWfKFOFfL3DY2TSs/RSJyfDA=="
+        "sig": "zfi8p7P4PgdYebZHlddXpHz0dQqe5tcwLgGwbUcKOfFkuBlzyaZdvlNblowegkU+CWt3tNP1al1/6K56ld8bAw=="
       }
     },
     {
       "seq": 4,
-      "evidence_id": "evd_DTR0YYEQ87",
+      "evidence_id": "evd_TJAS5FKMTG",
       "time": 1795251601600,
       "kind": "event",
       "incident_hint": "",
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251601480,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_6cd27282397e5a3c333e5aa8",
-            "name": "",
-            "type": "user",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "user"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "auth.login",
         "ivar": {
           "sensor_id": "app-sdk-1",
           "sensor_type": "app_sdk",
           "observation_point": "app_sdk",
           "sensor_seq": 4,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "304",
             "hop_decide_us": "98",
             "hop_enforce_us": "1360",
             "hop_ingest_us": "208",
             "hop_sensor_us": "52"
-          },
-          "value_moved": 0.0,
-          "records_read": 0,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          }
         }
       },
-      "prev_hash": "cfc638b365e188d4f3abe115cd10feecfa236037c2e21f7eca8844a6322c55ee",
-      "hash": "e00f724699433979096ccf4878b33b7b7dca8f36ae9c530eff8f1e0ddc6d79fe",
+      "prev_hash": "41128e54d158d901c8d7055a9baf3ff25835375e33674fa09734a66683bbcf4a",
+      "hash": "08e268badaf3fdf0a15e9d03583d71fb72546dd69602a95c7c18dd9d0d00b35a",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "ybcJlwHorPgg/yUn5k5lnpa4Ho3854Yi9wYiBAhldAiuIaLFMEDWs53ACS62CworGMHc+RAyuQ8ryElKmF5oBQ=="
+        "sig": "P92IK6JErTNguw3RN2wWf8WkRVAusslcTK8nSAsXew2P53QaGSaQGnGPgE009KBCZVWpmcK13Dr+bH6euchIDw=="
       }
     },
     {
       "seq": 5,
-      "evidence_id": "evd_Q9WR0076W3",
+      "evidence_id": "evd_AVXFYXN25R",
       "time": 1795251602000,
       "kind": "event",
       "incident_hint": "",
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251601880,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_26eeb06423b1b4bfe3fe5c99",
-            "name": "",
-            "type": "user",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "user"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "auth.login",
         "ivar": {
           "sensor_id": "app-sdk-1",
           "sensor_type": "app_sdk",
           "observation_point": "app_sdk",
           "sensor_seq": 5,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "315",
             "hop_decide_us": "100",
             "hop_enforce_us": "1400",
             "hop_ingest_us": "215",
             "hop_sensor_us": "55"
-          },
-          "value_moved": 0.0,
-          "records_read": 0,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          }
         }
       },
-      "prev_hash": "e00f724699433979096ccf4878b33b7b7dca8f36ae9c530eff8f1e0ddc6d79fe",
-      "hash": "69b8d175869e528a6fe23724d82dcfe95556a8dfe49f502d3c9ca8c8775001f3",
+      "prev_hash": "08e268badaf3fdf0a15e9d03583d71fb72546dd69602a95c7c18dd9d0d00b35a",
+      "hash": "0fb738ec434d34794b60dc841bbcb1434ecf0510a38d11d5b738f5545a08facd",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "llMe+IfMtc+wJp7DC462ZPRTrxrYXLSc9VpZtR3Dph/wpxRu9Gzk066aGPJHAaFg95+GPWSzitiURQIpGS2/Dg=="
+        "sig": "7vkGeRlKs1ew7tPRrukTIW0YEaPMxyGo1z0CXKQ+ZzuUtmGfGjGrhhb2k01N++c/8B46LbVTpGUWoWFAJzqcCQ=="
       }
     },
     {
       "seq": 6,
-      "evidence_id": "evd_5G9JW0MNVS",
+      "evidence_id": "evd_Q5MSYY4EM1",
       "time": 1795251602400,
       "kind": "event",
       "incident_hint": "",
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251602280,
         "severity_id": 1,
         "status_id": 2,
         "status": "Failure",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_f8053adca5bd8cd980740cb6",
-            "name": "",
-            "type": "user",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "user"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "auth.login",
         "ivar": {
           "sensor_id": "app-sdk-1",
           "sensor_type": "app_sdk",
           "observation_point": "app_sdk",
           "sensor_seq": 6,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "326",
             "hop_decide_us": "102",
             "hop_enforce_us": "1440",
             "hop_ingest_us": "222",
             "hop_sensor_us": "58"
-          },
-          "value_moved": 0.0,
-          "records_read": 0,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          }
         }
       },
-      "prev_hash": "69b8d175869e528a6fe23724d82dcfe95556a8dfe49f502d3c9ca8c8775001f3",
-      "hash": "ec4e503a49bab14ec96d794b7f0b9b241c8d0e25c25869b921b3582cfffd63f5",
+      "prev_hash": "0fb738ec434d34794b60dc841bbcb1434ecf0510a38d11d5b738f5545a08facd",
+      "hash": "d6a44fcc478cd8c17adee8450545c3feecb00009d17fa10e0a0f4ed4febd231a",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "8DoDSPA1QhVahsBJsNeGx52pFpT1s3w8Mqqykat7gTbvjcxiJ4BCWRPp5ClErWK9iBuh+BQbf8AqAx90+OEyCA=="
+        "sig": "n4cMqnuLXJBYXupat76Yawghp4qeoVjyEt/CRX3whTFSuhhFMLUii3R8o6hCxzvf08BcaYMGSfEnKGr2S5noDw=="
       }
     },
     {
       "seq": 7,
-      "evidence_id": "evd_04M9AJJA5G",
+      "evidence_id": "evd_GM0GP3FC6D",
       "time": 1795251603300,
       "kind": "event",
       "incident_hint": "",
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251603180,
         "severity_id": 1,
         "status_id": 1,
         "status": "Success",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_f8053adca5bd8cd980740cb6",
-            "name": "",
-            "type": "user",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "user"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "auth.login",
         "ivar": {
           "sensor_id": "app-sdk-1",
           "sensor_type": "app_sdk",
           "observation_point": "app_sdk",
           "sensor_seq": 7,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "337",
             "hop_decide_us": "104",
             "hop_enforce_us": "1480",
             "hop_ingest_us": "229",
             "hop_sensor_us": "61"
-          },
-          "value_moved": 0.0,
-          "records_read": 0,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          }
         }
       },
-      "prev_hash": "ec4e503a49bab14ec96d794b7f0b9b241c8d0e25c25869b921b3582cfffd63f5",
-      "hash": "83540eb1ecb49c5fa4908c3bfe9edd8ed80bc07ed2d1d7256222186bd921f346",
+      "prev_hash": "d6a44fcc478cd8c17adee8450545c3feecb00009d17fa10e0a0f4ed4febd231a",
+      "hash": "2c1966880d65b9b89f58ec7a757c00f9bc50ba5f67c20b7a586999815b960917",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "W+yg9aXNpjxcaXbo8rNpHzrDHho0VfbzoKrFFTe3uv2gHIPf19D4Zl1GEdZvlXGeucDyJ9VhMkfVSQM+CFyZAw=="
+        "sig": "gnvHJzeyAeEF6wlnc355s5LmpdLRhkS1cbdp8ebWyMAaSDMmfcV3jWZo/Oz/CQ60Li7iv4wMlufrtpItW95mDA=="
       }
     },
     {
       "seq": 8,
-      "evidence_id": "evd_HV7S7KSN40",
+      "evidence_id": "evd_5C5QP1VP1E",
       "time": 1795251604300,
       "kind": "event",
       "incident_hint": "",
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251604050,
         "severity_id": 1,
         "status_id": 1,
-        "status": "",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_c167259a675300c6662ea2f4",
-            "name": "",
-            "type": "service",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "service"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "db.query",
         "ivar": {
           "sensor_id": "db-1",
           "sensor_type": "database",
           "observation_point": "database",
           "sensor_seq": 8,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "348",
             "hop_decide_us": "106",
@@ -3002,34 +2291,25 @@
             "operation": "SELECT",
             "table": "persons"
           },
-          "value_moved": 0.0,
-          "records_read": 100,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          "records_read": 100
         }
       },
-      "prev_hash": "83540eb1ecb49c5fa4908c3bfe9edd8ed80bc07ed2d1d7256222186bd921f346",
-      "hash": "f2ff943e7269d7df4e0c9cb0bbd9550a0a2814af44b1dab87d175b1aa15d6f38",
+      "prev_hash": "2c1966880d65b9b89f58ec7a757c00f9bc50ba5f67c20b7a586999815b960917",
+      "hash": "8e2e425ae3b33a217e367d8c6ae48d8503e61a3773356f57c76e526915b6c99f",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "qdZHcFpKiTXIXCbNJ1OVAV1k7/N9NsLDGBxAPbEZ+9jPfmZC57ay5eiNRoxy5uKD0CzpaO9sw0qFIMQJFhImCQ=="
+        "sig": "EH8MZdSvW1O8E3nE4z3Nvib6/L/EMT96B3rLpXydS2F72a2xtwiK9j5sq0456mK7OkmMG/EDlt2JyLOvwJikDQ=="
       }
     },
     {
       "seq": 9,
-      "evidence_id": "evd_VD17G8CGKY",
+      "evidence_id": "evd_DGH3HX4H2K",
       "time": 1795251604300,
       "kind": "finding",
       "incident_hint": "",
       "payload": {
-        "finding_id": "fnd_PZA23WRP9Y",
+        "finding_id": "fnd_NBHS72NEMV",
         "rule": "undeclared_edge",
         "rule_family": "drift.edge",
         "technique": "T1078",
@@ -3037,7 +2317,7 @@
         "confidence": 0.3,
         "severity": 2,
         "evidence_ids": [
-          "evd_HV7S7KSN40"
+          "evd_5C5QP1VP1E"
         ],
         "entities": [
           {
@@ -3057,24 +2337,24 @@
         "deception_hit": false,
         "attack_stage": "privilege_escalation",
         "explanation": "trust edge edg_556ZH62X9E is used but never declared",
-        "source_event": "evd_HV7S7KSN40"
+        "source_event": "evd_5C5QP1VP1E"
       },
-      "prev_hash": "f2ff943e7269d7df4e0c9cb0bbd9550a0a2814af44b1dab87d175b1aa15d6f38",
-      "hash": "953ae3d3c6b9fc45b2b20795dbb566ede76906999906caf9aa84b72b46d3e4e1",
+      "prev_hash": "8e2e425ae3b33a217e367d8c6ae48d8503e61a3773356f57c76e526915b6c99f",
+      "hash": "e284b46c37b30bd6b2ea0f8dee621e7a369f4a7d0fd3a9b26406c2ef615a05b3",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "UI6HbDYzYOM3esiKe+SZn5DVPwrzkxxay2NPrYmA6GzeRxS3UNA0dYWcJmSHRzs0jLS4Py1FA4w7n0oRx5xMBw=="
+        "sig": "vO9J/cGiSqPVFK0aSLpeBj7Ceq3JnKMvjtd81DTMKl8HzSbkiT3V9VgebAh9F27LttPf5mBzcBtCTez6rPwFAQ=="
       }
     },
     {
       "seq": 10,
-      "evidence_id": "evd_0NQ9ZBST4R",
+      "evidence_id": "evd_HK0JWX03MM",
       "time": 1795251604300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_03DXJEV945",
+        "verdict_id": "vrd_3XQWMZM0EV",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -3092,28 +2372,28 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_HV7S7KSN40",
-          "evd_VD17G8CGKY"
+          "evd_5C5QP1VP1E",
+          "evd_DGH3HX4H2K"
         ],
         "time": 1795251604300,
         "ladder_level": 0
       },
-      "prev_hash": "953ae3d3c6b9fc45b2b20795dbb566ede76906999906caf9aa84b72b46d3e4e1",
-      "hash": "0a1c503d849be12cd939aa4759ad1e9ca8b39c4bbeb0b21c03a92c74f26e7e8f",
+      "prev_hash": "e284b46c37b30bd6b2ea0f8dee621e7a369f4a7d0fd3a9b26406c2ef615a05b3",
+      "hash": "c7480887296fe7aa019d1bda92f12b23f208d33327eb2575899362b2dbbacacd",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "efC07TZgoD43i0zv3pjp9HM8Rx0lxEoKP0Wnbp8GVWGmmevYzxXcTDR3NoAoFh2C56LQ1ZPxUQIOzDmBWHHHAw=="
+        "sig": "unl1hplqpO92cb8q/C4gMxfa4nzJr4tMn+gTEo4cLcDUGWYn/tEJxi0/+toaIcpqY5ZdD/zQfxQC9dVy0rFlCw=="
       }
     },
     {
       "seq": 11,
-      "evidence_id": "evd_V9VM8RYHRN",
+      "evidence_id": "evd_83HZRXYHXX",
       "time": 1795251604300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_0X334BR4JW",
+        "verdict_id": "vrd_FCBD0C1QB1",
         "decision": "record",
         "entity": {
           "type": "service",
@@ -3131,89 +2411,62 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_HV7S7KSN40",
-          "evd_VD17G8CGKY"
+          "evd_5C5QP1VP1E",
+          "evd_DGH3HX4H2K"
         ],
         "time": 1795251604300,
         "ladder_level": 0
       },
-      "prev_hash": "0a1c503d849be12cd939aa4759ad1e9ca8b39c4bbeb0b21c03a92c74f26e7e8f",
-      "hash": "3a0ff4d53bb260169306d8258eaf90a6c606fc633c02f26b88cb06d4eefdf93f",
+      "prev_hash": "c7480887296fe7aa019d1bda92f12b23f208d33327eb2575899362b2dbbacacd",
+      "hash": "9cd35e014e848b597689eee167e12ca918c79d201f2bb66f1b518250ff1dec06",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "xkMujGtErMc/hvbQWyie7lbW2uM7ZjJfmuuid5lrHnBfDtSDsxhHIC/2OrGx/ihDUYqe8dUozJSJGkFcVF0pBw=="
+        "sig": "aVpiVEB9ns4VcBP1EFvvJnlsVUpLAwzEDqsMz8TAN5ThNrRL70B0oeNwx5zsGRQKRz1l9bevuojXSFP17v8RDA=="
       }
     },
     {
       "seq": 12,
-      "evidence_id": "evd_A72GEQ4QRD",
+      "evidence_id": "evd_ZYQDE2MQKG",
       "time": 1795251605300,
       "kind": "event",
       "incident_hint": "",
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251605050,
         "severity_id": 1,
         "status_id": 1,
-        "status": "",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_c167259a675300c6662ea2f4",
-            "name": "",
-            "type": "service",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "service"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "db.query",
         "ivar": {
           "sensor_id": "db-1",
           "sensor_type": "database",
           "observation_point": "database",
           "sensor_seq": 9,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "359",
             "hop_decide_us": "108",
@@ -3223,34 +2476,25 @@
             "operation": "SELECT",
             "table": "persons"
           },
-          "value_moved": 0.0,
-          "records_read": 100,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          "records_read": 100
         }
       },
-      "prev_hash": "3a0ff4d53bb260169306d8258eaf90a6c606fc633c02f26b88cb06d4eefdf93f",
-      "hash": "967acd8b05f7289a5d3668c83f92d5984c069e137072991f31997e9333a082d1",
+      "prev_hash": "9cd35e014e848b597689eee167e12ca918c79d201f2bb66f1b518250ff1dec06",
+      "hash": "fd98b9ae2d36d5a735773f37be5a276bb2025c693ad61aea45b1bf4e6ddff54c",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "bkN52ksQUjKDs52JU469wfi+wPjrxZIfjaXrhs3KwVUeoTPK5MdwCZiSv7QEAuajU9qykw7Vuwb+fa2C32zXBQ=="
+        "sig": "cOvpzzXcMQeVhD84/drSqkG1qU08UFCQQPfwQluhye9unM5jUfKTccjzEy7x01jYN+1HVlVb7OrNatStgjaOCQ=="
       }
     },
     {
       "seq": 13,
-      "evidence_id": "evd_3A2J7AX1DZ",
+      "evidence_id": "evd_AM979ZKPSD",
       "time": 1795251605300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_BVHNXGEZ8F",
+        "verdict_id": "vrd_Q28R58Q4Z2",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -3266,27 +2510,27 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_A72GEQ4QRD"
+          "evd_ZYQDE2MQKG"
         ],
         "time": 1795251605300,
         "ladder_level": 0
       },
-      "prev_hash": "967acd8b05f7289a5d3668c83f92d5984c069e137072991f31997e9333a082d1",
-      "hash": "b56eeb562ce4cebb78a66e58c734374b22eccd8098c29daa854c1d161a150732",
+      "prev_hash": "fd98b9ae2d36d5a735773f37be5a276bb2025c693ad61aea45b1bf4e6ddff54c",
+      "hash": "1f49da35a0255730562927c53abdfbacd37fac1f7dce8b6ce3754f4b81f697ea",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "0qkQZOBxAOmoce1XW8avUnCvXhbXM/2bu8mPx/HIg0ZRahpuSQET0xZcU+0iQQb2Pxi5iUHj2cCryEByYUJGAw=="
+        "sig": "0g+obhanGdoIPgfL5otx5rviL8A8qQ58zPMkwjpS/WVyS0pfs7KB7S8A9sEqGVlxohDi/jBd04g2k3Qy+ugPBg=="
       }
     },
     {
       "seq": 14,
-      "evidence_id": "evd_KXNESF8QD1",
+      "evidence_id": "evd_3PZNJ9A5YX",
       "time": 1795251605300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_DZVXRM59JW",
+        "verdict_id": "vrd_BMJSSE7RJB",
         "decision": "record",
         "entity": {
           "type": "service",
@@ -3302,88 +2546,61 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_A72GEQ4QRD"
+          "evd_ZYQDE2MQKG"
         ],
         "time": 1795251605300,
         "ladder_level": 0
       },
-      "prev_hash": "b56eeb562ce4cebb78a66e58c734374b22eccd8098c29daa854c1d161a150732",
-      "hash": "4e7b7fcd465de98e2eb7ad403318f89c8b631808b9b9de19410254456aa41bd9",
+      "prev_hash": "1f49da35a0255730562927c53abdfbacd37fac1f7dce8b6ce3754f4b81f697ea",
+      "hash": "8f313d5fa26d8cbb4d8b3f2fd3cf35a48a525dfb1aeb2cf84ce4ec405f7fef06",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "aiP2ZfjE6yhx27Y+WvFOFadF6bFVLtEA3IIIiiFXLM9ePoL62AfVIbH/IJL2273M3aKYkeeZxd1OoA+nfioJCw=="
+        "sig": "65ZY0zxn4Ku1GSpbOSoZYhPtTg1Babb47BzcG6epRUcQZR6K2f1Kg4JwxT3PHU0/qt/EZ9KvpG65+UmfodGtBQ=="
       }
     },
     {
       "seq": 15,
-      "evidence_id": "evd_YSPAN25YXN",
+      "evidence_id": "evd_SEJC2H4WTC",
       "time": 1795251606300,
       "kind": "event",
       "incident_hint": "",
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251606050,
         "severity_id": 1,
         "status_id": 1,
-        "status": "",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_c167259a675300c6662ea2f4",
-            "name": "",
-            "type": "service",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "service"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "db.query",
         "ivar": {
           "sensor_id": "db-1",
           "sensor_type": "database",
           "observation_point": "database",
           "sensor_seq": 10,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "370",
             "hop_decide_us": "110",
@@ -3393,34 +2610,25 @@
             "operation": "SELECT",
             "table": "persons"
           },
-          "value_moved": 0.0,
-          "records_read": 100,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          "records_read": 100
         }
       },
-      "prev_hash": "4e7b7fcd465de98e2eb7ad403318f89c8b631808b9b9de19410254456aa41bd9",
-      "hash": "ad93c1149dd99573db99f6ddd3e8e102fd2347ba6c05d6b3fcfdd4d1d1925549",
+      "prev_hash": "8f313d5fa26d8cbb4d8b3f2fd3cf35a48a525dfb1aeb2cf84ce4ec405f7fef06",
+      "hash": "fb4420cb4acafd9680f24b59cfe8287aabff852c12b9892b1f5c11f9851fede4",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "9P9Lbos6T/PmW93LbPmdID3iHHNlOG/vqr/S6auWm0P2xa94tabC9VYvvqyPGJwKdDwZFWwEpoRwGjTV9SpNBA=="
+        "sig": "QVs3K8wXghMVhIfZ/Q+UkGzMrRLQI/TkN/A7PihNeSyqYmT/JhenZeTpJ74onBukF6xibXMnOmkpmWYo2v+jCQ=="
       }
     },
     {
       "seq": 16,
-      "evidence_id": "evd_S102ZHDXHG",
+      "evidence_id": "evd_YHS9BD7WRQ",
       "time": 1795251606300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_GZFVXPCFG1",
+        "verdict_id": "vrd_ZXYNX1515N",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -3436,27 +2644,27 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_YSPAN25YXN"
+          "evd_SEJC2H4WTC"
         ],
         "time": 1795251606300,
         "ladder_level": 0
       },
-      "prev_hash": "ad93c1149dd99573db99f6ddd3e8e102fd2347ba6c05d6b3fcfdd4d1d1925549",
-      "hash": "94b61bf268050ae2705628e2b69cbb4ca812d1c3d7aca929796261ecce000eb5",
+      "prev_hash": "fb4420cb4acafd9680f24b59cfe8287aabff852c12b9892b1f5c11f9851fede4",
+      "hash": "8c4247fdf55a4191065fcab09a82561f2a90a83588fce3f841040511536a5883",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "5Gj8LokYHhn8bC+/vz0rHxluPXwEMwLz3NNqXWKmph+6MaXLzuxT7xdXkDwrogOFxvqWIQc+yDAp1DxhvJj6Ag=="
+        "sig": "7+6DhO2Qm9Oi7tgLe/x+23YwXjWwbMERm6J0wEei6N7dgxK+eUDXxWoAtR3Y7C7IX7M9BmYej8WWN9jbet+BCw=="
       }
     },
     {
       "seq": 17,
-      "evidence_id": "evd_BNT29YYETA",
+      "evidence_id": "evd_6CPN8K6M6Q",
       "time": 1795251606300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_RFZ0WQW08E",
+        "verdict_id": "vrd_6A5B46AFVJ",
         "decision": "record",
         "entity": {
           "type": "service",
@@ -3472,88 +2680,61 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_YSPAN25YXN"
+          "evd_SEJC2H4WTC"
         ],
         "time": 1795251606300,
         "ladder_level": 0
       },
-      "prev_hash": "94b61bf268050ae2705628e2b69cbb4ca812d1c3d7aca929796261ecce000eb5",
-      "hash": "95b276c73fc356ece780ee1f704a5b6c13bac3250652ba01643cf2e2a1ab21bb",
+      "prev_hash": "8c4247fdf55a4191065fcab09a82561f2a90a83588fce3f841040511536a5883",
+      "hash": "a1eb839ad5efaf86d552c95c831a3d94345e1b2ccd1b9368054763325767010f",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "lPAr+CnDsb+XWyAZ5Zbc1/vOIXZWOyrG8gqKBJaS0u0qmKylIfPg+9ZOV0bGb5WvWp9fVr8o7OJ89HPjpxqqCA=="
+        "sig": "AiITBn6YjoG8uHhyN1jsMonX7jnPsEIu1gsTlzf6m2/IvVU6AROJkaXRXiC/DDRG1Cf6M9RcBxQCamewnnvMCw=="
       }
     },
     {
       "seq": 18,
-      "evidence_id": "evd_1S1FPY6DQ7",
+      "evidence_id": "evd_8WK8DSYFP9",
       "time": 1795251607300,
       "kind": "event",
       "incident_hint": "",
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251607050,
         "severity_id": 1,
         "status_id": 1,
-        "status": "",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_c167259a675300c6662ea2f4",
-            "name": "",
-            "type": "service",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "service"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "db.query",
         "ivar": {
           "sensor_id": "db-1",
           "sensor_type": "database",
           "observation_point": "database",
           "sensor_seq": 11,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "381",
             "hop_decide_us": "112",
@@ -3563,34 +2744,25 @@
             "operation": "SELECT",
             "table": "persons"
           },
-          "value_moved": 0.0,
-          "records_read": 100,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          "records_read": 100
         }
       },
-      "prev_hash": "95b276c73fc356ece780ee1f704a5b6c13bac3250652ba01643cf2e2a1ab21bb",
-      "hash": "315e1ddf3dba785f86605ff2b8a1f2775a8cd5d23c1383a5241ab6c84b57fc93",
+      "prev_hash": "a1eb839ad5efaf86d552c95c831a3d94345e1b2ccd1b9368054763325767010f",
+      "hash": "d8bad739c077bdf5037bdf5ba24b87cd29057762d114e146ff741ef7151512f8",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "ri2EdDVAzM89Q+MrjBscWmva/qqCKb7kBoFTJ5unTDtQbIqKEVwDoYyV1hKPvKIAIo+Uedmt0VYTdXrCOaWDBQ=="
+        "sig": "7Ph5Luj5sj9f2HNvzbJAyI+AbpQrSWFeDLg59M5+nIZqforIis5/AuWCzGpppqQiNKEVo1MWMLBau+NMsWZZBw=="
       }
     },
     {
       "seq": 19,
-      "evidence_id": "evd_H9DV4QRFGM",
+      "evidence_id": "evd_8EC0RN0H9E",
       "time": 1795251607300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_NNH8SWGS8Z",
+        "verdict_id": "vrd_59NQ0KNWRK",
         "decision": "record",
         "entity": {
           "type": "ip",
@@ -3606,27 +2778,27 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_1S1FPY6DQ7"
+          "evd_8WK8DSYFP9"
         ],
         "time": 1795251607300,
         "ladder_level": 0
       },
-      "prev_hash": "315e1ddf3dba785f86605ff2b8a1f2775a8cd5d23c1383a5241ab6c84b57fc93",
-      "hash": "53fefa47f31b03f92820bbab27fcfcb3f96485ab207dc8d8a78eaddea285363b",
+      "prev_hash": "d8bad739c077bdf5037bdf5ba24b87cd29057762d114e146ff741ef7151512f8",
+      "hash": "2e39b41528e4d4abfc4913e5aae063a459860a4002d791cf5e03fdb0980f3fa1",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "tgoTh1Gk5LGdpJE6rkuXKbh/YKqKh65GjGN2+KuFxHMQeRaYrW8OH3gZ7iJQfDz3BBO/IVwtcmePM80CqJuyAA=="
+        "sig": "tu9PAvDcuZsP+FAFGKR5UQQEITAiD3jNJQlo4OXfbqR5f2dvbb3GKcq2UT7biyIiqC7/2C74XhHYySLkwdDnAQ=="
       }
     },
     {
       "seq": 20,
-      "evidence_id": "evd_AC9MTZ9ZAB",
+      "evidence_id": "evd_CJMAP2YENS",
       "time": 1795251607300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_WVX815QPKZ",
+        "verdict_id": "vrd_Z4AE1EX800",
         "decision": "record",
         "entity": {
           "type": "service",
@@ -3642,88 +2814,61 @@
         "expires_at": 0,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_1S1FPY6DQ7"
+          "evd_8WK8DSYFP9"
         ],
         "time": 1795251607300,
         "ladder_level": 0
       },
-      "prev_hash": "53fefa47f31b03f92820bbab27fcfcb3f96485ab207dc8d8a78eaddea285363b",
-      "hash": "fc2650a5270ec9317c59b6642816047bb649b4e8c7fa2cc9775431e062bb99bf",
+      "prev_hash": "2e39b41528e4d4abfc4913e5aae063a459860a4002d791cf5e03fdb0980f3fa1",
+      "hash": "2ed2396738743e93a6dd7d13c46330b695d4c8ab4d851d070f6a30b71d1cab0f",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "D5jhJAl0ieUrG88mqJzKaHgJaVUVaDPjqqSpX51DOy88zqP0KIm7IX6R18zDFibtnPFNQLKUKkkVaTUdmj5iCw=="
+        "sig": "fYq7DG3iZ2BM+tp5QQcEYSmQUXxnObgR4IKbAB2GEaY5kUPQCvdxgdg8eF9MbTLsIfkPzwgKj/pWINuvjLcEAw=="
       }
     },
     {
       "seq": 21,
-      "evidence_id": "evd_E3WNZ81D86",
+      "evidence_id": "evd_7KMHKC7MB1",
       "time": 1795251608300,
       "kind": "event",
       "incident_hint": "",
       "payload": {
-        "class_uid": 0,
-        "category_uid": 0,
         "activity_id": 1,
         "type_uid": 1,
         "time": 1795251608050,
         "severity_id": 1,
         "status_id": 1,
-        "status": "",
-        "message": "",
         "metadata": {
           "version": "1.3.0",
           "product": {
             "name": "ivar",
             "vendor_name": "ivar",
-            "version": "0.1.1"
+            "version": "0.1.2"
           },
-          "profiles": [],
           "extensions": [
             {
               "name": "ivar",
               "uid": "999",
               "version": "1.0.0"
             }
-          ],
-          "uid": "",
-          "correlation_uid": ""
+          ]
         },
         "actor": {
           "user": {
             "uid": "kh_c167259a675300c6662ea2f4",
-            "name": "",
-            "type": "service",
-            "org_uid": ""
-          },
-          "session": null,
-          "app_name": "",
-          "authorizations": "",
-          "invoked_by": ""
+            "type": "service"
+          }
         },
-        "device": null,
         "src_endpoint": {
-          "ip": "198.51.100.7",
-          "port": 0,
-          "hostname": "",
-          "uid": "",
-          "svc_name": ""
+          "ip": "198.51.100.7"
         },
-        "dst_endpoint": null,
-        "process": null,
-        "http_request": null,
-        "http_response": null,
         "activity_name": "db.query",
         "ivar": {
           "sensor_id": "db-1",
           "sensor_type": "database",
           "observation_point": "database",
           "sensor_seq": 12,
-          "evidence_id": "",
-          "request_id": "",
-          "business_action": "",
-          "intent_token": "",
-          "target_entity": "",
           "attributes": {
             "hop_core_us": "392",
             "hop_decide_us": "114",
@@ -3733,34 +2878,25 @@
             "operation": "SELECT",
             "table": "persons"
           },
-          "value_moved": 0.0,
-          "records_read": 60000,
-          "destructive": false,
-          "tenant": "",
-          "engine_alerts": [],
-          "engine_alert_confidence": 0.0,
-          "declared_route": "",
-          "decoy_touched": false,
-          "decoy_id": "",
-          "egress_destination": ""
+          "records_read": 60000
         }
       },
-      "prev_hash": "fc2650a5270ec9317c59b6642816047bb649b4e8c7fa2cc9775431e062bb99bf",
-      "hash": "5fd1661aab7fabe1181a64a7beaf479217e7486278067e6b2e7385b02d983f62",
+      "prev_hash": "2ed2396738743e93a6dd7d13c46330b695d4c8ab4d851d070f6a30b71d1cab0f",
+      "hash": "ca64876945e365e7ed66259f54c35923ca6942e8bf73452e25d3e0a41b09472c",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "HlQMTeTnPZpvUUDhjK4AZ44IvvLxKlshK19vyMjrrXakWU8/sOsZkV/Kss9C9ZdDXwBSV2z5q4M39tubNb1eCw=="
+        "sig": "xsieVRNmV1GqFDSeUjn66KQm7qydamfiye54YtvHdifxg7YED40bjlFPmniVm6n9XniiA5jsY/+A6hc/XlekAA=="
       }
     },
     {
       "seq": 22,
-      "evidence_id": "evd_Q3GRMH801Y",
+      "evidence_id": "evd_NWJJEVNGVK",
       "time": 1795251608300,
       "kind": "finding",
       "incident_hint": "",
       "payload": {
-        "finding_id": "fnd_DPR42WVMKK",
+        "finding_id": "fnd_0JGTSQJJA0",
         "rule": "bulk_read_anomaly",
         "rule_family": "exfil.bulk_read",
         "technique": "T1530",
@@ -3768,7 +2904,7 @@
         "confidence": 0.7,
         "severity": 4,
         "evidence_ids": [
-          "evd_E3WNZ81D86"
+          "evd_7KMHKC7MB1"
         ],
         "entities": [
           {
@@ -3788,24 +2924,24 @@
         "deception_hit": false,
         "attack_stage": "data_theft",
         "explanation": "bulk read far above the usage profile of edg_556ZH62X9E",
-        "source_event": "evd_E3WNZ81D86"
+        "source_event": "evd_7KMHKC7MB1"
       },
-      "prev_hash": "5fd1661aab7fabe1181a64a7beaf479217e7486278067e6b2e7385b02d983f62",
-      "hash": "713ccb2fe3b4eee365985feb643573dd828d51c44e3441da61387fd9f42fe2de",
+      "prev_hash": "ca64876945e365e7ed66259f54c35923ca6942e8bf73452e25d3e0a41b09472c",
+      "hash": "55a1322f7487387e42eba29bbe0da3818e1bf57b7129b22a6ea890a79f31b4f5",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "dC1tSb0TGs2riYMLKZGV9axk8U+PRN6kzByrUU1hW0/jvvznLRRaE8xVmqqUx9UZZB3WrW41PmiB6PBJDbGzDQ=="
+        "sig": "Rny3LEBFbx4LbREqcdsav5P/o1w+CgumRYRJgiDQCVAieL+VJm1J628ystc+lEDyPhYdswjgWhDNkH2+R+E5AQ=="
       }
     },
     {
       "seq": 23,
-      "evidence_id": "evd_SARRDBQ4CA",
+      "evidence_id": "evd_CH863Q9217",
       "time": 1795251608300,
       "kind": "finding",
       "incident_hint": "",
       "payload": {
-        "finding_id": "fnd_7K4KP6Z4B5",
+        "finding_id": "fnd_8S5PEBF8WF",
         "rule": "invariant_breach",
         "rule_family": "consequence.per_identity_records",
         "technique": "T1657",
@@ -3813,7 +2949,7 @@
         "confidence": 1.0,
         "severity": 5,
         "evidence_ids": [
-          "evd_E3WNZ81D86"
+          "evd_7KMHKC7MB1"
         ],
         "entities": [
           {
@@ -3833,25 +2969,25 @@
         "deception_hit": false,
         "attack_stage": "impact",
         "explanation": "consequence invariant breached (per_identity_records: 60400 of 10000)",
-        "source_event": "evd_E3WNZ81D86"
+        "source_event": "evd_7KMHKC7MB1"
       },
-      "prev_hash": "713ccb2fe3b4eee365985feb643573dd828d51c44e3441da61387fd9f42fe2de",
-      "hash": "c97ff0a9ea6b9fedd003efc5d58ce3ff201b9adfe83cbb290c97279ecb734edc",
+      "prev_hash": "55a1322f7487387e42eba29bbe0da3818e1bf57b7129b22a6ea890a79f31b4f5",
+      "hash": "571b77db0d8c20619d526a6819dbd93bacc4b73d38199d8fc5f903d73afa56de",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "uPAMoGZ4lw3volKa7N8wglxWVodC5Wp0S1MdjQZvBO2bu5J5PesHACAC3iTkVNCWcf5k2C/Bf5ME/0naz23KBQ=="
+        "sig": "MIe3DMi7LIl9OS1TlPeeTllizJCPJWqTrHcS2HBYDQ6PSHwChFAY6BqGM7/KFA6u1y2rlIRoG+Q4eqxyZr5UBw=="
       }
     },
     {
       "seq": 24,
-      "evidence_id": "evd_E9VGS1H33S",
+      "evidence_id": "evd_STJ98XA8WS",
       "time": 1795251608300,
       "kind": "action_request",
       "incident_hint": "",
       "payload": {
         "request": {
-          "action_request_id": "act_6VKDBF8XE3",
+          "action_request_id": "act_NA976DAA74",
           "target": {
             "type": "ip",
             "id": "198.51.100.7",
@@ -3867,11 +3003,11 @@
           },
           "reversal_method": "ip.unban",
           "evidence_ids": [
-            "evd_E3WNZ81D86",
-            "evd_Q3GRMH801Y",
-            "evd_SARRDBQ4CA"
+            "evd_7KMHKC7MB1",
+            "evd_NWJJEVNGVK",
+            "evd_CH863Q9217"
           ],
-          "verdict_id": "vrd_1T8HTM1XN9",
+          "verdict_id": "vrd_SCD5XS4P2G",
           "confidence_class": "two_source_high",
           "evidence_captured_first": false,
           "time": 1795251608300,
@@ -3881,22 +3017,22 @@
         "review": "Allowed",
         "needs_approval": false
       },
-      "prev_hash": "c97ff0a9ea6b9fedd003efc5d58ce3ff201b9adfe83cbb290c97279ecb734edc",
-      "hash": "55a8f5690a2daff14be277eeb9f5154bdfb94cce69c523318e8c2d6f681c99bb",
+      "prev_hash": "571b77db0d8c20619d526a6819dbd93bacc4b73d38199d8fc5f903d73afa56de",
+      "hash": "67f22364f4028cfbe97d6f99ecded5c0f3b2f10e5eed65a2b0f9855c7449c210",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "GROb8Jg1jishlDwIq+3cW/DzTcwd+ESN3LGejV1oW66Da/+S4YVa9bBgxlwvxZtMf42KUcfvH3S5ntXoNapeBw=="
+        "sig": "NoNz+lLRdhwdKWP91m3hOOGof6Szda62Ym765gLIUp/uCWgssxUSlwruHyZSEvC5SyqL/ty8Inl0ypfRXNdFCQ=="
       }
     },
     {
       "seq": 25,
-      "evidence_id": "evd_2JY943B4Y7",
+      "evidence_id": "evd_MQ8EERBTKQ",
       "time": 1795251608300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_1T8HTM1XN9",
+        "verdict_id": "vrd_SCD5XS4P2G",
         "decision": "contain",
         "entity": {
           "type": "ip",
@@ -3916,30 +3052,30 @@
         "expires_at": 1795255208300,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_E3WNZ81D86",
-          "evd_Q3GRMH801Y",
-          "evd_SARRDBQ4CA"
+          "evd_7KMHKC7MB1",
+          "evd_NWJJEVNGVK",
+          "evd_CH863Q9217"
         ],
         "time": 1795251608300,
         "ladder_level": 4
       },
-      "prev_hash": "55a8f5690a2daff14be277eeb9f5154bdfb94cce69c523318e8c2d6f681c99bb",
-      "hash": "afd932fd6693d0fd6b645d4be7f138a144291732a927f6ebe1e626f9bb9bbe78",
+      "prev_hash": "67f22364f4028cfbe97d6f99ecded5c0f3b2f10e5eed65a2b0f9855c7449c210",
+      "hash": "8fb70d2aa09add1d4e8a3ab35cd344f6599b30aac5a3ade858724b957e652dc8",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "tvOAVnQHuoLIHMh4EwofGMc+hnSuKI53LvN8ZrgsmyC5K9sHfjkl8j0hvW4LJuePyl6jTPjlTar5Qc6SBbr1Aw=="
+        "sig": "67X5nMJ0PlwCoquG0NvZOLc/dxi6jfp4GDVS2Vg+PoJxjs4fDfIqP7gS8CnnilvuNwriFnji0TsjOSpEl39qCg=="
       }
     },
     {
       "seq": 26,
-      "evidence_id": "evd_GM81DXQ5ZT",
+      "evidence_id": "evd_VTHA1ZHD6A",
       "time": 1795251608300,
       "kind": "action_request",
       "incident_hint": "",
       "payload": {
         "request": {
-          "action_request_id": "act_PRM5S6Y6BN",
+          "action_request_id": "act_7QQA6P699M",
           "target": {
             "type": "service",
             "id": "kh_c167259a675300c6662ea2f4",
@@ -3955,11 +3091,11 @@
           },
           "reversal_method": "trust_edge.restore",
           "evidence_ids": [
-            "evd_E3WNZ81D86",
-            "evd_Q3GRMH801Y",
-            "evd_SARRDBQ4CA"
+            "evd_7KMHKC7MB1",
+            "evd_NWJJEVNGVK",
+            "evd_CH863Q9217"
           ],
-          "verdict_id": "vrd_D3FST2ZGQ4",
+          "verdict_id": "vrd_TN1S83B9TW",
           "confidence_class": "two_source_high",
           "evidence_captured_first": false,
           "time": 1795251608300,
@@ -3969,22 +3105,22 @@
         "review": "Allowed",
         "needs_approval": false
       },
-      "prev_hash": "afd932fd6693d0fd6b645d4be7f138a144291732a927f6ebe1e626f9bb9bbe78",
-      "hash": "5a1d042e9b5b974e2defe813e0a79832a72da780b0853393956445a4fde00d56",
+      "prev_hash": "8fb70d2aa09add1d4e8a3ab35cd344f6599b30aac5a3ade858724b957e652dc8",
+      "hash": "89ec7ce4b51bbb0828fcb42df4081b9af4ba0d70f4e30225d1eb948d48d9355d",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "Gv0VMvC8I/WSuRhyyhWBtNh2kzbg841Ur2mwoVcngtETNvujXdcmH05HC2xRZFXiJO6O5eK7bMlYq5NpdjTPDA=="
+        "sig": "mw0QMahdyrw9QUGP3VPSGlcwwbFYFMI659pg/9chj9OKzc/8rKIH6W/PfdFnqwgxnALBMN0uVnQK5TqwjHXHCQ=="
       }
     },
     {
       "seq": 27,
-      "evidence_id": "evd_02A3E6T6WN",
+      "evidence_id": "evd_M9FZ692MPM",
       "time": 1795251608300,
       "kind": "verdict",
       "incident_hint": "",
       "payload": {
-        "verdict_id": "vrd_D3FST2ZGQ4",
+        "verdict_id": "vrd_TN1S83B9TW",
         "decision": "contain",
         "entity": {
           "type": "service",
@@ -4004,19 +3140,19 @@
         "expires_at": 1795255208300,
         "mode": "enforce",
         "evidence_ids": [
-          "evd_E3WNZ81D86",
-          "evd_Q3GRMH801Y",
-          "evd_SARRDBQ4CA"
+          "evd_7KMHKC7MB1",
+          "evd_NWJJEVNGVK",
+          "evd_CH863Q9217"
         ],
         "time": 1795251608300,
         "ladder_level": 4
       },
-      "prev_hash": "5a1d042e9b5b974e2defe813e0a79832a72da780b0853393956445a4fde00d56",
-      "hash": "c26013dfc7cd386049e99f339545fce819f93f1b9c6212c789773b957f0ef6b2",
+      "prev_hash": "89ec7ce4b51bbb0828fcb42df4081b9af4ba0d70f4e30225d1eb948d48d9355d",
+      "hash": "095d3085e2d97bb5c9b51afa88e0be95fa56ddc52185db1b5c4bd94265c2f447",
       "signature": {
         "alg": "ed25519",
         "key_id": "evidence-1",
-        "sig": "NEWn4MuntfkL03naVfHLmzHAkPejwf6jt0PO0VE51RFR/7WoibYY5HZVxdoD/1MttNQFIK+ullY3ap1fn+qnCw=="
+        "sig": "CQ+6eEjCDpvKxvjcAekf2cNtCCzUDvfTB62SWQok7C2WeAtQlNMy8LateCnRAl9TVPZrbgtJkeEjPCGQFs4nAQ=="
       }
     }
   ],
@@ -4155,6 +3291,6 @@
   "signature": {
     "alg": "ed25519",
     "key_id": "replay-1",
-    "sig": "QfBxYSQ1bdlIBPJtpMWWTKuyeDdnjPTs56VnmsARmN35ntFnwkHLMXXlcj+hVenbsIMxrNhQlUy6NXr/h9juDQ=="
+    "sig": "iW8Gc53CoNQv9WNpRnRdol+9IAwJT8TdmU2Un8xD9pb7tSmrNZ5fq0XUrWsM1vpZKNb5qrXfTozf8b0jimX1Dw=="
   }
 }
