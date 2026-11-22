@@ -1333,7 +1333,7 @@ checksum = "3bd1574e617a9a6c1f8f8181bd7e841e1f20e4277607ef28945765188d6284d4"
 
 [[package]]
 name = "ivar-abi"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "ivar-api",
  "serde_json",
@@ -1341,7 +1341,7 @@ dependencies = [
 
 [[package]]
 name = "ivar-ai"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "ivar-contracts",
  "ivar-core",
@@ -1355,7 +1355,7 @@ dependencies = [
 
 [[package]]
 name = "ivar-ai-gateway"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "axum",
@@ -1372,7 +1372,7 @@ dependencies = [
 
 [[package]]
 name = "ivar-api"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "base64 0.22.1",
  "hex",
@@ -1385,7 +1385,7 @@ dependencies = [
 
 [[package]]
 name = "ivar-build-runner"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "ivar-contracts",
@@ -1397,7 +1397,7 @@ dependencies = [
 
 [[package]]
 name = "ivar-contracts"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "base64 0.22.1",
  "ed25519-dalek",
@@ -1415,7 +1415,7 @@ dependencies = [
 
 [[package]]
 name = "ivar-core"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "base64 0.22.1",
  "biscuit-auth",
@@ -1436,7 +1436,7 @@ dependencies = [
 
 [[package]]
 name = "ivar-database-sensor"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "ivar-contracts",
@@ -1448,7 +1448,7 @@ dependencies = [
 
 [[package]]
 name = "ivar-edge-filter"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "base64 0.22.1",
  "hex",
@@ -1462,7 +1462,7 @@ dependencies = [
 
 [[package]]
 name = "ivar-linux-agent"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "base64 0.22.1",
@@ -1479,7 +1479,7 @@ dependencies = [
 
 [[package]]
 name = "ivar-log-collector"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "ivar-contracts",
@@ -1492,7 +1492,7 @@ dependencies = [
 
 [[package]]
 name = "ivar-network-sensor"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "ivar-contracts",
@@ -1505,7 +1505,7 @@ dependencies = [
 
 [[package]]
 name = "ivar-plugin-host"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "base64 0.22.1",
  "hex",
@@ -1524,7 +1524,7 @@ dependencies = [
 
 [[package]]
 name = "ivar-replay"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "ivar-contracts",
@@ -1537,7 +1537,7 @@ dependencies = [
 
 [[package]]
 name = "ivar-sensor-kit"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "base64 0.22.1",
@@ -1552,7 +1552,7 @@ dependencies = [
 
 [[package]]
 name = "ivar-server"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "axum",
@@ -1588,7 +1588,7 @@ dependencies = [
 
 [[package]]
 name = "ivar-wasm"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "biscuit-auth",
  "getrandom 0.2.17",
@@ -1598,7 +1598,7 @@ dependencies = [
 
 [[package]]
 name = "ivar-windows-agent"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "ivar-contracts",
@@ -1611,7 +1611,7 @@ dependencies = [
 
 [[package]]
 name = "ivar-workstation-sensor"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "hex",

@@ -153,34 +153,34 @@ container images in GitHub's registry under `ghcr.io/jhmeel/ivar`.
 
 | Component | Install |
 |---|---|
-| Node.js SDK | `npm install https://github.com/jhmeel/Ivar/releases/download/v0.1.1/ivar-express-0.1.1.tgz` |
-| Python SDK | `pip install https://github.com/jhmeel/Ivar/releases/download/v0.1.1/ivar-0.1.1-py3-none-any.whl` |
-| Go SDK | `go get github.com/jhmeel/ivar/sdk/go@v0.1.1` |
+| Node.js SDK | `npm install https://github.com/jhmeel/Ivar/releases/download/v0.1.2/ivar-express-0.1.2.tgz` |
+| Python SDK | `pip install https://github.com/jhmeel/Ivar/releases/download/v0.1.2/ivar-0.1.2-py3-none-any.whl` |
+| Go SDK | `go get github.com/jhmeel/ivar/sdk/go@v0.1.2` |
 | Java SDK | the jar and pom from the release, installed into your local Maven repository (below) |
 | PHP SDK | the zip from the release, through a Composer `package` repository (below) |
 | .NET SDK | the `.nupkg` from the release, added from a local folder (below) |
-| Core, control plane, connectors, sensors | `docker pull ghcr.io/jhmeel/ivar/core:v0.1.1` (also `control`, `connectors`, `sensors`) |
-| Edge filter for Envoy and Istio | `ghcr.io/jhmeel/ivar/edge-filter:v0.1.1`, or `ivar_edge_filter.wasm` from the release |
-| Linux binaries | `ivar-0.1.1-linux-x86_64.tar.gz` from the release |
+| Core, control plane, connectors, sensors | `docker pull ghcr.io/jhmeel/ivar/core:v0.1.2` (also `control`, `connectors`, `sensors`) |
+| Edge filter for Envoy and Istio | `ghcr.io/jhmeel/ivar/edge-filter:v0.1.2`, or `ivar_edge_filter.wasm` from the release |
+| Linux binaries | `ivar-0.1.2-linux-x86_64.tar.gz` from the release |
 
 Verify what you download:
 
 ```bash
-curl -LO https://github.com/jhmeel/Ivar/releases/download/v0.1.1/SHA256SUMS
+curl -LO https://github.com/jhmeel/Ivar/releases/download/v0.1.2/SHA256SUMS
 sha256sum --check --ignore-missing SHA256SUMS
 ```
 
 The Python SDK also installs straight from git, without a release:
-`pip install "ivar @ git+https://github.com/jhmeel/Ivar.git@v0.1.1#subdirectory=sdk/python"`.
+`pip install "ivar @ git+https://github.com/jhmeel/Ivar.git@v0.1.2#subdirectory=sdk/python"`.
 
 **Java**, with Maven or Gradle:
 
 ```bash
-curl -LO https://github.com/jhmeel/Ivar/releases/download/v0.1.1/ivar-java-0.1.1.jar -LO https://github.com/jhmeel/Ivar/releases/download/v0.1.1/ivar-java-0.1.1.pom
-mvn install:install-file -Dfile=ivar-java-0.1.1.jar -DpomFile=ivar-java-0.1.1.pom
+curl -LO https://github.com/jhmeel/Ivar/releases/download/v0.1.2/ivar-java-0.1.2.jar -LO https://github.com/jhmeel/Ivar/releases/download/v0.1.2/ivar-java-0.1.2.pom
+mvn install:install-file -Dfile=ivar-java-0.1.2.jar -DpomFile=ivar-java-0.1.2.pom
 ```
 
-then depend on `dev.ivar:ivar-java:0.1.1` (Gradle: add `mavenLocal()` to the
+then depend on `dev.ivar:ivar-java:0.1.2` (Gradle: add `mavenLocal()` to the
 repositories). Its own dependencies resolve from Maven Central as usual.
 
 **PHP**, in `composer.json`:
@@ -191,13 +191,13 @@ repositories). Its own dependencies resolve from Maven Central as usual.
     "type": "package",
     "package": {
       "name": "ivar/ivar-php",
-      "version": "0.1.1",
-      "dist": { "url": "https://github.com/jhmeel/Ivar/releases/download/v0.1.1/ivar-php-0.1.1.zip", "type": "zip" },
+      "version": "0.1.2",
+      "dist": { "url": "https://github.com/jhmeel/Ivar/releases/download/v0.1.2/ivar-php-0.1.2.zip", "type": "zip" },
       "require": { "php": ">=8.1", "ext-ffi": "*", "ext-json": "*" },
       "autoload": { "psr-4": { "Ivar\\": "src/" } }
     }
   }],
-  "require": { "ivar/ivar-php": "0.1.1" }
+  "require": { "ivar/ivar-php": "0.1.2" }
 }
 ```
 
@@ -205,10 +205,10 @@ repositories). Its own dependencies resolve from Maven Central as usual.
 
 ```bash
 mkdir -p packages
-curl -L -o packages/Ivar.AspNetCore.0.1.1.nupkg https://github.com/jhmeel/Ivar/releases/download/v0.1.1/Ivar.AspNetCore.0.1.1.nupkg
+curl -L -o packages/Ivar.AspNetCore.0.1.2.nupkg https://github.com/jhmeel/Ivar/releases/download/v0.1.2/Ivar.AspNetCore.0.1.2.nupkg
 dotnet new nugetconfig
 dotnet nuget add source ./packages --name ivar-release --configfile nuget.config
-dotnet add package Ivar.AspNetCore --version 0.1.1
+dotnet add package Ivar.AspNetCore --version 0.1.2
 ```
 
 The folder is added next to nuget.org, which still serves the SDK's own
@@ -287,8 +287,8 @@ download has everything these steps need: the binaries in `bin/`, a starter
 policy in `share/ivar/policy/`, the attack replay library and the console.
 
 ```bash
-curl -LO https://github.com/jhmeel/Ivar/releases/download/v0.1.1/ivar-0.1.1-linux-x86_64.tar.gz
-tar -xzf ivar-0.1.1-linux-x86_64.tar.gz && cd ivar-0.1.1-linux-x86_64
+curl -LO https://github.com/jhmeel/Ivar/releases/download/v0.1.2/ivar-0.1.2-linux-x86_64.tar.gz
+tar -xzf ivar-0.1.2-linux-x86_64.tar.gz && cd ivar-0.1.2-linux-x86_64
 export PATH="$PWD/bin:$PATH"
 cp share/ivar/policy/*.yaml .     # policy.yaml, openapi.yaml, time-locks.yaml, operator-decisions.yaml
 
@@ -337,7 +337,7 @@ or with the image, which reads them from `/etc/ivar`:
 
 ```bash
 docker run -d --name ivar-core -p 8080:8080 -v "$PWD:/etc/ivar:ro" -v ivar-evidence:/var/lib/ivar \
-  ghcr.io/jhmeel/ivar/core:v0.1.1 serve --config /etc/ivar/core.yaml
+  ghcr.io/jhmeel/ivar/core:v0.1.2 serve --config /etc/ivar/core.yaml
 ```
 
 The redaction key is shared with every sensor: payload values and
@@ -370,7 +370,7 @@ one does the same four things:
 #### Node.js (Express)
 
 ```bash
-npm install https://github.com/jhmeel/Ivar/releases/download/v0.1.1/ivar-express-0.1.1.tgz
+npm install https://github.com/jhmeel/Ivar/releases/download/v0.1.2/ivar-express-0.1.2.tgz
 ```
 
 ```js
@@ -443,7 +443,7 @@ with a cancellation window.
 #### Python (FastAPI, Starlette, any ASGI app)
 
 ```bash
-pip install https://github.com/jhmeel/Ivar/releases/download/v0.1.1/ivar-0.1.1-py3-none-any.whl
+pip install https://github.com/jhmeel/Ivar/releases/download/v0.1.2/ivar-0.1.2-py3-none-any.whl
 ```
 
 ```python
@@ -513,7 +513,7 @@ as above.
 #### Go (net/http)
 
 ```bash
-go get github.com/jhmeel/ivar/sdk/go@v0.1.1
+go get github.com/jhmeel/ivar/sdk/go@v0.1.2
 ```
 
 ```go
@@ -574,7 +574,7 @@ After installing the jar from the release (see [Installation](#installation)):
 <dependency>
   <groupId>dev.ivar</groupId>
   <artifactId>ivar-java</artifactId>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
 </dependency>
 ```
 
@@ -629,7 +629,7 @@ On plain Jakarta EE register the same filter in `web.xml` or with
 Add the release as a Composer package repository (see [Installation](#installation)), then:
 
 ```bash
-composer require ivar/ivar-php:0.1.1
+composer require ivar/ivar-php:0.1.2
 ```
 
 The SDK runs the core with wasmtime through FFI: enable `ffi.enable=1` and
@@ -683,7 +683,7 @@ a small file and applied by every worker.
 With the release package added as a source (see [Installation](#installation)):
 
 ```bash
-dotnet add package Ivar.AspNetCore --version 0.1.1
+dotnet add package Ivar.AspNetCore --version 0.1.2
 ```
 
 ```csharp
@@ -987,7 +987,7 @@ curl -X POST http://ivar-core:8080/v1/events -H 'content-type: application/json'
   "events": [{
     "class_uid": 6003, "category_uid": 6, "activity_name": "business.action", "time": 1795000000000,
     "actor": { "user": { "uid": "kh_9f2c...", "type": "human" } },
-    "src_endpoint": { "ip": "10.1.1.3" },
+    "src_endpoint": { "ip": "10.1.2.3" },
     "ivar": { "sensor_id": "billing-batch", "sensor_type": "app_sdk", "observation_point": "app_sdk",
               "sensor_seq": 42, "business_action": "refund", "value_moved": 1200 }
   }]
@@ -1292,6 +1292,12 @@ Verified in this repository's test suites and the local stack:
   Express API, 34 of 34 checks, reproduced on clean installs, with the
   console following it live from the core and the replay video above built
   from its sealed evidence.
+* The enterprise test (`deploy/enterprise`): every release artifact built
+  from the checkout, six applications (one per SDK) behind Envoy with
+  Coraza and the Core Rule Set, a three shard core and the control plane;
+  application attacks, attacks on IVAR itself, a live signed rollout,
+  48 sessions per application under load, shard and control plane
+  outages, restarts and forensic replay. 206 of 206 checks pass.
 * The Helm chart rendered with Helm's template engine and checked
   (`deploy/helm/chartcheck`), and the reference Envoy config accepted by
   `envoy --mode validate`.
